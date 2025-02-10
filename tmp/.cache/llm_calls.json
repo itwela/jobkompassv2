@@ -1,0 +1,702 @@
+{
+  "eec4b7dc898af1afe4f2bdbf235cf42baa43120016cfac133d3cf3a0062a50e5": {
+    "data": {
+      "className": "h5 text-uppercase mb-0"
+    },
+    "timestamp": 1738351273551,
+    "requestId": "67j6jhpqi6p"
+  },
+  "dfe5b4be8d5112b056e922ffa77bf9bf687e5a0243150d7cc19dee07cebbb63e": {
+    "data": {
+      "className": "h5 text-uppercase mb-0"
+    },
+    "timestamp": 1738351275456,
+    "requestId": "67j6jhpqi6p"
+  },
+  "8632cf0615dd2150f2b104359096c7343f13e828c61be6f3499b49ebda82ab46": {
+    "data": {
+      "progress": "The classname of the div containing the job description has been successfully extracted.",
+      "completed": true
+    },
+    "timestamp": 1738351277659,
+    "requestId": "67j6jhpqi6p"
+  },
+  "c1cbe7e75a87a57ce1f0b0114cd12bed7181497dad7bfd3f7546439ac55f3413": {
+    "data": {
+      "xpath": "//div[@class='h5 text-uppercase mb-0']"
+    },
+    "timestamp": 1738351653440,
+    "requestId": "5tadvvyzjcl"
+  },
+  "8b7eae08ef3139c2ff11cfe77a801e125e62c2e1eb3eaa453b91e3e008a5bd86": {
+    "data": {
+      "xpath": "//div[@class='h5 text-uppercase mb-0']"
+    },
+    "timestamp": 1738351655122,
+    "requestId": "5tadvvyzjcl"
+  },
+  "53aca2578acaadf96b35bf61f01431b849a3f299608a2f415385ccd0ec453aa7": {
+    "data": {
+      "progress": "The extracted xpath does not seem to correspond to a job description element, as it appears to be targeting a header or title element.",
+      "completed": false
+    },
+    "timestamp": 1738351657296,
+    "requestId": "5tadvvyzjcl"
+  },
+  "7d06a941568782a63bca09296c163ee5fb2987c8a83e8be199abd306a47baf1c": {
+    "data": {
+      "xpath": "//p[contains(text(), 'Kaseya is not your typical company')]"
+    },
+    "timestamp": 1738351660883
+  },
+  "7d54afa4688b9a2210df2ae88f4bc9251d1bb48138af70ca035a2c1f365d7c55": {
+    "data": {
+      "xpath": "//div[@class='h5 text-uppercase mb-0'] | //p[contains(text(), 'Kaseya is not your typical company')]"
+    },
+    "timestamp": 1738351662831
+  },
+  "002ffe205ec7bcd399a9f75d50ea81c169fa2670169a9ca2234f5d1078269469": {
+    "data": {
+      "progress": "The xpath for the job description element has been extracted.",
+      "completed": true
+    },
+    "timestamp": 1738351664732
+  },
+  "884db07b92b9dd7d515126e7d68cd533d9bd79337e744e90e344628e2e9bf8a7": {
+    "data": {
+      "jobNameXpath": "//h1[@class='display-4 font-weight-bold mb-4']"
+    },
+    "timestamp": 1738352210758,
+    "requestId": "th5ql1cqk2p"
+  },
+  "98c84f5c4cf751bc4a69523df885c7c0fbbb86bb3ec317ef803cf8899ba8fbc7": {
+    "data": {
+      "jobNameXpath": "//h1[@class='display-4 font-weight-bold mb-4']"
+    },
+    "timestamp": 1738352213339,
+    "requestId": "th5ql1cqk2p"
+  },
+  "03ee4aaf39fa3e42b08335e36334fa22c995e697182df36b7629d00b803f66b4": {
+    "data": {
+      "progress": "The extracted XPath for the job name element is provided.",
+      "completed": true
+    },
+    "timestamp": 1738352215172,
+    "requestId": "th5ql1cqk2p"
+  },
+  "dc7dd82fd6ba31dcec28c17009532c5b83225255678d3256fb80ddb3978b6c5e": {
+    "data": {
+      "companyNameXpath": "//text()[contains(.,'Kaseya')]/ancestor::div"
+    },
+    "timestamp": 1738352600920,
+    "requestId": "fmnk917ac6e"
+  },
+  "6442ea8889e51c1667549ca841e56c4374f00dee57ba4182b94fa0a0095cdb29": {
+    "data": {
+      "companyNameXpath": "//text()[contains(.,'Kaseya')]/ancestor::div"
+    },
+    "timestamp": 1738352223243,
+    "requestId": "udz6mltqpqg"
+  },
+  "e07debb0f08729c1e4cc4a99f11e9a7103f703c112bb7266a3d03dc3f31a1c43": {
+    "data": {
+      "progress": "The extracted XPath appears to target the correct element containing the company name 'Kaseya'.",
+      "completed": true
+    },
+    "timestamp": 1738352602583,
+    "requestId": "fmnk917ac6e"
+  },
+  "73569e405302f89d0a1e0f610eb0dc2d31bf67ee1b33995c367d391ff44549ef": {
+    "data": {
+      "companyImgXpath": "/html/body/header/div/a/img"
+    },
+    "timestamp": 1738352230287,
+    "requestId": "gbmy98kl54j"
+  },
+  "9a6d636892b03c121d54861c04f6024bdbcfe1d9817da609584f26399169cc48": {
+    "data": {
+      "companyImgXpath": "/html/body/header/div/a/img"
+    },
+    "timestamp": 1738352231576,
+    "requestId": "gbmy98kl54j"
+  },
+  "94925509bd932b1a1ec372074154fe27b04e442de8d958de9e1940eff6b0116c": {
+    "data": {
+      "progress": "The extraction response provides an XPath for the company image/logo: '/html/body/header/div/a/img'.",
+      "completed": true
+    },
+    "timestamp": 1738352232506,
+    "requestId": "gbmy98kl54j"
+  },
+  "dc96dbcbb14239489d5326151dc378f28b241ab604fb344680f8729fb3b9b208": {
+    "data": {
+      "jobInformationXpath": "//h1[contains(text(),'Application Security Manager')]/following-sibling::div[contains(@class,'h5 text-uppercase mb-0')]"
+    },
+    "timestamp": 1738352594816,
+    "requestId": "59knjnrpt5p"
+  },
+  "f49af1d0579dffcff91634ce12c11ad2eeaf392395204b74dbaaf4e937d4b8a5": {
+    "data": {
+      "jobInformationXpath": "//h1[contains(text(),'Application Security Manager')]/following-sibling::div[contains(@class,'h5 text-uppercase mb-0')]"
+    },
+    "timestamp": 1738352596633,
+    "requestId": "59knjnrpt5p"
+  },
+  "4a78a1dec2d08f3417414807474bbb06be0403a86992c3b5595efd5d164df765": {
+    "data": {
+      "progress": "The extracted XPath appears to target the job information element accurately by identifying a header with specific text and its relevant sibling div.",
+      "completed": true
+    },
+    "timestamp": 1738352598055,
+    "requestId": "59knjnrpt5p"
+  },
+  "dca4cced55c57bedb155487597e0330ee40db836846a45d6c1e1920c603e4095": {
+    "data": {
+      "jobInformationXpath": "//h1[contains(text(),'Application Security Manager')]"
+    },
+    "timestamp": 1738353195258,
+    "requestId": "tuhkoklkqv"
+  },
+  "0edc6ab770b34e5cbb97fa6aed4fbee5e97adc6d442f294f8d81b400137138b3": {
+    "data": {
+      "jobInformationXpath": "//h1[contains(text(),'Application Security Manager')]"
+    },
+    "timestamp": 1738353197155,
+    "requestId": "tuhkoklkqv"
+  },
+  "c4488ef4af5c141f1503b36d17b86b6775e998ffd3ff8bf6ac19ee412bb53bc5": {
+    "data": {
+      "progress": "The extracted XPath precisely matches the example provided in the instruction, indicating that the task has been satisfied.",
+      "completed": true
+    },
+    "timestamp": 1738353198597,
+    "requestId": "tuhkoklkqv"
+  },
+  "4f7e084a66025b70243831a8820ba803e4f0d7a8e029f155b29bce1a84e13737": {
+    "data": {
+      "companyNameXpath": "//text()[contains(.,'Kaseya')]/parent::*"
+    },
+    "timestamp": 1738353202559,
+    "requestId": "qptjgx3h1y"
+  },
+  "8eb452ac94d62a52f9ee9c2a8fe534497d0cc07d9c131953272159f6f0a8090d": {
+    "data": {
+      "companyNameXpath": "//text()[contains(.,'Kaseya')]/parent::*"
+    },
+    "timestamp": 1738353204480,
+    "requestId": "qptjgx3h1y"
+  },
+  "46249607fd5facc519add7c5e80fef5eab4fa62f38b01bda2a0b07d8c8146791": {
+    "data": {
+      "progress": "The extracted XPath is: //text()[contains(.,'Kaseya')]/parent::*",
+      "completed": true
+    },
+    "timestamp": 1738353205584,
+    "requestId": "qptjgx3h1y"
+  },
+  "fbf9ae01a75f2bd92ad2d45dc8001edf03b6d06c5ef92c8f4553bf3f5ee601ec": {
+    "data": {
+      "jobNameXpath": "//h1[contains(text(),'Application Security Manager')]"
+    },
+    "timestamp": 1738353481737,
+    "requestId": "1f3ecyc2vbc"
+  },
+  "49475e6a96ac607c0fff710ce3121ab1ec90fc66f7d3c200dfbc7cbb34c115f5": {
+    "data": {
+      "jobNameXpath": "//h1[contains(text(),'Application Security Manager')]"
+    },
+    "timestamp": 1738353483818,
+    "requestId": "1f3ecyc2vbc"
+  },
+  "11bd284e8e16b0ad3ab0ac46ec4f7b27250c88bc44611b7cbdcd08855702f249": {
+    "data": {
+      "progress": "The extracted XPath precisely matches the example provided in the instruction, indicating that the task has been satisfied.",
+      "completed": true
+    },
+    "timestamp": 1738353484971,
+    "requestId": "1f3ecyc2vbc"
+  },
+  "37e96b42d9a5a5d3cf528274dedfa7771550d0f71fefa56a7174d4f955d1af51": {
+    "data": {
+      "companyNameXpath": "//a[contains(@href,'www.Kaseya.com')]"
+    },
+    "timestamp": 1738353487838,
+    "requestId": "ayd9pfdcdsw"
+  },
+  "9011951d0c737230766dd2e56c7f4e0c9be8fe57f8621d6604dac78ebf173950": {
+    "data": {
+      "companyNameXpath": "//a[contains(@href,'www.Kaseya.com')]"
+    },
+    "timestamp": 1738353492696,
+    "requestId": "ayd9pfdcdsw"
+  },
+  "716bed8f4f1895a3eb9e19aa36a905b81ac594dea156b919dd5080f73ef8d8f7": {
+    "data": {
+      "progress": "The extracted XPath is: //a[contains(@href,'www.Kaseya.com')]",
+      "completed": true
+    },
+    "timestamp": 1738353493994,
+    "requestId": "ayd9pfdcdsw"
+  },
+  "0effa6af0e1c16ce504797d9c13ed16284e92cec4f00d572b05ac7afcc6ed327": {
+    "data": {
+      "jobDescriptionXpath": "//h1[contains(text(),'Application Security Manager')]/following-sibling::div[contains(@class,'h5 text-uppercase mb-0')]"
+    },
+    "timestamp": 1738353500616,
+    "requestId": "fjjsqvgl0xk"
+  },
+  "7115b7ee9c2c4a7ebdbd763deae3756c5e01b7f929cf5a9372f6f5692ef26a68": {
+    "data": {
+      "jobDescriptionXpath": "//h1[contains(text(),'Application Security Manager')]/following-sibling::div[contains(@class,'h5 text-uppercase mb-0')]"
+    },
+    "timestamp": 1738353503249,
+    "requestId": "fjjsqvgl0xk"
+  },
+  "1dab35aa544212c77b15c7c6bb34aad06e72d70fe3055b07c6ec887a5629a010": {
+    "data": {
+      "progress": "The extracted xpath includes unnecessary parts beyond the main element identifier.",
+      "completed": false
+    },
+    "timestamp": 1738353504352,
+    "requestId": "fjjsqvgl0xk"
+  },
+  "05a6448b7c3040584265f94b935196864cab983ddaf15b76828b49e78a2f8828": {
+    "data": {
+      "jobDescriptionXpath": "//p[contains(text(),'Kaseya is not your typical company')]"
+    },
+    "timestamp": 1738353507620
+  },
+  "d54e946204f247f82d737886937b8d60b904878a3385aa96d713602525742723": {
+    "data": {
+      "jobDescriptionXpath": "//h1[contains(text(),'Application Security Manager')]|//p[contains(text(),'Kaseya is not your typical company')]"
+    },
+    "timestamp": 1738353508685
+  },
+  "40ee28217e23fd264a0f73ecbc45cc149b371c6d87cb107937cd9fddd5de3f8f": {
+    "data": {
+      "progress": "The extracted XPath includes two paths: one for the job title and another for a paragraph containing company information.",
+      "completed": false
+    },
+    "timestamp": 1738353509776
+  },
+  "edc3db8f4e40f1f7cd48bdad54359c2ab644b6b1b23ea0fd2d6e4ebb2cdcb6f6": {
+    "data": {
+      "jobDescriptionXpath": "//div[contains(text(),'WHAT YOU’LL DO:')]/following-sibling::div"
+    },
+    "timestamp": 1738353513694
+  },
+  "2f4c622a0ab216430074effe9447ca26cd87cdd61febb724bbd7361b59ae3d41": {
+    "data": {
+      "jobDescriptionXpath": "//h1[contains(text(),'Application Security Manager')]|//p[contains(text(),'Kaseya is not your typical company')]|//div[contains(text(),'WHAT YOU’LL DO:')]/following-sibling::div"
+    },
+    "timestamp": 1738353516006
+  },
+  "205a98e9063d349f937078db77ddd40f7c94901fd19b149f1c56e768264ebfa3": {
+    "data": {
+      "progress": "The extracted XPath includes multiple paths, but the instruction specifies a need for a single, concise path to the job description element. The current extraction includes multiple paths separated by '|', which may not align with the instruction's requirement for simplicity and specificity.",
+      "completed": false
+    },
+    "timestamp": 1738353521619
+  },
+  "cd1a73146803d1732851c8c7b608760342f0723ac203a5061a27c5b68c52b51a": {
+    "data": {
+      "jobDescriptionXpath": "//p[contains(text(),'Prior experience as a senior AppSec Manager is required')]"
+    },
+    "timestamp": 1738353525175
+  },
+  "ae8a3dc691d5a5a3879c738b99a976383f69598c52da14113635dc87145b4091": {
+    "data": {
+      "jobDescriptionXpath": "//h1[contains(text(),'Application Security Manager')]|//p[contains(text(),'Kaseya is not your typical company')]|//div[contains(text(),'WHAT YOU’LL DO:')]/following-sibling::div|//p[contains(text(),'Prior experience as a senior AppSec Manager is required')]"
+    },
+    "timestamp": 1738353528265
+  },
+  "616739dd00370d0e5f8f53706c49e35d01fd96f2bf3bcdf9339a5c06349f461e": {
+    "data": {
+      "progress": "The extracted content includes multiple xpaths, but the instruction specifies the need for a single, concise xpath that directly points to the full job description element. The current extraction response includes multiple paths, which may not align with the instruction's requirement for simplicity and specificity.",
+      "completed": false
+    },
+    "timestamp": 1738353530241
+  },
+  "d9e3fdbad659deec7cd2a48f962bc8e61f7ee4562f17a6f63cbaf319fb7aa1cb": {
+    "data": {
+      "jobDescriptionXpath": "//div[contains(text(),'GENERAL QUALIFICATIONS AND EXPERIENCE')]/preceding-sibling::div"
+    },
+    "timestamp": 1738353533770
+  },
+  "92dacdf44712d541a8f91e7d50bbf62191464d774cf5e07e843b7b6f71fe5327": {
+    "data": {
+      "jobDescriptionXpath": "//h1[contains(text(),'Application Security Manager')]|//p[contains(text(),'Kaseya is not your typical company')]|//div[contains(text(),'WHAT YOU’LL DO:')]/following-sibling::div|//p[contains(text(),'Prior experience as a senior AppSec Manager is required')]|//div[contains(text(),'GENERAL QUALIFICATIONS AND EXPERIENCE')]/preceding-sibling::div"
+    },
+    "timestamp": 1738353537225
+  },
+  "12b62f7891215535daae3061910938fad7d26d75c465b5fbae78fc7d6d08a4c5": {
+    "data": {
+      "progress": "The extracted xpaths include multiple paths to elements related to the job description, but they are not simplified as per the instruction. The extraction includes multiple paths, some of which may not be necessary.",
+      "completed": false
+    },
+    "timestamp": 1738353538762
+  },
+  "ae63c340bea33f51492c5d0545edb9b63eb3a05dc36d256e63e06800c48205dc": {
+    "data": {
+      "jobDescriptionXpath": "//div[contains(text(),'WHAT YOU’LL BRING:')]/following-sibling::div"
+    },
+    "timestamp": 1738353542157
+  },
+  "9c584b572216f88f311a15b839b87ec5eba59015a97b69582d43ca0e2b49dd82": {
+    "data": {
+      "jobDescriptionXpath": "//h1[contains(text(),'Application Security Manager')]|//p[contains(text(),'Kaseya is not your typical company')]|//div[contains(text(),'WHAT YOU’LL DO:')]/following-sibling::div|//p[contains(text(),'Prior experience as a senior AppSec Manager is required')]|//div[contains(text(),'GENERAL QUALIFICATIONS AND EXPERIENCE')]/preceding-sibling::div|//div[contains(text(),'WHAT YOU’LL BRING:')]/following-sibling::div"
+    },
+    "timestamp": 1738353544788
+  },
+  "72373c48481e049135a58dc9eaf6d81b5d2c59238cea45f00303f8a501d53fd7": {
+    "data": {
+      "progress": "The extracted xpaths include multiple elements, but the instruction specifies that only the xpath for the full job description is needed. The current extraction includes multiple sections, which may not align with the instruction to simplify the xpath to the specific job description element.",
+      "completed": false
+    },
+    "timestamp": 1738353548226
+  },
+  "1e0b5f68f6c56e8b51baf816966e54b550d1e2fa6eb61002394365e932c02366": {
+    "data": {
+      "jobDescriptionXpath": "//p[contains(text(),'If this sounds like the right career to fit your personality and interests, please apply, we’re looking forward to meeting you!')]"
+    },
+    "timestamp": 1738353551901
+  },
+  "4d5677cb3319efd2b426978b90622482248a064e49cefa8e9e4c76181ec5a51d": {
+    "data": {
+      "jobDescriptionXpath": "//h1[contains(text(),'Application Security Manager')]|//p[contains(text(),'Kaseya is not your typical company')]|//div[contains(text(),'WHAT YOU’LL DO:')]/following-sibling::div|//p[contains(text(),'Prior experience as a senior AppSec Manager is required')]|//div[contains(text(),'GENERAL QUALIFICATIONS AND EXPERIENCE')]/preceding-sibling::div|//div[contains(text(),'WHAT YOU’LL BRING:')]/following-sibling::div|//p[contains(text(),'If this sounds like the right career to fit your personality and interests, please apply, we’re looking forward to meeting you!')]"
+    },
+    "timestamp": 1738353556169
+  },
+  "d7e6ea3bb7eedf240002fbf8af30ac2bad9351a07d535a1c27a54c4ce35a569c": {
+    "data": {
+      "progress": "The extracted content contains multiple xpaths, but the instruction specifies that only the xpath for the full job description is needed. The current extraction includes multiple elements, which may not align with the instruction to simplify the xpath and focus solely on the job description.",
+      "completed": false
+    },
+    "timestamp": 1738353557825
+  },
+  "a9da2c501e2f0efd5f4a4ac473e750f5ef23d3eabc856a14fbf57cd070473de0": {
+    "data": {
+      "jobDescriptionXpath": "//p[contains(text(),'Join the Kaseya growth rocket ship')]"
+    },
+    "timestamp": 1738353560683
+  },
+  "7f258187803b505e200cce5cf21108fb69ddb7a1d7321f1fedfc2c573f3679a2": {
+    "data": {
+      "jobDescriptionXpath": "//h1[contains(text(),'Application Security Manager')]|//p[contains(text(),'Kaseya is not your typical company')]|//div[contains(text(),'WHAT YOU’LL DO:')]/following-sibling::div|//p[contains(text(),'Prior experience as a senior AppSec Manager is required')]|//div[contains(text(),'GENERAL QUALIFICATIONS AND EXPERIENCE')]/preceding-sibling::div|//div[contains(text(),'WHAT YOU’LL BRING:')]/following-sibling::div|//p[contains(text(),'If this sounds like the right career to fit your personality and interests, please apply, we’re looking forward to meeting you!')]|//p[contains(text(),'Join the Kaseya growth rocket ship')]"
+    },
+    "timestamp": 1738353564945
+  },
+  "c1e3b8aed4746abfc5db6dfa699f229b5715791be5fcbc88a282a28083c0d41b": {
+    "data": {
+      "progress": "The extracted content contains multiple xpaths, but the instruction specifies that only one concise xpath is needed to locate the full job description. The current extraction includes several xpaths, which may not align with the instruction to provide a single, simplified xpath.",
+      "completed": false
+    },
+    "timestamp": 1738353566791
+  },
+  "fa16319e7ffc120f9a969a3065f9eaf717446fe85fdab573815c7806ce7f4b01": {
+    "data": {
+      "jobNameSelector": "h1.display-4.font-weight-bold.mb-4"
+    },
+    "timestamp": 1738353842902,
+    "requestId": "lhfgx3zf2vk"
+  },
+  "6f6673ee48531f6b6f293808668577cfc291abb98ca93d4bebe286e7374ebe34": {
+    "data": {
+      "jobNameSelector": "h1.display-4.font-weight-bold.mb-4"
+    },
+    "timestamp": 1738353845083,
+    "requestId": "lhfgx3zf2vk"
+  },
+  "05886b4fbe0782d71318a78c0f9e6a224886de9f89d47c5421ff1658f525b2bf": {
+    "data": {
+      "progress": "The extracted CSS selector is 'h1.display-4.font-weight-bold.mb-4'.",
+      "completed": false
+    },
+    "timestamp": 1738353846869,
+    "requestId": "lhfgx3zf2vk"
+  },
+  "b39cddb402edc09f2c23bb34f585d9c24f52a6bda02a3d7fb705e8d3b8828dfe": {
+    "data": {
+      "jobNameSelector": "null"
+    },
+    "timestamp": 1738353850253
+  },
+  "168bc0fe19ae15eac3e4049ef8524f2063adafa8917918a4341abbc5cfc1405b": {
+    "data": {
+      "jobNameSelector": "h1.display-4.font-weight-bold.mb-4"
+    },
+    "timestamp": 1738353852270
+  },
+  "c0ca1e738753cbcbf7dd974b7e445bbb69c81d2ede9efd2832d2c8e7f7a84962": {
+    "data": {
+      "progress": "The extracted CSS selector is 'h1.display-4.font-weight-bold.mb-4'.",
+      "completed": false
+    },
+    "timestamp": 1738353853306
+  },
+  "97e8d9a2aecc6bf6fac9c79a53d161a1fd047bd2b17abf042f51c51d8853638e": {
+    "data": {
+      "jobNameSelector": "null"
+    },
+    "timestamp": 1738353856341
+  },
+  "8a41e00053f9f1180fe25d8cd154b682aff6a3f720552190f1bfe3b6e6909237": {
+    "data": {
+      "progress": "The extracted CSS selector is 'h1.display-4.font-weight-bold.mb-4'.",
+      "completed": false
+    },
+    "timestamp": 1738353857949
+  },
+  "28176429272396dcdf06c0b58e52484cb37f3ea27632577bdfeed26e8152baa7": {
+    "data": {
+      "jobNameSelector": ""
+    },
+    "timestamp": 1738353861169
+  },
+  "d6d8f8f4b25c7439d6bb02411965a7a75c5fc398b838b3ed0ce1b27ca7c80a30": {
+    "data": {
+      "jobNameSelector": "h1.display-4.font-weight-bold.mb-4"
+    },
+    "timestamp": 1738353863208
+  },
+  "6c1a37bdff9f942b9a62c6c95a580887558284c4d9b5043d2c753b78d1f27636": {
+    "data": {
+      "progress": "The extracted CSS selector is 'h1.display-4.font-weight-bold.mb-4'.",
+      "completed": true
+    },
+    "timestamp": 1738353864918
+  },
+  "de8c84168e6c95564cc02fc6079ad00a2ace4a87428c8f9df70a1c3bb8dfd3d9": {
+    "data": {
+      "companyNameSelector": ".nav-link[href='https://www.kaseya.com/careers/']"
+    },
+    "timestamp": 1738353869958,
+    "requestId": "novr4ziy1xj"
+  },
+  "4d10081ea2a6e65c04fb9d56b0ca051662e78f4d1086917bb8d422f510f79813": {
+    "data": {
+      "companyNameSelector": ".nav-link[href='https://www.kaseya.com/careers/']"
+    },
+    "timestamp": 1738353871852,
+    "requestId": "novr4ziy1xj"
+  },
+  "8a25c69db8b37b718ab9636f45091becc4cd5f5c19ac48a7e07ffe31d0ea44b9": {
+    "data": {
+      "progress": "The extracted CSS selector is '.nav-link[href='https://www.kaseya.com/careers/']'.",
+      "completed": false
+    },
+    "timestamp": 1738353873209,
+    "requestId": "novr4ziy1xj"
+  },
+  "7eb1582e3b088090ad9e734636d211d400b29a06ba31f9440ca05027399dcfa9": {
+    "data": {
+      "companyNameSelector": "a[href='https://www.kaseya.com/']"
+    },
+    "timestamp": 1738353877261
+  },
+  "a34a2a6b821245c4ed4087285c53bcf0b09fbf4d73ca48d1271b3aa2ebfea2be": {
+    "data": {
+      "companyNameSelector": "a[href='https://www.kaseya.com/']"
+    },
+    "timestamp": 1738353878565
+  },
+  "b06cf478a7dded5c7c6701d493bda2e4640c0175ad8320c117fe661468e35667": {
+    "data": {
+      "progress": "The extracted CSS selector is 'a[href='https://www.kaseya.com/']'.",
+      "completed": false
+    },
+    "timestamp": 1738353880034
+  },
+  "057a9e8aa180bd8d77689d10ac9590edfbb42180fff5bfa79e9bc4b818340586": {
+    "data": {
+      "companyNameSelector": "p:contains('Kaseya is not your typical company')"
+    },
+    "timestamp": 1738353884075
+  },
+  "cb98491c152eef6604517428dba6ea5f06452dd310474046ea3d3220fc2ab825": {
+    "data": {
+      "companyNameSelector": "p:contains('Kaseya is not your typical company')"
+    },
+    "timestamp": 1738353885794
+  },
+  "af006e6851e9d83374f8033f0deb4164dae71647205fadce294ca24414c55a7a": {
+    "data": {
+      "progress": "The extracted CSS selector is not specific or concise enough to uniquely identify the company name element. It uses a pseudo-class that may not be reliable for unique identification.",
+      "completed": false
+    },
+    "timestamp": 1738353887131
+  },
+  "e2ca733c07804653d1f49347b8c79c95a525151389356a2072345953e8d230a7": {
+    "data": {
+      "companyNameSelector": "#company-name"
+    },
+    "timestamp": 1738353891038
+  },
+  "d67bd574d261b8ef1f02d097ca460b01fe20eb444d3b351b3dcaf2a73e6cf66b": {
+    "data": {
+      "companyNameSelector": "#company-name"
+    },
+    "timestamp": 1738353892533
+  },
+  "1e236bd058efb78ed4b85c6157105f3ea3e050e2407baf803b40bb16fa2c4f8d": {
+    "data": {
+      "progress": "The CSS selector '#company-name' has been extracted, which is specific, concise, and likely to uniquely identify the company name element.",
+      "completed": true
+    },
+    "timestamp": 1738353893933
+  },
+  "2ed77ac9db1502ada2e67d2766ad8da51a4ac2edceb039c250ec838010891869": {
+    "data": {
+      "jobDescriptionSelector": "null"
+    },
+    "timestamp": 1738353900319,
+    "requestId": "pmmkaxolf"
+  },
+  "846d932ce2b7696b722831378863feff689d9e1191875e22a1b9435cc4b4fb99": {
+    "data": {
+      "jobDescriptionSelector": "#job-description"
+    },
+    "timestamp": 1738353901533,
+    "requestId": "pmmkaxolf"
+  },
+  "5289e75943a37c0dd60f7c15c0ea1135c67bac84467bd5c95790d21e30fb0098": {
+    "data": {
+      "progress": "The CSS selector '#job-description' has been identified as the main container element for the job description.",
+      "completed": true
+    },
+    "timestamp": 1738353902731,
+    "requestId": "pmmkaxolf"
+  },
+  "fb9344da88620d4e7f66389881a6280a0c3cfe17dade171dfc056ceb166d59d5": {
+    "data": {
+      "jobNameSelector": "h1.display-4.font-weight-bold.mb-4"
+    },
+    "timestamp": 1738354047243,
+    "requestId": "zokb38yvp6h"
+  },
+  "98bb0dcc2d7d726ed7501c443a5ef00859094ec3d3b48a978003372cfbc3ffc3": {
+    "data": {
+      "jobNameSelector": "h1.display-4.font-weight-bold.mb-4"
+    },
+    "timestamp": 1738354049149,
+    "requestId": "zokb38yvp6h"
+  },
+  "604ba7b8a68f42be022dd82b56784850a615fda55d8a6e2a2fd023543949f21c": {
+    "data": {
+      "progress": "The CSS selector for the job title/name has been extracted as `h1.display-4.font-weight-bold.mb-4`.",
+      "completed": true
+    },
+    "timestamp": 1738354050619,
+    "requestId": "zokb38yvp6h"
+  },
+  "0deb7507e9f31a624dab798675e2dea594bb2985164c4b41fb9c5868b9b9ca52": {
+    "data": {
+      "companyNameSelector": "div.h5.text-uppercase.mb-0"
+    },
+    "timestamp": 1738354053181,
+    "requestId": "hotkamlhxz4"
+  },
+  "6b8d1c571b9c6abea0bfc56ee9a48d2aa72d742cd1ab2118f15c75acaa9cb236": {
+    "data": {
+      "companyNameSelector": "div.h5.text-uppercase.mb-0"
+    },
+    "timestamp": 1738354054096,
+    "requestId": "hotkamlhxz4"
+  },
+  "06bdb5378f09dbf3750be7b6ef9efe816bcd70c15bb9214c9882ec3736192229": {
+    "data": {
+      "progress": "The CSS selector 'div.h5.text-uppercase.mb-0' has been extracted as the unique identifier for the company name element.",
+      "completed": true
+    },
+    "timestamp": 1738354055528,
+    "requestId": "hotkamlhxz4"
+  },
+  "31347ba9312dd00fbd5ea1d21bc5c26dc3b8230b09e310c75387baa2fc4f642f": {
+    "data": {
+      "jobDescriptionSelector": "<div class=\"h5 text-uppercase mb-0\">US Remote</div>"
+    },
+    "timestamp": 1738354058544,
+    "requestId": "spoc3z31c1"
+  },
+  "178e67583f5ae8218337a85e7ba709572cde7f4f12367ce535c8dd71153c5a3d": {
+    "data": {
+      "jobDescriptionSelector": "<div class=\"job-description-container\">"
+    },
+    "timestamp": 1738354060999,
+    "requestId": "spoc3z31c1"
+  },
+  "e2c457dea8818e1867d46a8b9cffe0db2cf06b39054fcc81dfaa8bf9dd626107": {
+    "data": {
+      "progress": "The CSS selector for the main container element has been identified as '<div class=\"job-description-container\">'.",
+      "completed": true
+    },
+    "timestamp": 1738354062467,
+    "requestId": "spoc3z31c1"
+  },
+  "217d19999e82105959df25ba1b1e1ec47c8270bdf7843f0dc8b2c3eba77ffe8d": {
+    "data": {
+      "jobNameSelector": "h1.display-4.font-weight-bold.mb-4"
+    },
+    "timestamp": 1738354419719,
+    "requestId": "a5cvlyklm44"
+  },
+  "c1d5e6313a379d6654d674135b55c23d24dca221ceb39fab9951049b3e4b95d2": {
+    "data": {
+      "jobNameSelector": "h1.display-4.font-weight-bold.mb-4"
+    },
+    "timestamp": 1738354422264,
+    "requestId": "a5cvlyklm44"
+  },
+  "e24263c8be43dcfbb5c8eb7349438bfc4caf751fe1c02b2102753c52d83b3ac5": {
+    "data": {
+      "progress": "The CSS selector for the job title/name has been extracted as \"h1.display-4.font-weight-bold.mb-4\".",
+      "completed": true
+    },
+    "timestamp": 1738354424403,
+    "requestId": "a5cvlyklm44"
+  },
+  "c2d19e906e5c06cc375f52c72d4a498a88a826eb9108e0cd767bbfcdcec1557e": {
+    "data": {
+      "companyNameSelector": "h1.display-4.font-weight-bold.mb-4"
+    },
+    "timestamp": 1738354427098,
+    "requestId": "pw0b2ly7rn"
+  },
+  "a56d43aa8beb5e8a821b29802beb6597d860ea7f0fce1488bf780811966f104c": {
+    "data": {
+      "companyNameSelector": "h1.display-4.font-weight-bold.mb-4"
+    },
+    "timestamp": 1738354429095,
+    "requestId": "pw0b2ly7rn"
+  },
+  "1061c6df376f84132e5f23c6f097cdc900c8c2226616fecdc8019999d1b9567d": {
+    "data": {
+      "progress": "The CSS selector for the hiring company's name has been extracted as \"h1.display-4.font-weight-bold.mb-4\".",
+      "completed": true
+    },
+    "timestamp": 1738354430525,
+    "requestId": "pw0b2ly7rn"
+  },
+  "28a646ac1472fcb8cd529e8cba87f64693edcffd5d0b931baa9d1c5403cc5956": {
+    "data": {
+      "jobDescriptionSelector": "div.h5.text-uppercase.mb-0"
+    },
+    "timestamp": 1738354433292,
+    "requestId": "hcnfswbjab"
+  },
+  "0ef93a6c5bbfff9e987219b19c93f71a73f7c4ff9fbf6f0758c947f15b90629b": {
+    "data": {
+      "jobDescriptionSelector": "div.h5.text-uppercase.mb-0"
+    },
+    "timestamp": 1738354434766,
+    "requestId": "hcnfswbjab"
+  },
+  "5ad7ed974fc863fafda34b2bf695930652fea54902a6b5415da47be118aed5ab": {
+    "data": {
+      "progress": "The CSS selector for the container element holding the entire job description has been extracted as 'div.h5.text-uppercase.mb-0'.",
+      "completed": true
+    },
+    "timestamp": 1738354436067,
+    "requestId": "hcnfswbjab"
+  }
+}
