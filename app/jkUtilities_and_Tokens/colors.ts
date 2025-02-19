@@ -17,6 +17,7 @@ export const JK_Colors = {
         fg_shadow: '#212226',
         textColor: '#F9F9F9',
         boxShadow: '#212226',
+        bg_gradient: 'background: linear-gradient(to bottom right, #393939, #212226)',
     },
     purple: '#7338AC',
     purple_accent: '#F2B8E4',
@@ -33,4 +34,6 @@ export const JK_Colors = {
     lightWhite: '#F9F9F9',
     white: '#ffffff',
     green: '#2BDC7E',
+    teal: '#00B8A9',
+    gray: '#808080',
 };

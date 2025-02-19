@@ -4,6 +4,8 @@ import { useQuery } from '@tanstack/react-query';
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 interface JobKompassCareerAssistantContextType {
+    wantsToPreviewResume: boolean;
+    setWantsToPreviewResume: (want: boolean) => void;
     myResumeSelection: string;
     setMyResumeSelection: (selection: string) => void;
     myResumeSelectionIndex: number;
@@ -28,6 +30,7 @@ const JobKompassCareerAssistantContext = createContext<JobKompassCareerAssistant
 
 export const JobKompassCareerAssistantProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
+    const [wantsToPreviewResume, setWantsToPreviewResume] = useState<boolean>(false);
     const [myResumeSelection, setMyResumeSelection] = useState<string>('');
     const [myResumeSelectionIndex, setMyResumeSelectionIndex] = useState<number>(-2);
     const [myCoverLetterSelection, setMyCoverLetterSelection] = useState<string>('');
@@ -39,6 +42,8 @@ export const JobKompassCareerAssistantProvider: React.FC<{ children: ReactNode }
     const [startEditingDocument, setStartEditingDocument] = useState<boolean>(false);
 
     const value = {
+        wantsToPreviewResume, 
+        setWantsToPreviewResume,
         myResumeSelection,
         setMyResumeSelection,
         myResumeSelectionIndex,

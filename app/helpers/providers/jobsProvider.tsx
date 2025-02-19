@@ -51,10 +51,8 @@ export const JobKompassJobsProvider: React.FC<{ children: ReactNode }> = ({ chil
 
     useEffect(() => {
         if (jdLoading) {
-            console.log('Loading Jobs...');
             setJobsDataIsLoading(true);
         } else {
-            console.log('Jobs Data Loaded!');
             setJobsDataIsLoading(false);
         }
     }, [jdLoading]); 
@@ -62,10 +60,8 @@ export const JobKompassJobsProvider: React.FC<{ children: ReactNode }> = ({ chil
     useEffect(() => {
         if (jobsData) {
             setUserJobs(jobsData);
-            console.log('------ YES ------ User Jobs');
         } else {
             setUserJobs(null);
-            console.log('------ NO ------ User Jobs', jobsData);
         }
     }, [jobsData]); 
 

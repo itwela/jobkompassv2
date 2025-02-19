@@ -256,3 +256,27 @@ export async function addCoverLetterToDb(cover: FormData, user: any) {
         };
     }
 }
+
+export async function getUsersResume(resumeName: string, userName: string, userId: string) {
+    const supabase = await createSupServerInstance();
+    const filePath = `resumes/${userName}-${userId}/${resumeName}`;
+    const { data, error } = await supabase
+        .storage
+        .from('docs')
+        .download(filePath);
+    if (error) {
+        console.error("Error downloading resume:", error);
+        return {
+            status: 'error',
+            message: 'Failed to download resume'
+        };
+    }
+
+    // Convert Blob to ArrayBuffer
+    const arrayBuffer = await data.arrayBuffer();
+    
+    return {
+        data: arrayBuffer,
+        type: data.type
+    };
+}

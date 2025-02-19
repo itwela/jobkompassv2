@@ -2,20 +2,20 @@
 
 import { useJobKompassCareerAssistant } from "@/app/helpers/providers/careerAssistantProvider"
 import { useJobKompassUser } from "@/app/helpers/providers/userProvider"
-import { JK_Colors } from "@/app/jkUtilities_and_Tokens/colors"
-import { ThemeKeys } from "@/app/types"
-import { FileText, FileUser, Upload } from "lucide-react"
+import { useJobKompassTheme } from "@/app/helpers/providers/themeProvider"
+import { FileText } from "lucide-react"
 
 export default function MyCoverLetters() {
 
     const { user } = useJobKompassUser()
+    const { styles } = useJobKompassTheme()
     const {myCoverLetterSelection, myCoverLetterSelectionIndex, setMyCoverLetterSelection, setMyCoverLetterSelectionIndex} = useJobKompassCareerAssistant()
     
     const coverLetterNames = user?.[0]?.cover_letters
 
     return (
         <>
-            <div className="w-full h-max">
+            <div style={{color: styles.text.primary}} className="w-full h-max">
                 <div>
                     <p>View and even update your saved cover letters!</p>
                 </div>
@@ -24,17 +24,20 @@ export default function MyCoverLetters() {
                     {coverLetterNames?.map((coverLetter, index) => {
                         return (
                             <div key={index}
-                                style={{ backgroundColor: `${JK_Colors.indigo_accent}` }}
-                                // style={{backgroundColor: `${JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.boxShadow}61`}}
-                                className="max-w-[261.8px] cursor-pointer p-2 rounded-lg">
+                                style={{
+                                    backgroundColor: styles.card.background,
+                                    border: styles.card.border,
+                                    boxShadow: `0 4px 6px -1px ${styles.card.boxShadow}`,
+                                    transition: 'all 0.3s ease'
+                                }}
+                                className="max-w-[261.8px] cursor-pointer p-2 rounded-lg hover:translate-y-[-2px]">
                                 <div className="flex gap-2  items-center justify-between">
                                     <div className="flex  gap-2 items-center ">
-                                        <div style={{ backgroundColor: `${JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.bg}10` }} className="p-2 rounded-sm">
-                                            <FileText style={{ color: JK_Colors.indigo }} className="w-4 h-4" />
+                                        <div style={{backgroundColor: styles.card.accent}} className="p-2 rounded-sm transition-colors duration-300">
+                                            <FileText style={{color: styles.nav.colors.careerAssistant}} className="w-4 h-4" />
                                         </div>
                                         <div>
-                                            <p style={{ color: JK_Colors.black }} className="text-sm font-bold">{coverLetter}</p>
-                                            {/* <p style={{color:JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.textColor}} className="text-sm font-bold">{resume}</p> */}
+                                            <p style={{color: styles.text.primary}} className="text-sm font-bold">{coverLetter}</p>
                                         </div>
                                     </div>
                                     <button

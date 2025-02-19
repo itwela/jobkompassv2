@@ -1,71 +1,77 @@
-
 'use client'
 
-import {
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-  } from "@/components/ui/sidebar"
-  import { Calendar, Home, Book, ArrowLeft, SettingsIcon, Inbox, Search, Settings,  User2, ChevronUp, ArrowLeftFromLine } from "lucide-react"
-import { supabaseClientClient } from "../utils/supabase/client"
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
+import { Book, ArrowLeft, SettingsIcon, ArrowLeftFromLine } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { useJobKompassUser } from "../helpers/providers/userProvider"
+import { useState } from "react"
+import { useJobKompassTheme } from "@/app/helpers/providers/themeProvider"
+import { useSidebar } from "@/components/ui/sidebar";
 
 export default function JkBottomNavRoutes() {
-
-  // Menu items.
+  const { styles } = useJobKompassTheme()
+  const { open, state } = useSidebar();
   const items = [
     {
       title: "Blog",
       url: "/blog",
       icon: Book,
+      color: styles.nav.colors.home
     },
     {
-      title: "Settings",
+      title: "Landing",
       url: "#",
-      icon: SettingsIcon,
+      icon: ArrowLeft,
+      color: styles.nav.colors.home
     },
   ]
-
-  // const supabase = createClient()
   const router = useRouter()
+  const [navItemIndex, setNavItemIndex] = useState<number | null>(null)
+  const [isLandingHovered, setIsLandingHovered] = useState<boolean>(false)
 
-  const handleLogout = async () => {
-    // defaults to the global scope
-    await supabaseClientClient.auth.signOut()
-    router.push('/')
-  }
-    
-    return (
-        <>
-            <SidebarMenu>
-              {items.map((item: any) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <a href='/'>
-                      <ArrowLeft />
-                      <span>Landing</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                  <SidebarMenuButton asChild>
-                    <span onClick={handleLogout}>
-                      <ArrowLeftFromLine />
-                      <span>Log Out</span>
-                    </span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-            </SidebarMenu>
-        </>
-    )
+  return (
+    <SidebarMenu className="space-y-1">
+      {items.map((item, index) => (
+        <SidebarMenuItem key={item.title}>
+          <SidebarMenuButton asChild>
+            <a
+              onMouseEnter={() => setNavItemIndex(index)}
+              onMouseLeave={() => setNavItemIndex(null)}
+              href={item.url}
+              className="group relative overflow-hidden rounded-xl transition-all duration-300 hover:translate-y-[-2px]"
+              style={{
+                backgroundColor: navItemIndex === index ? styles.card.accent : 'transparent',
+              }}
+            >
+              <div className="relative">
+                <div className="relative z-10 flex items-center gap-3 py-3">
+                  <div 
+                    className="rounded-lg transition-all duration-300"
+                    style={{
+                      backgroundColor: navItemIndex === index ? `${item.color}20` : 'transparent'
+                    }}
+                  >
+                    <item.icon 
+                      size={20}
+                      className="transition-all duration-300"
+                      style={{
+                        color: navItemIndex === index ? item.color : styles.nav.inactiveColor,
+                      }}
+                    />
+                  </div>
+                  <span 
+                    className={`font-medium tracking-wide transition-all duration-300 ${state === 'expanded' ? 'block' : 'hidden'}`}
+                    style={{
+                      color: navItemIndex === index ? styles.nav.activeColor : styles.nav.inactiveColor,
+                    }}
+                  >
+                    {item.title}
+                  </span>
+                </div>
+              </div>
+            </a>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      ))}
+    </SidebarMenu>
+  )
 }

@@ -73,10 +73,8 @@ export const JobKompassUserProvider: React.FC<{ children: ReactNode }> = ({ chil
 
     useEffect(() => {
         if (auidLoading || udLoading) {
-            console.log('Loading...');
             setUserDataIsLoading(true);
         } else {
-            console.log('Loaded!');
             setUserDataIsLoading(false);
         }
     }, [auidLoading, udLoading]);
@@ -85,12 +83,10 @@ export const JobKompassUserProvider: React.FC<{ children: ReactNode }> = ({ chil
         if (authUserId) {
             setUserId(authUserId);
             setIsAuthenticated(true);
-            console.log('User ID:', authUserId);
             console.log('User ------ IS ------ authenticated');
         } else {
             setUserId(null);
             setIsAuthenticated(false);
-            console.log('User ID:', authUserId);
             console.log('User is ------ NOT ----- authenticated');
         }
     }, [authUserId]);
@@ -98,10 +94,10 @@ export const JobKompassUserProvider: React.FC<{ children: ReactNode }> = ({ chil
     useEffect(() => {
         if (userData) {
             setUser(userData);
-            console.log('------ YES ------ User Data:', userData);
+            console.log('------ YES ------ User');
         } else {
             setUser(null);
-            console.log('------ NO ------ User Data:', userData);
+            console.log('------ NO ------ User:');
         }
     }, [userData]);
 

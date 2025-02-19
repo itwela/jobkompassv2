@@ -1,58 +1,66 @@
 'use client';
+
 import { JK_Styles } from '@/app/jkUtilities_and_Tokens/styles';
-import AiResumeEditor from './components/AiResumeEditor';
-import JobScraper from './components/JobScraper';
 import { ThemeKeys } from "@/app/types";
 import { JK_Colors } from '@/app/jkUtilities_and_Tokens/colors';
 import SplashScreen from '@/app/jkUtilities_and_Tokens/components/splashScreen';
 import { useJobKompassUser } from '@/app/helpers/providers/userProvider';
 import { createSupClientInstance } from '@/app/utils/supabase/client';
-import { useEffect, useState } from 'react';
 import QuickAdd from './components/quickAdd';
 import ConsoleHeader from '../../jkComponents/jkConsoleHeader';
-import FeatuureBoxes from './components/featureBoxes';
+import FeatureBoxes from './components/featureBoxes';
 import { useSidebar } from '@/components/ui/sidebar';
 import RecentJobs from './components/recentJobs';
 import ShortCuts from './components/shortcuts';
+import { useJobKompassTheme } from '@/app/helpers/providers/themeProvider';
 
-export default function Dashboard({getJobInformationStagehand}: {getJobInformationStagehand: any}) {
-    const {user, userDataIsLoading} = useJobKompassUser();
+export default function Dashboard({ getJobInformationStagehand }: { getJobInformationStagehand: any }) {
+    const { user, userDataIsLoading } = useJobKompassUser();
+    const { styles } = useJobKompassTheme();
     const supabase = createSupClientInstance();
     const { open } = useSidebar()
-  
-    if(userDataIsLoading) {
+
+    if (userDataIsLoading) {
         return (
-            <>
-            <div className={`${JK_Styles(open).bigDashboardContainerStyle}`}>
+            <div className="min-h-screen flex items-center justify-center">
                 <SplashScreen />
             </div>
-        </>
         )
-    } 
+    }
 
     return (
-        <div className={`${JK_Styles(open).bigDashboardContainerStyle} w-full min-h-screen h-max`}
-        style={{ backgroundColor: JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.fg }}
-    >
-        <div
-            className={`min-h-screen relative h-max w-full ${open ? JK_Styles(open).consoleOpenPadding : JK_Styles(open).consoleClosedPadding}`}
-            style={{
-                backgroundColor: 'transparent',
-                color: JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.textColor,
-            }}
-        >
-                <ConsoleHeader 
-                    headingText={`Good Morning, ${user?.[0]?.username?.charAt(0).toUpperCase() + user?.[0]?.username?.slice(1)}`}
-                    subTitleText={`Check out our features:`}
-                />
-                <FeatuureBoxes/>
-                <div className='h-[60px]'/>
-                <div className='flex md:flex-row flex-col md:min-h-[400px] h-max  justify-between '>
-                    <RecentJobs/>
-                    <div className='flex flex-col gap-5 justify-between md:w-[48%]'>
-                        <QuickAdd user={user} handleGetJobWithStageHand={getJobInformationStagehand} />
-                        <ShortCuts/>
+        <div className="min-h-screen w-full relative" style={{ backgroundColor: styles.background }}>
+            <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="w-full mx-auto h-max flex flex-col gap-5">
+                    <div style={{backgroundColor: styles.background}} className="sticky top-0 left-0 right-0 z-10">
+                        <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 pt-16">
+                            <div className="mb-6">
+                                <ConsoleHeader
+                                    headingText={`${user?.[0]?.username?.charAt(0).toUpperCase() + user?.[0]?.username?.slice(1)}`}
+                                    subTitleText={`Your workspace`}
+                                />
+                            </div>
+
+                            <div className="mb-6">
+                                <FeatureBoxes />
+                            </div>
+                        </div>
                     </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div className="space-y-8 transform transition-all duration-700 hover:translate-y-[-2px]">
+                            <RecentJobs />
+                        </div>
+                        <div className="space-y-8">
+                            <div className="transform transition-all duration-700 hover:translate-y-[-2px]">
+                                <QuickAdd user={user} handleGetJobWithStageHand={getJobInformationStagehand} />
+                            </div>
+                            <div className="transform transition-all duration-700 hover:translate-y-[-2px]">
+                                <ShortCuts />
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

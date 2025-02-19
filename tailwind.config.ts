@@ -9,6 +9,48 @@ export default {
   ],
   theme: {
   	extend: {
+  		animation: {
+  			'border-beam': 'border-beam calc(var(--duration)*1s) infinite linear',
+  			'fade-in': 'fade-in 0.5s ease-out',
+  			'fade-in-up': 'fade-in-up 0.5s ease-out',
+  			'text': 'text 5s ease infinite',
+  			'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+  		},
+  		keyframes: {
+  			'border-beam': {
+  				'100%': {
+  					'offset-distance': '100%'
+  				}
+  			},
+  			'fade-in': {
+  				'0%': {
+  					opacity: '0'
+  				},
+  				'100%': {
+  					opacity: '1'
+  				}
+  			},
+  			'fade-in-up': {
+  				'0%': {
+  					opacity: '0',
+  					transform: 'translateY(10px)'
+  				},
+  				'100%': {
+  					opacity: '1',
+  					transform: 'translateY(0)'
+  				}
+  			},
+  			'text': {
+  				'0%, 100%': {
+  					'background-size': '200% 200%',
+  					'background-position': 'left center'
+  				},
+  				'50%': {
+  					'background-size': '200% 200%',
+  					'background-position': 'right center'
+  				}
+  			}
+  		},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
@@ -66,10 +108,10 @@ export default {
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
   		},
-  		animation: {
-  			'border-beam': 'border-beam calc(var(--duration)*1s) infinite linear'
-  		},
-  		keyframes: {
+        customAnimation: {
+            'border-beam': 'border-beam calc(var(--duration)*1s) infinite linear'
+        },
+        customKeyframes: {
   			'border-beam': {
   				'100%': {
   					'offset-distance': '100%'

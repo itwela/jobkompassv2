@@ -12,8 +12,9 @@ interface JobKompassToastContextType {
     setToastIsVisible: (isVisible: boolean) => void;
     toastType: 'success' | 'error' | 'warning' | 'info' | 'none';
     setToastType: (type: 'success' | 'error' | 'warning' | 'info' | 'none') => void;
+    toastButton?: React.ReactNode;
+    setToastButton: (action: React.ReactNode | undefined) => void;
 }
-
 const JobKompassToastContext = createContext<JobKompassToastContextType | undefined>(undefined);
 
 export const JobKompassToastProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -22,6 +23,7 @@ export const JobKompassToastProvider: React.FC<{ children: ReactNode }> = ({ chi
     const [toastMessage, setToastMessage] = useState('');
     const [toastIsVisible, setToastIsVisible] = useState(false);
     const [toastType, setToastType] = useState<'success' | 'error' | 'warning' | 'info' | 'none'>('none');
+    const [toastButton, setToastButton] = useState<React.ReactNode>();
 
     const value = {
         toastHeader,
@@ -32,6 +34,8 @@ export const JobKompassToastProvider: React.FC<{ children: ReactNode }> = ({ chi
         setToastIsVisible,
         toastType,
         setToastType,
+        toastButton,
+        setToastButton,
     };
 
     return (

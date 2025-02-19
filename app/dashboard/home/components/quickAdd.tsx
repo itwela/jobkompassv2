@@ -1,20 +1,17 @@
 'use client'
 
+import { useJobKompassTheme } from "@/app/helpers/providers/themeProvider";
 import { useJobKompassUser } from "@/app/helpers/providers/userProvider";
-import { JK_Colors } from "@/app/jkUtilities_and_Tokens/colors";
-import JkGap from "@/app/jkUtilities_and_Tokens/components/jkGap";
-import { JK_Styles } from "@/app/jkUtilities_and_Tokens/styles";
-import { ThemeKeys } from "@/app/types";
 import { Card } from "@/components/ui/card";
 import { useSidebar } from "@/components/ui/sidebar";
-import { LucideArrowRight, LucideLoader } from "lucide-react";
+import { LucideArrowRight, LucideLoader, Link as LinkIcon } from "lucide-react";
 import { useState } from "react";
 
 export default function QuickAdd({
     user,
     handleGetJobWithStageHand
 }: {
-    user: any,
+    user: any
     handleGetJobWithStageHand: (url: string, userId: any) => Promise<any>
 }) {
     const [loading, setLoading] = useState(false);
@@ -22,26 +19,18 @@ export default function QuickAdd({
     const [error, setError] = useState<string | null>(null);
     const [url, setUrl] = useState('');
     const {open} = useSidebar()
-
-
-    const quickAdd = async (url: string, userId: any) => {
-       
+    const [isHovered, setIsHovered] = useState(false);
+    const { styles } = useJobKompassTheme();
+    const quickAdd = async (url: string) => {
         if (!url || url.length < 10) {
             setError('Please enter a URL');
             return;
-        }
-
-        if (!userId) {
-            setError('Please login');
-            return;
-        } else {
-            console.log("user id: ", userId);
         }
         
         try {
             setLoading(true);
             setError('');
-            const jobData = await handleGetJobWithStageHand(url, userId);
+            const jobData = await handleGetJobWithStageHand(url, user?.[0]?.user_id);
             if (jobData) {
                 console.log("success")
             } else {
@@ -56,54 +45,92 @@ export default function QuickAdd({
     }
 
     return (
-        <>
-        <div className="w-full h-[200px] flex flex-col gap-2">
-            <div>
-                <h2 className="text-2xl font-bold">Quick Add</h2>
-                <h3 style={{opacity: 0.618}}>in a rush?</h3>
+        <div className="transform transition-all duration-500">
+            <div className="flex items-center justify-between mb-6">
+                <div>
+                    <h2 style={{color: styles.text.title}} className="">Quick Add</h2>
+                    <p style={{color: styles.text.subtitle}} className="">Add a job to your applications</p>
+                </div>
+                <LinkIcon 
+                    className={styles.icon.default}
+                    size={24} 
+                    style={{
+                        color: isHovered ? styles.nav.colors.applications : undefined
+                    }}
+                />
             </div>
-            <JkGap/>
-            <Card className={`w-full mt-3 flex place-content-center flex-col gap-2 h-full rounded-lg ${JK_Styles(open).componentPadding}`}
-            style={{
-                backgroundColor: JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.fg_accent,
-                // box-shadow: X-offset Y-offset Blur Spread Color;
-                boxShadow: `6.18px 6.18px 0px ${JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.boxShadow}`    }}
+            
+            <Card 
+                className="relative overflow-hidden rounded-xl transition-all duration-300 hover:translate-y-[-2px]"
+                style={{
+                    backgroundColor: styles.card.background,
+                    border: styles.card.border
+                }}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
             >
-                <p className={`${JK_Styles(open).superSubtitleSize} !text-sm line-clamp-2`}
-                    style={{opacity: 0.618}}>
+                <div className="absolute inset-y-0 left-0 w-1"
+                    style={{
+                        backgroundColor: isHovered ? styles.nav.colors.applications : 'transparent'
+                    }}
+                />
+                <div className="relative z-10 space-y-6 p-8">
+                    <p className={styles.text.secondary}>
                         {error ? error : quickAddDescription}
-                </p>
-                <div className="flex gap-2 w-full h-[36.18px]  justify-between">
-                    <div 
-                        style={{
-                            color: JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.textColor,    
-                            backgroundColor: JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.boxShadow,
-                        }}
-                        className="w-full h-full relative rounded-lg">
+                    </p>
+
+                    <div className="relative">
+                        <div 
+                            className="relative overflow-hidden rounded-lg border transition-all duration-300 focus-within:border-white/30"
+                            style={{
+                                backgroundColor: isHovered ? `${styles.nav.colors.applications}10` : styles.card.accent,
+                                borderColor: styles.card.boxShadow
+                            }}
+                        >
                         <input
                             type="text"
                             value={url}
                             onChange={(e) => setUrl(e.target.value)}
-                            placeholder=""
-                            className="p-[6.618px] h-full outline-none w-[81.618%]  bg-transparent"
+                            placeholder="Paste job URL here..."
+                            className="w-full p-4 bg-transparent outline-none"
+                            style={{
+                                color: styles.text.primary,
+                            }}
                         />
-                        <button
-                            onClick={() => {error ? setError(null) : quickAdd(url, user?.[0]?.user_id)}}
-                            disabled={loading}
-                            className="absolute opacity-[61.8%] flex place-self-center top-0 right-0 w-[40px] h-full flex place-items-center place-content-center text-white rounded hover:bg-blue-600 disabled:bg-gray-400"
-                        >
-                            {loading ? <LucideLoader color={'#fff'} size={20}/> : error ? <LucideArrowRight color={'red'} size={20}/> : <LucideArrowRight color={JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.textColor} size={20}/>}
-                        </button>
+                            <button
+                                onClick={() => {error ? setError(null) : quickAdd(url)}}
+                                disabled={loading}
+                                className="absolute right-0 top-0 h-full px-4 flex items-center justify-center transition-all duration-300 hover:bg-white/10"
+                            >
+                                {loading ? 
+                                    <LucideLoader className={`animate-spin ${styles.text.secondary}`} size={20}/> : 
+                                    error ? 
+                                        <LucideArrowRight style={{ color: styles.status.rejected }} size={20}/> : 
+                                        <LucideArrowRight 
+                                            className="transition-transform duration-300 hover:translate-x-1" 
+                                            size={20}
+                                            style={{
+                                                color: isHovered ? styles.nav.colors.applications : styles.text.secondary
+                                            }}
+                                        />
+                                }
+                            </button>
+                        </div>
                     </div>
+
+                    {error && (
+                        <div className="flex items-center justify-between">
+                            <p style={{ color: styles.status.rejected }} className="text-sm">{error}</p>
+                            <button 
+                                onClick={() => {setError(null); setUrl('')}}
+                                className={`text-sm ${styles.text.tertiary} hover:${styles.text.primary} transition-colors`}
+                            >
+                                Clear
+                            </button>
+                        </div>
+                    )}
                 </div>
-                {error && (
-                    <>
-                    <p className="text-red-500 mt-2 place-self-center">{error}</p>
-                    <button onClick={() => {setError(null); setUrl('')}}>ok</button>
-                    </>
-                )}
             </Card>
         </div>
-        </>
     )
 }

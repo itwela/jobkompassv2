@@ -1,94 +1,100 @@
-import { useJobKompassUser } from "@/app/helpers/providers/userProvider";
-import { JK_Colors } from "@/app/jkUtilities_and_Tokens/colors";
-import { ThemeKeys } from "@/app/types";
+'use client';
+
+import { useJobKompassTheme } from "@/app/helpers/providers/themeProvider";
 import Link from "next/link";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { fastComponentDelayTime, mediumComponentDelayTime, slowComponentDelayTime } from "@/app/jkUtilities_and_Tokens/tokens";
-import { ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { ChevronRight, Briefcase, Building2, Sparkles, Bot } from "lucide-react";
+import { useState, useEffect } from "react";
+import { title } from "process";
 
-export default function FeatuureBoxes() {
-    const { user, userDataIsLoading } = useJobKompassUser();
-    const feaatureData = [
-        {
-            title: 'Applications',
-            subTitle: 'View your applications and track your progress',
-            vid: ""
-        },
-        {
-            title: 'Company Hub',
-            subTitle: 'View your applications and track your progress',
-            vid: ""
-        },
-        {
-            title: 'Career Assistant',
-            subTitle: 'View your applications and track your progress',
-            vid: ""
-        },
-    ]
-    const [featureIndexHovered, setFeatureIndexHovered] = useState<any>(null);
+export default function FeatureBoxes() {
+    const { styles } = useJobKompassTheme();
+    const [sidebarOpen, setSidebarOpen] = useState(true);
+    
+    useEffect(() => {
+        const handleSidebarChange = (event: CustomEvent) => {
+            setSidebarOpen(event.detail.open);
+        };
 
-    const handleFeatureMouseEnter = (index: number) => {
-        setFeatureIndexHovered(index);
-    };
+        window.addEventListener('sidebarStateChange', handleSidebarChange as EventListener);
+        return () => {
+            window.removeEventListener('sidebarStateChange', handleSidebarChange as EventListener);
+        };
+    }, []);
 
-    const handleFeatureMouseLeave = () => {
-        setFeatureIndexHovered(null);
-    };
+    const featureData = [{
+        title: 'Applications',
+        subTitle: 'Track your job applications',
+        icon: Briefcase,
+        url: '/dashboard/applications',
+        color: styles.nav.colors.applications,
+        delay: fastComponentDelayTime
+    }, {
+        title: 'Career Assistant',
+        subTitle: 'Get personalized career guidance',
+        icon: Sparkles,
+        url: '/dashboard/careerassistant',
+        color: styles.nav.colors.careerAssistant,
+        delay: mediumComponentDelayTime
+    }, {
+        title: 'Workers',
+        subTitle: 'Automate your job search',
+        icon: Bot,
+        url: '/dashboard/workers',
+        color: styles.nav.colors.workers,
+        delay: slowComponentDelayTime
+    },
+];
+
+    const [featureIndexHovered, setFeatureIndexHovered] = useState<number | null>(null);
 
     return (
-        <>
-        <div className="flex justify-between w-full">
-            <div className="w-max my-5 flex flex-col gap-5">
-                
-                <Link  href={'/dashboard/applications'} className="w-full h-[40px]">
-                    <BlurFade onMouseEnter={() => handleFeatureMouseEnter(0)} onMouseLeave={() => handleFeatureMouseLeave()} className="h-full flex place-items-center justify-between px-3 w-full rounded-lg" delay={fastComponentDelayTime} inView
-                        style={{
-                            backgroundColor: featureIndexHovered === 0 ? JK_Colors.lightBlue : JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.fg_accent,
-                            color: featureIndexHovered === 0 ? JK_Colors.blue : JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.textColor,
-                            boxShadow: `3.18px 3.18px 0px ${JK_Colors.lightBlueAccent}`
-                            }}>
-                            <>
-                            <p className="font-bold">{feaatureData[0].title}</p>
-                            <ChevronRight color={JK_Colors.lightBlueAccent} size={15}/>
-                            </>
-                    </BlurFade>
-                </Link>
-            
-                <Link href={'/dashboard/applications'} className="w-full h-[40px]">
-                    <BlurFade onMouseEnter={() => handleFeatureMouseEnter(1)} onMouseLeave={() => handleFeatureMouseLeave()} className="h-full flex place-items-center justify-between px-3 w-full rounded-lg" delay={fastComponentDelayTime} inView
-                        style={{
-                            backgroundColor: featureIndexHovered === 1 ? JK_Colors.blue : JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.fg_accent,
-                            color: featureIndexHovered === 1 ? JK_Colors.white : JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.textColor,
-                            boxShadow: `3.18px 3.18px 0px ${JK_Colors.blue_accent}`
-                        }}>
-                            <>
-                            <p className="font-bold">{feaatureData[1].title}</p>
-                            <ChevronRight color={JK_Colors.blue_accent} size={15}/>
-                            </>
-                    </BlurFade>
-                </Link>
-
-
-                <Link href={'/dashboard/careerassistant'} className="w-max h-[40px]">
-                    <BlurFade onMouseEnter={() => handleFeatureMouseEnter(2)} onMouseLeave={() => handleFeatureMouseLeave()} className="h-full flex gap-3 place-items-center justify-between px-3 w-full rounded-lg" delay={slowComponentDelayTime} inView
-                        style={{
-                            backgroundColor: featureIndexHovered === 2 ? JK_Colors.indigo : JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.fg_accent,
-                            color: featureIndexHovered === 2 ? JK_Colors.white : JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.textColor,
-                            boxShadow: `3.18px 3.18px 0px ${JK_Colors.indigo_accent}`
-                        }}>
-                            <>
-                            <p className="font-bold">{feaatureData[2].title}</p>
-                            <ChevronRight color={JK_Colors.indigo_accent} size={15}/>
-                            </>
-                    </BlurFade>
-                </Link>
-            </div>
-
-            <div className="w-[70%] flex place-items-center place-content-center">
-                <p className="font-bold">Cool edited video will go here</p>
-            </div>
+        <div className={`grid grid-cols-1 md:grid-cols-3 gap-4 w-full transition-all duration-300 ${sidebarOpen ? 'md:pl-0' : 'md:pl-0'}`}>
+            {featureData.map((feature, index) => {
+                const Icon = feature.icon;
+                return (
+                    <Link key={index} href={feature.url}>
+                        <div
+                            onMouseEnter={() => setFeatureIndexHovered(index)}
+                            onMouseLeave={() => setFeatureIndexHovered(null)}
+                            className="group relative overflow-hidden rounded-lg transition-all duration-300 h-full hover:translate-y-[-2px]"
+                            style={{
+                                backgroundColor: styles.card.background,
+                                border: styles.card.border
+                            }}
+                        >
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 w-1"
+                                    style={{
+                                        backgroundColor: featureIndexHovered === index ? feature.color : 'transparent'
+                                    }}
+                                />
+                                <div className="p-4">
+                                    <div className="flex items-center gap-2">
+                                        <div className="p-1.5 rounded-md transition-all duration-300"
+                                            style={{
+                                                backgroundColor: featureIndexHovered === index ? `${feature.color}10` : 'transparent'
+                                            }}>
+                                            <Icon 
+                                                size={20}
+                                                className={`${styles.icon.default} transition-colors duration-300`}
+                                                style={{
+                                                    color: featureIndexHovered === index ? feature.color : styles.text.primary
+                                                }}
+                                            />
+                                        </div>
+                                        <div>
+                                            <h3 style={{color: styles.text.primary}} className={`text-sm font-medium`}>{feature.title}</h3>
+                                            <p style={{color: styles.text.secondary}} className={`text-xs mt-0.5`}>{feature.subTitle}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </Link>
+                );
+            })}
         </div>
-        </>
-    )
+    );
 }

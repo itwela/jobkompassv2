@@ -18,8 +18,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <JobKompassLandingProvider>
               <SidebarProvider>
 
-                <AppSidebar />
-
+                  <AppSidebar />
                   {children}
 
               </SidebarProvider>

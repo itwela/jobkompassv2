@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
     },
   },
   webpack: (config) => {
+    // Keep existing alias configurations
     config.resolve.alias = {
       ...config.resolve.alias,
       canvas: false,
@@ -15,6 +16,7 @@ const nextConfig: NextConfig = {
       "sharp$": false,
       "onnxruntime-node$": false,
     };
+    
     return config;
   },
 };

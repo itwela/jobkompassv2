@@ -1,41 +1,21 @@
 'use client'
 
+import { JKLogoSVG } from '@/app/assets/svgs/logo'
+import { useJobKompassApplicationBuddy } from '@/app/helpers/providers/applicaitonBuddyProvider'
 import { JobKompassJobsType, useJobKompassJobs } from '@/app/helpers/providers/jobsProvider'
+import { useJobKompassTheme } from '@/app/helpers/providers/themeProvider'
 import { useJobKompassUser } from '@/app/helpers/providers/userProvider'
 import DateScroller from '@/app/jkComponents/jkDateScroller'
 import { JK_Colors } from '@/app/jkUtilities_and_Tokens/colors'
 import { JK_Styles } from '@/app/jkUtilities_and_Tokens/styles'
 import { ThemeKeys } from '@/app/types'
-import { useRef, useState } from 'react'
-import JobFilters from './jobFIlters'
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
-import { JKLogoSVG } from '@/app/assets/svgs/logo'
-import { ArrowDown, ArrowDown01, ArrowDown10, ArrowDownAz, ArrowDownCircle, ArrowDownCircleIcon, Eye, EyeOff, FileText, FileUser, NotebookPen, X } from 'lucide-react'
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog"
-import ApplicationBuddy from './applicationBuddy'
-import { 
-    Terminal,
-    AnimatedSpan,
-    TypingAnimation,
- } from "@/src/components/magicui/terminal"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Dialog, DialogContent, DialogFooter, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { useSidebar } from '@/components/ui/sidebar'
-import JkGap from '@/app/jkUtilities_and_Tokens/components/jkGap'
+import { ArrowDown, Eye, EyeOff, FileText, FileUser, NotebookPen } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import ApplicationBuddy from './applicationBuddy'
+import JobFilters from './jobFIlters'
 
 export default function JobsList() {
     const scrollContainerRef = useRef<HTMLDivElement>(null)
@@ -44,19 +24,20 @@ export default function JobsList() {
     const { open } = useSidebar()
     const [searchQuery, setSearchQuery] = useState('')
     const [showDescription, setShowDescription] = useState(false)
-    // Dummy jobs data
-    // const dummyJobs: JobKompassJobsType[] = [
-    //     { Title: "Frontend Developer", Company: "TechCorp", "Date Applied": "2024-01-15", Link: "techcorp.com/jobs", Keywords: ["React", "TypeScript"], "Resume used": "frontend_v2.pdf", Status: "Applied", Interviewed: false },
-    //     { Title: "Software Engineer", Company: "InnovateSoft", "Date Applied": "2024-01-14", Link: "innovatesoft.com/careers", Keywords: ["Node.js", "AWS"], "Resume used": "fullstack_v1.pdf", Status: "Interview", Interviewed: false },
-    //     { Title: "UI/UX Designer", Company: "DesignHub", "Date Applied": "2024-01-13", Link: "designhub.io/jobs", Keywords: ["Figma", "Adobe XD"], "Resume used": "design_v3.pdf", Status: "Rejected", Interviewed: false },
-    //     { Title: "Backend Developer", Company: "DataFlow", "Date Applied": "2024-01-12", Link: "dataflow.net/positions", Keywords: ["Python", "Django"], "Resume used": "backend_v2.pdf", Status: "Interested", Interviewed: false },
-    //     { Title: "DevOps Engineer", Company: "CloudTech", "Date Applied": "2024-01-11", Link: "cloudtech.com/openings", Keywords: ["Docker", "Kubernetes"], "Resume used": "devops_v1.pdf", Status: "Interview", Interviewed: false },
-    //     { Title: "Mobile Developer", Company: "AppWorks", "Date Applied": "2024-01-10", Link: "appworks.dev/jobs", Keywords: ["React Native", "iOS"], "Resume used": "mobile_v2.pdf", Status: "Applied", Interviewed: false },
-    //     { Title: "Full Stack Developer", Company: "WebSolutions", "Date Applied": "2024-01-09", Link: "websolutions.com/careers", Keywords: ["MERN Stack"], "Resume used": "fullstack_v3.pdf", Status: "Pending", Interviewed: false },
-    //     { Title: "System Architect", Company: "ArchSystems", "Date Applied": "2024-01-08", Link: "archsystems.org/jobs", Keywords: ["System Design", "AWS"], "Resume used": "architect_v1.pdf", Status: "Interview", Interviewed: false },
-    //     { Title: "QA Engineer", Company: "QualityTech", "Date Applied": "2024-01-07", Link: "qualitytech.com/positions", Keywords: ["Selenium", "Jest"], "Resume used": "qa_v2.pdf", Status: "Applied", Interviewed: false },
-    //     { Title: "Product Manager", Company: "ProductHub", "Date Applied": "2024-01-06", Link: "producthub.io/careers", Keywords: ["Agile", "Scrum"], "Resume used": "pm_v1.pdf", Status: "Rejected", Interviewed: false }
-    // ]
+    const { styles } = useJobKompassTheme()
+    const { isOpen: isBuddyOpen, setIsOpen: setIsBuddyOpen } = useJobKompassApplicationBuddy()
+    const [sidebarOpen, setSidebarOpen] = useState(true)
+
+    useEffect(() => {
+        const handleSidebarChange = (event: CustomEvent) => {
+            setSidebarOpen(event.detail.open);
+        };
+
+        window.addEventListener('sidebarStateChange', handleSidebarChange as EventListener);
+        return () => {
+            window.removeEventListener('sidebarStateChange', handleSidebarChange as EventListener);
+        };
+    }, []);
 
     // Filter jobs based on search query
     const filteredJobs = userJobs?.filter(job => 
@@ -65,100 +46,116 @@ export default function JobsList() {
     )
 
     const filterColors = {
-        Interested: JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.fg_accent,
-        Applied: JK_Colors?.lightBlue,
-        Interviewing: JK_Colors.blue,
-        Offer: JK_Colors.indigo,
-        Rejected: JK_Colors.purple,
-        Ghosted: JK_Colors.darkGrey,
+        Interested: styles.status.interested,
+        Applied: styles.status.applied,
+        Interviewing: styles.status.interviewing,
+        Offer: styles.status.offer,
+        Rejected: styles.status.rejected,
+        Ghosted: styles.status.ghosted,
     }
+
+    const jobListRef = useRef<HTMLDivElement>(null)
+    const screenWxH = useRef<HTMLDivElement>(null)
+    const [searchWidth, setSearchWidth] = useState<number>(0)
+    const fullScreenRef = useRef<HTMLDivElement>(null)
+
+    // Update search width when jobListRef changes or sidebar state changes
+    useEffect(() => {
+        if (jobListRef.current) {
+            setSearchWidth(jobListRef.current.offsetWidth)
+        }
+    }, [jobListRef.current, sidebarOpen])
+
+    // Update search width when window resizes
+    useEffect(() => {
+        const handleResize = () => {
+            if (jobListRef.current) {
+                setSearchWidth(jobListRef.current.offsetWidth)
+            }
+        }
+
+        window.addEventListener('resize', handleResize)
+        return () => window.removeEventListener('resize', handleResize)
+    }, [])
 
     return (
         <>
+        {isBuddyOpen && (
+            <div ref={fullScreenRef} className="fixed place-self-start inset-0 flex flex-col items-center justify-center w-screen backdrop-blur-sm left-0 z-[20]" style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}></div>
+        )}
+
         <div className='flex flex-col w-full h-full'>
-            
-        <div className="flex flex-col gap-2 w-full max-h-fit" style={{ overflow: 'clip' }}>
+            <div className="flex flex-col gap-2 w-full max-h-fit" style={{ overflow: 'clip' }}>
                 <input
                     type="text"
                     placeholder="Search"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full my-2 p-2 outline-none"
+                    className="my-2 p-4 outline-none rounded-xl transition-all duration-300 backdrop-blur-sm border border-opacity-20 hover:border-opacity-40 focus:border-opacity-60"
                     style={{
-                        backgroundColor: JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.fg_accent,
-                        borderColor: JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.boxShadow
+                        width: `${searchWidth}px`,
+                        backgroundColor: `${styles.card.background}40`,
+                        borderColor: styles.card.boxShadow,
+                        color: styles.text.primary.split(' ')[0],
+                        boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.1)',
+                        backdropFilter: 'blur(4px)',
+                        WebkitBackdropFilter: 'blur(4px)'
                     }}
                 />
-                <JobFilters filterColors={filterColors}/>
+                <JobFilters searchQuery={searchQuery} setSearchQuery={setSearchQuery} filterColors={filterColors}/>
             </div>
 
-            <div className="relative h-[328px] w-full justify-between flex gap-3">
-                
-                {/* this is the shadow that fades the jobs into nothing :D */}
+            <div ref={jobListRef} className={`relative h-[328px] w-full justify-between flex gap-3 transition-all duration-300 ${sidebarOpen ? '' : 'md:ml-0'}`}>
                 <div className="absolute top-0 left-0 right-0 h-[10px] w-full z-10 pointer-events-none"
                     style={{
-                        background: `linear-gradient(to bottom, ${JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.fg}, transparent)`
+                        background: `linear-gradient(to bottom, ${styles.background}, transparent)`
                 }}/>
-                <div ref={scrollContainerRef} className="h-full grid grid-cols-2 no-scrollbar overflow-y-scroll w-full gap-5">
+                <div ref={scrollContainerRef} className="h-full flex flex-wrap md:flex-nowrap md:grid md:grid-cols-2 no-scrollbar overflow-y-scroll w-full gap-5">
                     
 
                     {filteredJobs?.map((job: JobKompassJobsType, i: number) => (
                         <div key={i} className='h-max w-full pt-[5%] w-full'>
 
-                                <Card key={i} className='w-full pt-3  relative h-[200px] overflow-hidden flex flex-col gap-2 px-5 rounded-lg mb-3'
+                                <Card key={i} className='w-full relative pt-3 relative h-[400px] overflow-hidden flex flex-col gap-2 px-5 rounded-lg mb-3 transform transition-all duration-700 hover:translate-y-[-2px]'
                                     style={{
-                                        color: JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.textColor,
-                                        backgroundColor: JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.fg_accent,
-                                        boxShadow: `6.18px 6.18px 0px ${JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.boxShadow}`
+                                        color: styles.text.primary,
+                                        backgroundColor: styles.card.background,
+                                        border: styles.card.border
                                     }}>
+                                     
                                         <div className='pt-2 pb-8 w-full h-[90%] no-scrollbar overflow-y-scroll'>
 
-                                            <div className='w-[6.18px] cursor-pointer outline outline-[1px] left-0 top-0 absolute  rounded-l-lg rounded-bl-lg absolute h-full'
-                                                style={{
-                                                    backgroundColor: filterColors[job.Status as keyof typeof filterColors]
-                                                }}
-                                            >
-                                            </div>
 
                                             <CardHeader className='p-0'>
                                                 <div className="flex pb-2 justify-between">
                                                     <CardDescription className={`${JK_Styles(open).superSubtitleSize} font-bold  w-[50%] opacity-[61.8%]`}>{job.Company}</CardDescription>
-                                                    <div className="flex gap-1">
-                                                        <FileText size={15} />
-                                                        <FileUser size={15} />                            
-                                                        <Dialog >
+                                                    <div className="flex gap-1 w-max  h-max">
+                                                        <FileText className='cursor-pointer' size={15} />
+                                                        <FileUser className='cursor-pointer' size={15} />                            
+                                                        <Dialog>
                                                             <DialogTrigger asChild>
-                                                                <NotebookPen size={15} />
+                                                                <NotebookPen onClick={() => {setIsBuddyOpen(!isBuddyOpen);}} className='cursor-pointer' size={15} />
                                                             </DialogTrigger>
 
-                                                            <DialogContent className='!w-max !h-[61.8%] !border-none !outline-none' style={{  color: JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.textColor, }}>
+                                                            <DialogContent ref={fullScreenRef} className='!w-max h-max !border-none !outline-none ' style={{ color: styles.text.primary }}>
 
 
-                                                                <Terminal  style={{ color: JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.textColor, backgroundColor: JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.fg_accent,}} className="sm:max-w-[425px] relative">
-                                                                    
-                                                                    <DialogClose 
-                                                                    style={{
-                                                                        color: JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.textColor,
-                                                                    }}
-                                                                    className='absolute p-2  z-[10] top-[1%] right-2'>
-                                                                        <X style={{ color: JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.textColor }} className="h-4 w-4" />
-                                                                        </DialogClose>
+                                                                <div style={{ 
+                                                                    color: styles.text.primary,
+                                                                    // backgroundColor: styles.card.background
+                                                                }}>
+                                                                    <DialogTitle> 
+                                                                    </DialogTitle>
 
-                                                                    <DialogHeader className='flex flex-col w-full place-items-start'>
-                                                                        <DialogTitle className='w-full text-left flex place-items-center'><JKLogoSVG size='small'/> Application Buddy</DialogTitle>
-                                                                        <DialogDescription className='text-left w-full whitespace-normal'>
-                                                                            Get those repeated questions 
-                                                                            answered, copy and paste 
-                                                                            straight into your application.
-                                                                        </DialogDescription>
-                                                                    </DialogHeader>
-
-                                                                    <ApplicationBuddy/>
+                                                                    <DialogContent ref={fullScreenRef} style={{backgroundColor: styles.background
+                                                                    }} >
+                                                                        <ApplicationBuddy/>
+                                                                    </DialogContent>
 
                                                                     <DialogFooter>
                                                                     </DialogFooter>
 
-                                                                </Terminal>
+                                                                </div>
 
                                                             </DialogContent>
                                                         </Dialog>
@@ -169,7 +166,19 @@ export default function JobsList() {
                                                         {job.Title}
                                                     </a>
                                                 </CardTitle>
-                                                <CardDescription className={`${JK_Styles(open).superSubtitleSize} font-bold  w-[50%] opacity-[61.8%]`}>{job['Date Applied']}</CardDescription>
+                                                <CardDescription className={`${JK_Styles(open).superSubtitleSize} font-bold  flex justify-between  w-full `}>
+                                                   <p className="opacity-[61.8%]">
+                                                    {job['Date Applied']}
+                                                   </p>
+                                                    <div className='w-max py-1 px-2 text-xs font-medium rounded-lg'
+                                            style={{
+                                                backgroundColor: filterColors[job.Status as keyof typeof filterColors],
+                                                color: '#ffffff'
+                                            }}
+                                        >
+                                            {job.Status}
+                                        </div>
+                                                </CardDescription>
                                                 {/* <div className="flex gap-1">
                                                 </div> */}
                                                 <div className='h-[5px]'></div>
@@ -189,7 +198,7 @@ export default function JobsList() {
 
                                                 {showDescription === true && (
                                                     <>
-                                                    <CardDescription style={{ color: JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.textColor }}
+                                                    <CardDescription style={{ color: styles.text.primary }}
                                                         className={`${JK_Styles(open).superSubtitleSize} opacity-[81.618%]`}>
                                                             {job.Description}
                                                     </CardDescription>
@@ -198,6 +207,7 @@ export default function JobsList() {
 
                                             </CardHeader>
 
+                                            <div className='h-[15px]'></div>
                                             <div className='h-[15px]'></div>
                                             <CardContent className='w-full h-max p-0 flex flex-col gap-2'>
                                                
@@ -216,19 +226,18 @@ export default function JobsList() {
                                                     </div>
 
                                                     <div className='w-full p-0 flex flex-wrap gap-2'>
-
                                                         {job?.Keywords?.map((keyword: string, i: number) => (
-                                                            <div key={i} className='p-2 w-max rounded-lg'
-                                                            style={{
-                                                                backgroundColor: JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.fg_accent,
-                                                                boxShadow: `1.618px 1.618px 0px ${JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.boxShadow}`
-                                                            }}
+                                                            <span key={i} 
+                                                                className="px-3 py-1 text-xs rounded-full transition-colors hover:bg-white/10"
+                                                                style={{
+                                                                    backgroundColor: styles.card.accent,
+                                                                    border: styles.card.border,
+                                                                    color: styles.text.secondary
+                                                                }}
                                                             >
                                                                 {keyword}
-                                                            </div>
+                                                            </span>
                                                         ))}
-
-
                                                     </div>
 
                                                     <div className='h-[15px]'></div>
@@ -249,10 +258,11 @@ export default function JobsList() {
 
                                                     <div className='w-full p-0 flex flex-wrap gap-2'>
 
-                                                            <div className='p-2 w-max rounded-lg'
+                                                            <div className='px-3 py-1 text-xs rounded-full transition-colors hover:bg-white/10'
                                                             style={{
-                                                                backgroundColor: JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.fg_accent,
-                                                                boxShadow: `1.618px 1.618px 0px ${JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.boxShadow}`
+                                                                backgroundColor: styles.card.accent,
+                                                                border: styles.card.border,
+                                                                color: styles.text.secondary
                                                             }}
                                                             >
                                                                 {job['Resume used'] || 'No Resume Selected'}
@@ -261,21 +271,6 @@ export default function JobsList() {
                                                         </div>
 
                                                     <div className='h-[15px]'></div>
-
-                                                    {/* Status */}
-                                                    <div className='flex gap-3 w-full justify-between place-items-center'>
-                                                    
-                                                        <div className='flex gap-1 place-items-start'>
-                                                            <JKLogoSVG size='small'/>
-                                                            <p className='pl-[1px] font-bold'>Status</p>
-                                                        </div>
-
-                                                        <div style={{backgroundColor: JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.textColor}} className='h-[0.5px] opacity-[61.8%] w-full'></div>
-
-                                                        <ArrowDown size={25} className='place-self-center'/>
-
-                                                    </div>
-
 
 
                                             </CardContent>
@@ -296,7 +291,7 @@ export default function JobsList() {
                         }}>
                     </div>
                     {/* NOTE This div is here to allow for users to see all jobs. A placeholder that will not be touched. */}
-                    <div className='w-full h-[60px] flex gap-2 p-5 rounded-lg place-items-center mb-3'
+                    <div className='w-full h-[10px] flex gap-2 p-5 rounded-lg place-items-center mb-3'
                         style={{
                             backgroundColor: "transparent"
                         }}>
@@ -312,7 +307,7 @@ export default function JobsList() {
                 {/* this is the shadow that fades the jobs into nothing :D */}
                 <div className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none"
                     style={{
-                        background: `linear-gradient(to bottom, transparent, ${JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.fg})`
+                        background: `linear-gradient(to bottom, transparent, ${styles.background})`
                 }}
                 />
             </div>

@@ -41,7 +41,7 @@ export async function getCurrentUser() {
       return null;
     }
     
-    console.log('User found:', user);
+    console.log('User found:');
     return user.id;
     
   } catch (error) {
@@ -54,7 +54,6 @@ export async function getCurrentUser() {
 export const getUserInfo = async (id: string) => {
     
   try {
-      console.log('getting user info', id);
       const { data: profileData } = await supabaseClientClient
           .schema(psch)
           .from(uta)
@@ -70,7 +69,6 @@ export async function getUserJobs(userId: string) {
      
     try {
         // Your implementation here
-        console.log('Fetching jobs for user:', userId);
         const { data: jobsData } = await supabaseClientClient
             .schema(psch as string)
             .from(jta as string)
