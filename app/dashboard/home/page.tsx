@@ -22,7 +22,7 @@ export default function Dashboard({ getJobInformationStagehand }: { getJobInform
 
     if (userDataIsLoading) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
+            <div className="fixed w-screen z-[30] h-screen flex items-center justify-center">
                 <SplashScreen />
             </div>
         )
@@ -32,8 +32,8 @@ export default function Dashboard({ getJobInformationStagehand }: { getJobInform
         <div className="min-h-screen w-full relative" style={{ backgroundColor: styles.background }}>
             <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="w-full mx-auto h-max flex flex-col gap-5">
-                    <div style={{backgroundColor: styles.background}} className="sticky top-0 left-0 right-0 z-10">
-                        <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 pt-16">
+                    <div style={{backgroundColor: styles.background}} className="sm:sticky top-0 left-0 right-0 z-10">
+                        <div className="w-full mx-auto pt-16">
                             <div className="mb-6">
                                 <ConsoleHeader
                                     headingText={`${user?.[0]?.username?.charAt(0).toUpperCase() + user?.[0]?.username?.slice(1)}`}

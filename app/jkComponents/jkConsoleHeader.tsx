@@ -6,7 +6,7 @@ import { TextAnimate } from "@/components/ui/text-animate";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { textComponentDelayTime } from "../jkUtilities_and_Tokens/tokens";
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
-import { JKLogoSVG } from "../assets/svgs/logo";
+import { JKLogoSVG } from "../../public/assets/svgs/logo";
 import { useJobKompassUser } from "@/app/helpers/providers/userProvider";
 import { useJobKompassTheme } from "../helpers/providers/themeProvider";
 

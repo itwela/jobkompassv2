@@ -19,7 +19,7 @@ export default function JkBottomNavRoutes() {
     },
     {
       title: "Landing",
-      url: "#",
+      url: "/",
       icon: ArrowLeft,
       color: styles.nav.colors.home
     },

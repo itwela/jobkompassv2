@@ -1,6 +1,6 @@
 'use client'
 
-import { JKLogoSVG } from '@/app/assets/svgs/logo'
+import { JKLogoSVG } from '@/public/assets/svgs/logo'
 import { JobKompassJobsType } from '@/app/helpers/providers/jobsProvider'
 import { useJobKompassTheme } from '@/app/helpers/providers/themeProvider'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -58,7 +58,8 @@ export default function JKJobCard({ job, onBuddyOpen, filterColors }: JKJobCardP
                                         <DialogClose className='absolute p-2 z-[10] top-[1%] right-2'>
                                             <X className="h-4 w-4" style={{ color: styles.text.primary }} />
                                         </DialogClose>
-                                        <DialogHeader>
+
+                                        <DialogHeader className='p-6'>
                                             <DialogTitle className="flex items-center" style={{ color: styles.text.primary }}>
                                                 <JKLogoSVG size="small"/>
                                                 <span className="ml-2">Application Buddy</span>
@@ -67,6 +68,7 @@ export default function JKJobCard({ job, onBuddyOpen, filterColors }: JKJobCardP
                                                 Get quick answers for common application questions
                                             </DialogDescription>
                                         </DialogHeader>
+
                                         <ApplicationBuddy/>
                                         <DialogFooter/>
                                     </div>

@@ -20,6 +20,14 @@ import { useRef } from "react";
 import { useJobKompassToast } from "@/app/helpers/providers/toastProvider";
 import { useJobKompassResume } from "@/app/helpers/providers/JobKompassResumeProvider";
 import { themes } from "./components/resume/resumeTemplates";
+import JkGradientImage from "@/app/jkComponents/jkGradientImage";
+import { useJobKompassAssets } from "@/app/helpers/hooks/useJobKompassAssets";
+import Image from "next/image";
+import robot from './../../../public/assets/images/robot.png'
+import bluegraient from './../../../public/assets/images/b-grad-1.png'
+import bluegraient2 from './../../../public/assets/images/b-grad-2.png'
+import map from './../../../public/assets/images/map-layout.png'
+import JkGradientVideo from "@/app/jkComponents/jkGradientVideo";
 
 export default function CareerAssistantClient() {
     const { user, userDataIsLoading } = useJobKompassUser();
@@ -27,6 +35,7 @@ export default function CareerAssistantClient() {
     const { setToastIsVisible, setToastMessage, setToastHeader } = useJobKompassToast();
     const { open } = useSidebar();
     const { currentTheme, setCurrentTheme, currentThemeName } = useJobKompassResume()
+    const { getAsset } = useJobKompassAssets();
     const {
         wantsToPreviewResume,
         setWantsToPreviewResume,
@@ -54,10 +63,10 @@ export default function CareerAssistantClient() {
 
     if (userDataIsLoading) {
         return (
-            <div className={`${JK_Styles(open).bigDashboardContainerStyle}`}>
+            <div className="fixed w-screen z-[30] h-screen flex items-center justify-center">
                 <SplashScreen />
             </div>
-        );
+        )
     }
 
     if (startEditingDocument) {
@@ -82,9 +91,23 @@ export default function CareerAssistantClient() {
     return (
         <>
             <JobKompassToast />
+
+            <div ref={refOfThisComponent} className="fixed w-screen z-[-30] bg-red-200 h-screen"/>
+
             <div className="min-h-screen w-full relative" style={{ backgroundColor: styles.background }}>
+                <JkGradientImage
+                    imageSrc={getAsset('mapLayout')}
+                    imageRight="-20px"
+                    imageTop="-200px"
+                    opacity="30%"
+                    flip
+                    needsInversion
+                />
+                {/* <JkGradientVideo
+                videoName="gradient4Compressed.mp4"
+                /> */}
                 <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 py-16">
-                    <div className="w-full mx-auto h-max flex flex-col gap-5">
+                    <div className="w-full z-[3] relative mx-auto h-max flex flex-col gap-5">
                         <div className="">
                             <ConsoleHeader
                                 headingText="Career Assistant"
@@ -112,13 +135,11 @@ export default function CareerAssistantClient() {
                             />
 
                             <JkGap />
-                            <h2  style={{color: styles.text.primary}} className={`${JK_Styles(open).headingSize}`}>Templates</h2>
+                            <h2 style={{color: styles.text.primary}} className={`${JK_Styles(open).headingSize}`}>Templates</h2>
                             <JkGap />
 
                             {/* resume choices */}
                             <ResumeChoices />
-
-                            {/* cover letter choices */}
 
                             {/* start editing */}
                             {myResumeTemplateSelection && (

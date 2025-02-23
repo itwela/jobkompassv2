@@ -4,16 +4,8 @@ import { useJobKompassTheme } from "@/app/helpers/providers/themeProvider";
 import { JK_Styles } from "@/app/jkUtilities_and_Tokens/styles";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { memo } from "react";
+import { JkSelectProps } from "../dashboard/careerassistant/interfaces/careerAssistantInterfaces";
 
-export interface JkSelectProps {
-    user: any;
-    label: string;
-    value: string;
-    triggerText: string;
-    options: Array<{ value: string; label: string; }>;
-    onChange: (value: string) => void;
-    className?: string;
-}
 
 export const JkSelect = memo(
     ({
@@ -23,6 +15,7 @@ export const JkSelect = memo(
         triggerText,
         options,
         onChange,
+        onMouseEnter,
         className
     }: JkSelectProps) => {
         const { styles } = useJobKompassTheme();
@@ -36,7 +29,6 @@ export const JkSelect = memo(
                         style={{
                             backgroundColor: styles.form.select.background,
                             color: styles.form.select.text,
-                            border: styles.form.select.border
                         }}
                     >
                         <SelectValue placeholder={triggerText} />
@@ -45,7 +37,6 @@ export const JkSelect = memo(
                         style={{
                             backgroundColor: styles.background,
                             backdropFilter: 'blur(8px)',
-                            border: styles.form.select.border
                         }}
                     >
                         <SelectGroup>
@@ -57,6 +48,7 @@ export const JkSelect = memo(
                                     style={{
                                         color: styles.form.select.text
                                     }}
+                                    onMouseEnter={onMouseEnter}
                                 >
                                     {option.label}
                                 </SelectItem>

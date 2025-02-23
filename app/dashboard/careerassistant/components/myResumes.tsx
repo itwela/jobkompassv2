@@ -111,18 +111,19 @@ export default function MyResumes ({parentRef}: {parentRef: React.RefObject<HTML
         generatePDFPreview();
     }
 
-    useEffect(() => {
-        if (myResumeTemplateSelection) {
-            window.scrollTo({
-                top: document.documentElement.scrollHeight,
-                behavior: 'smooth'
-            });
-        }
-    }, [myResumeTemplateSelection]);
+    // useEffect(() => {
+    //     if (myResumeTemplateSelection) {
+    //         window.scrollTo({
+    //             top: document.documentElement.scrollHeight,
+    //             behavior: 'smooth'
+    //         });
+    //     }
+    // }, [myResumeTemplateSelection]);
 
 
     return (
         <>
+        
         <div style={{color: styles.text.primary}} className="w-full h-max">
 
             <p>View and even update your saved resumes!</p>
@@ -139,7 +140,7 @@ export default function MyResumes ({parentRef}: {parentRef: React.RefObject<HTML
                 </span> 
             </div>
 
-            <div className="flex flex-col w-full gap-2 my-5 h-[200px]">
+            <div className="flex flex-col w-full gap-2 my-5 h-max">
                
                 {resumeNames?.map((resume, index) => {
                     return (

@@ -7,8 +7,8 @@ import { JkInput } from "@/app/jkComponents/jkInput";
 import { JkSelect } from "@/app/jkComponents/jkSelect";
 import { JkPopUp } from "@/app/jkComponents/jkPopUp";
 import { JkCombobox } from "@/app/jkComponents/jkCombobox";
-import { Briefcase, GraduationCap, LucideGraduationCap, LucidePlus, Plus, Sparkles, User, X } from "lucide-react";
-import { useRef } from "react";
+import { Bot, Briefcase, DownloadCloud, GraduationCap, LucideGraduationCap, LucidePlus, Plus, Sparkles, User, X } from "lucide-react";
+import { useRef, useState } from "react";
 import { JkEducationFields } from "@/app/jkComponents/jkEducationFields";
 import { JkExperienceFields } from "@/app/jkComponents/jkExperienceFields";
 import { Download } from "lucide-react";
@@ -16,6 +16,7 @@ import jsPDF from 'jspdf';
 import html2canvas from "html2canvas";
 import { TechBroProps } from "./resume/resumeTemplates";
 import { JkProjectFields } from "@/app/jkComponents/jkProjectFields";
+import { useJobKompassResume } from "@/app/helpers/providers/JobKompassResumeProvider";
 
 export default function EditFields({
     user,
@@ -29,6 +30,33 @@ export default function EditFields({
     const { styles } = useJobKompassTheme();
     const refOfThisComponent = useRef<HTMLDivElement>(null);
 
+    const [currentTechnicalSkill, setCurrentTechnicalSkill] = useState<string>('');
+    const [currentAdditionalSkill, setCurrentAdditionalSkill] = useState<string>('');
+    const { registerContentRef, wantsToPrint, setWantsToPrint, currentTheme } = useJobKompassResume();
+    const { sectionImCurrentlyEditingRef, setSectionImCurrentlyEditingRef } = useJobKompassResume();
+
+    const handleWantingToPrint = () => {
+
+        // NOTE this is setup to effectively hide everything else on the page
+        // and then we are going to print the page/save it
+
+        // NOTE Component references:
+        // LINK app/dashboard/careerassistant/components/resume/🖨️Presume.tsx
+        // LINK app/dashboard/careerassistant/components/🖨️PdocumentComponent.tsx
+        // LINK app/dashboard/careerassistant/components/documentEditor.tsx:143
+
+
+        // NOTE this is where the preview component is being rendered as well, I found myself loosing it sometime:
+        // LINK app/dashboard/careerassistant/components/documentEditor.tsx:188
+
+        setWantsToPrint(true);
+    }
+
+    const handleFocus = ( e: any, fieldName? : string,) => {
+        console.log("Focus event triggered for project:", fieldName, e);
+        setSectionImCurrentlyEditingRef(`${fieldName}`);
+    };
+
     return (
         <div 
             ref={refOfThisComponent}
@@ -41,17 +69,47 @@ export default function EditFields({
                 transition: 'all 0.2s ease-in-out'
             }}
         >
-            {/* <button
-                onClick={async () => {await generateTechBroPDF(resumeData)}}
-                className="w-full p-4 rounded-xl border border-dashed flex items-center justify-center gap-3 transition-all duration-300 hover:border-solid hover:bg-white/5 hover:scale-[1.01] active:scale-[0.99] mb-8"
-                style={{ 
-                    borderColor: JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.textColor,
-                    color: JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.textColor 
-                }}
-            >
-                <Download className="h-[18px] w-[18px]" />
-                <span>Download Resume as PDF</span>
-            </button> */}
+
+            {/* TOOLS */}
+            <section className="w-full">
+                <div className="flex gap-3 mb-8  flex place-content-center w-full">
+                   
+                    <button 
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 hover:translate-y-[-2px]"
+                        style={{
+                            backgroundColor: `${styles.nav.colors.careerAssistant}20`,
+                            color: styles.text.primary,
+                            border: styles.card.border
+                        }}
+                    >
+                        <Bot className="h-[16px] w-[16px]" />
+                    </button>
+
+                    <button 
+                        onClick={handleWantingToPrint}
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 hover:translate-y-[-2px]"
+                        style={{
+                            backgroundColor: `${styles.nav.colors.careerAssistant}20`,
+                            color: styles.text.primary,
+                            border: styles.card.border
+                        }}
+                    >
+                        <Download className="h-[16px] w-[16px]" />
+                    </button>
+                    <button 
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 hover:translate-y-[-2px]"
+                        style={{
+                            backgroundColor: `${styles.nav.colors.careerAssistant}20`,
+                            color: styles.text.primary,
+                            border: styles.card.border
+                        }}
+                    >
+                        <DownloadCloud className="h-[16px] w-[16px]" />
+                    </button>
+
+                </div>
+            </section>
+
             {/* Personal Information Section */}
             <section className="space-y-3">
                 <div className="flex items-center gap-3">
@@ -78,9 +136,10 @@ export default function EditFields({
                         label="First Name"
                         placeholderText="John"
                         type="text"
-                        className="w-full backdrop-blur-sm"
+                        className="w-full "
                         value={resumeData.personalInfo.firstName}
                         onChange={(e) => handleUpdateResumeData("firstName", e.target.value)}
+                        onMouseEnter={(e) => {handleFocus(e, "name-resume")}}
                     />
                     <JkInput
                         user={user}
@@ -90,6 +149,7 @@ export default function EditFields({
                         className="w-full backdrop-blur-sm"
                         value={resumeData.personalInfo.lastName}
                         onChange={(e) => handleUpdateResumeData("lastName", e.target.value)}
+                        onMouseEnter={(e) => {handleFocus(e, "name-resume")}}
                     />
                 </div>
 
@@ -102,6 +162,7 @@ export default function EditFields({
                         className="w-full backdrop-blur-sm"
                         value={resumeData.personalInfo.email}
                         onChange={(e) => handleUpdateResumeData("email", e.target.value)}
+                        onMouseEnter={(e) => {handleFocus(e, "name-resume")}}
                     />
                     <JkSelect
                         user={user}
@@ -109,16 +170,17 @@ export default function EditFields({
                         value={resumeData.personalInfo.citizenship}
                         triggerText="Select Citizenship"
                         options={[
-                            { value: 'us', label: 'US Citizen' },
-                            { value: 'canadian', label: 'Canadian Citizen' },
-                            { value: 'australian', label: 'Australian Citizen' },
-                            { value: 'british', label: 'British Citizen' },
-                            { value: 'italian', label: 'Italian Citizen' },
-                            { value: 'german', label: 'German Citizen' },
-                            { value: 'french', label: 'French Citizen' },
-                            { value: 'spanish', label: 'Spanish Citizen' },
+                            { value: 'US Citizen', label: 'US Citizen' },
+                            { value: 'Canadian Citizen', label: 'Canadian Citizen' },
+                            { value: 'Australian Citizen', label: 'Australian Citizen' },
+                            { value: 'British Citizen', label: 'British Citizen' },
+                            { value: 'Italian Citizen', label: 'Italian Citizen' },
+                            { value: 'German Citizen', label: 'German Citizen' },
+                            { value: 'French Citizen', label: 'French Citizen' },
+                            { value: 'Spanish Citizen', label: 'Spanish Citizen' },
                         ]} // --- 🦕 ---
                         onChange={(value) => handleUpdateResumeData("citizenship", value)}
+                        onMouseEnter={(e) => handleFocus(e, "citizenship-resume")}
                     />
                 </div>
             </section>
@@ -128,6 +190,7 @@ export default function EditFields({
                 className="space-y-3 pt-8" 
                 style={{ borderColor: styles.card.border }}
             >
+                
                 <div className="flex items-center gap-3">
                     <div 
                         className="p-2.5 rounded-lg transition-all duration-300"
@@ -147,29 +210,8 @@ export default function EditFields({
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <JkPopUp
-                        user={user}
-                        label="Experience"
-                        refComponent={refOfThisComponent}
-                        header="Professional Experience"
-                        subtitle="Add your work history and achievements"
-                        trigger={
-                            <span 
-                                className="w-full flex-col p-4 rounded-xl border border-dashed flex items-center justify-center gap-3 transition-all duration-300 hover:border-solid hover:bg-white/5 hover:scale-[1.01] active:scale-[0.99]"
-                                style={{ 
-                                    borderColor: styles.card.border,
-                                    color: styles.text.primary
-                                }}
-                            >
-                                <LucidePlus size={20} />
-                                <span>Add Experience</span>
-                            </span>
-                        }
-                        styledTrigger={false}
-                        BigField={<JkExperienceFields user={user} experience={resumeData.experience} />}
-                    />
-
-                    <JkPopUp
+               
+                <JkPopUp
                         user={user}
                         refComponent={refOfThisComponent}
                         label="Education"
@@ -190,12 +232,60 @@ export default function EditFields({
                         styledTrigger={false}
                         BigField={<JkEducationFields user={user} education={resumeData.education} />}
                     />
+
+                    <JkPopUp
+                        user={user}
+                        label="Experience"
+                        refComponent={refOfThisComponent}
+                        header="Professional Experience"
+                        subtitle="Add your work history and achievements"
+                        trigger={
+                            <span 
+                                className="w-full flex-col p-4 rounded-xl border border-dashed flex items-center justify-center gap-3 transition-all duration-300 hover:border-solid hover:bg-white/5 hover:scale-[1.01] active:scale-[0.99]"
+                                style={{ 
+                                    borderColor: styles.card.border,
+                                    color: styles.text.primary
+                                }}
+                            >
+                                <LucidePlus size={20} />
+                                <span>Add Experience</span>
+                            </span>
+                        }
+                        styledTrigger={false}
+                        BigField={<JkExperienceFields 
+                            user={user} 
+                            experience={resumeData.experience}
+                            onCreate={() => {
+                                const newExperience = {
+                                    title: "",
+                                    company: "",
+                                    location: "",
+                                    date: "",
+                                    description: "",
+                                    details: []
+                                };
+                                handleUpdateResumeData("experience", [...resumeData.experience, newExperience]);
+                            }}
+                            onSave={(index: number, updatedExperience: any) => {
+                                const newExperience = [...resumeData.experience];
+                                newExperience[index] = updatedExperience;
+                                handleUpdateResumeData("experience", newExperience);
+                            }}
+                            onDelete={(index) => {
+                                const updatedExperience = resumeData.experience.filter((_, i) => i !== index);
+                                handleUpdateResumeData("experience", updatedExperience);
+                            }}
+                        />}
+                    />
+
+                
                 </div>
+
             </section>
 
             {/* Skills & Projects Section */}
             <section>
-            <div className="space-y-3 pt-6 border-t" 
+                <div className="space-y-3 pt-6 border-t" 
                 style={{ 
                     borderColor: `${styles.text.primary}10`
                 }}>
@@ -215,34 +305,59 @@ export default function EditFields({
                 </div>
 
                 <div className="space-y-3">
-                    <JkCombobox
-                        user={user}
-                        label="Technical Skills"
-                        onChange={(index, field, value) => {
-                            const updatedSkills = {
-                                technical: [...resumeData.skills.technical],
-                                additional: [...resumeData.skills.additional]
-                            };
-                            updatedSkills.technical[index] = value;
-                            handleUpdateResumeData("skills", updatedSkills);
-                        }}
-                        initialObjectOfThings={[
-                            { value: 'javascript', label: 'JavaScript' },
-                            { value: 'typescript', label: 'TypeScript' },
-                            { value: 'react', label: 'React' },
-                            { value: 'node', label: 'Node.js' },
-                            { value: 'python', label: 'Python' },
-                            { value: 'java', label: 'Java' },
-                            { value: 'csharp', label: 'C#' },
-                            { value: 'sql', label: 'SQL' },
-                            { value: 'aws', label: 'AWS' },
-                            { value: 'docker', label: 'Docker' },
-                        ]} // --- 🦕 ---
-                        notFoundComponent={<></>}
-                    />
-
+                    
+                    {/* REVIEW Technical SKills */}
+                    <div className="flex gap-2">
+                        <JkInput
+                            user={user}
+                            label="Technical Skills"
+                            placeholderText="Type a skill and press Enter"
+                            type="text"
+                            className="w-full"
+                            value={currentTechnicalSkill}
+                            onMouseEnter={(e) => {handleFocus(e, "skills-resume")}}
+                            onChange={(e) => {
+                                setCurrentTechnicalSkill(e.target.value);
+                            }}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.keyCode === 13) {
+                                    e.preventDefault();
+                                    if (currentTechnicalSkill.trim()) {
+                                        const updatedSkills = {
+                                            ...resumeData.skills,
+                                            technical: [...resumeData.skills.technical, currentTechnicalSkill.trim()]
+                                        };
+                                        handleUpdateResumeData("skills", updatedSkills);
+                                        setCurrentTechnicalSkill('');
+                                    }
+                                }
+                            }}
+                            fieldImIn="Skills"
+                        />
+                        <button
+                            onClick={() => {
+                                if (currentTechnicalSkill.trim()) {
+                                    const updatedSkills = {
+                                        ...resumeData.skills,
+                                        technical: [...resumeData.skills.technical, currentTechnicalSkill.trim()]
+                                    };
+                                    handleUpdateResumeData("skills", updatedSkills);
+                                    setCurrentTechnicalSkill('');
+                                }
+                            }}
+                            className="self-end p-3 rounded-lg transition-all duration-300 hover:opacity-80"
+                            style={{
+                                backgroundColor: styles.nav.colors.careerAssistant,
+                                color: '#ffffff',
+                                marginBottom: '1px'
+                            }}
+                        >
+                            Add
+                        </button>
+                    </div>
                     <div className="flex flex-wrap gap-2">
-                        {resumeData?.skills?.technical?.map((skill, index) => (
+                        
+                        {resumeData.skills.technical.map((skill, index) => (
                             <span 
                                 key={index} 
                                 className="px-3.5 py-1.5 rounded-full text-sm flex items-center gap-2.5 transition-all duration-300 hover:scale-[1.02] hover:shadow-sm"
@@ -257,15 +372,93 @@ export default function EditFields({
                                     onClick={() => {
                                         const updatedSkills = {
                                             ...resumeData.skills,
-                                            technical: resumeData.skills.technical.filter((_ : any, i : number) => i !== index)
+                                            technical: resumeData.skills.technical.filter((_, i) => i !== index)
                                         };
                                         handleUpdateResumeData("skills", updatedSkills);
                                     }}
                                 />
                             </span>
                         ))}
+
                     </div>
 
+                    {/* REVIEW additional skills */}
+                    <div className="flex gap-2">
+                        <JkInput
+                            user={user}
+                            label="Additional Skills"
+                            placeholderText="Type a skill and press Enter"
+                            type="text"
+                            className="w-full"
+                            value={currentAdditionalSkill}
+                            onChange={(e) => {
+                                setCurrentAdditionalSkill(e.target.value);
+                            }}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    if (currentAdditionalSkill.trim()) {
+                                        const updatedSkills = {
+                                            ...resumeData.skills,
+                                            additional: [...resumeData.skills.additional, currentAdditionalSkill.trim()]
+                                        };
+                                        handleUpdateResumeData("skills", updatedSkills);
+                                        setCurrentAdditionalSkill('');
+                                    }
+                                }
+                            }}
+                            onMouseEnter={(e) => {handleFocus(e, "skills-resume")}}
+                            fieldImIn="Skills"
+                        />
+                        <button
+                            onClick={() => {
+                                if (currentAdditionalSkill.trim()) {
+                                    const updatedSkills = {
+                                        ...resumeData.skills,
+                                        additional: [...resumeData.skills.additional, currentAdditionalSkill.trim()]
+                                    };
+                                    handleUpdateResumeData("skills", updatedSkills);
+                                    setCurrentAdditionalSkill('');
+                                }
+                            }}
+                            className="self-end p-3 rounded-lg transition-all duration-300 hover:opacity-80"
+                            style={{
+                                backgroundColor: styles.nav.colors.careerAssistant,
+                                color: '#ffffff',
+                                marginBottom: '1px'
+                            }}
+                        >
+                            Add
+                        </button>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                        
+                        {resumeData.skills.additional.map((skill, index) => (
+                            <span 
+                                key={index} 
+                                className="px-3.5 py-1.5 rounded-full text-sm flex items-center gap-2.5 transition-all duration-300 hover:scale-[1.02] hover:shadow-sm"
+                                style={{ 
+                                    backgroundColor: styles.card.boxShadow,
+                                    color: styles.text.primary
+                                }}
+                            >
+                                {skill}
+                                <X 
+                                    className="h-3 w-3 cursor-pointer hover:opacity-70" 
+                                    onClick={() => {
+                                        const updatedSkills = {
+                                            ...resumeData.skills,
+                                            additional: resumeData.skills.additional.filter((_, i) => i !== index)
+                                        };
+                                        handleUpdateResumeData("skills", updatedSkills);
+                                    }}
+                                />
+                            </span>
+                        ))}
+
+                    </div>
+
+                    {/* Projects... */}
                     <JkPopUp
                         user={user}
                         label="Projects"
@@ -287,9 +480,14 @@ export default function EditFields({
                         styledTrigger={false}
                         BigField={<JkProjectFields user={user} projects={resumeData.projects} />}
                     />
+
                 </div>
+
+
                 </div>
+                
             </section>
+            
         </div>
     );
 }

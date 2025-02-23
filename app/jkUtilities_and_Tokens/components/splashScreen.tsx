@@ -1,6 +1,6 @@
 'use client'
 
-import { JKLogoSVG } from "@/app/assets/svgs/logo";
+import { JKLogoSVG } from "@/public/assets/svgs/logo";
 import { JK_Styles } from "../styles";
 import { useQuery } from "@tanstack/react-query";
 import { ThemeKeys } from "@/app/types";

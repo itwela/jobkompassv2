@@ -17,8 +17,11 @@ export interface JkInputProps {
     type: string;
     value: string | undefined;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+    onMouseEnter?: (e: React.MouseEvent<HTMLInputElement>) => void;
     className?: string;
     style?: React.CSSProperties;
+    fieldImIn?: string;
 }
 
 export interface JkTextAreaProps {
@@ -30,14 +33,16 @@ export interface JkTextAreaProps {
     className?: string;
     style?: React.CSSProperties;
 }
-
 export interface JkSelectProps {
     user: any;
-    label: string; 
+    label: string;
     value: string;
     triggerText: string;
-    options: Array<{value: string, label: string}>;
+    options: Array<{ value: string; label: string; }>;
     onChange: (value: string) => void;
+    onMouseEnter?: (e: React.MouseEvent<HTMLInputElement>) => void;
+    className?: string;
+
 }
 
 export interface JkPopUpProps {

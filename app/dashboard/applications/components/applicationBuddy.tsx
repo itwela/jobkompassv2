@@ -4,7 +4,7 @@ import { useJobKompassUser } from "@/app/helpers/providers/userProvider"
 import { useJobKompassTheme } from "@/app/helpers/providers/themeProvider"
 import { Check, Copy, X } from "lucide-react"
 import { useState } from "react"
-import { JKLogoSVG } from "@/app/assets/svgs/logo"
+import { JKLogoSVG } from "@/public/assets/svgs/logo"
 import { DialogClose } from "@radix-ui/react-dialog"
 import { useJobKompassApplicationBuddy } from "@/app/helpers/providers/applicaitonBuddyProvider"
 
@@ -48,25 +48,7 @@ export default function ApplicationBuddy() {
 
     return (
         <>
-            {/* <div className='flex flex-col w-full place-items-start p-6'>
-                <span className="flex justify-between w-full">
-                    <div className='w-full text-left gap-2 flex place-items-center'>
-                        <JKLogoSVG size='small' />
-                        <span style={{ color: styles.text.primary }} className='text-xl font-semibold'>Application Buddy</span>
-                    </div>
-                    <DialogClose    
-                        style={{
-                            color: styles.text.primary,
-                        }}
-                        onClick={() => { setIsBuddyOpen(!isBuddyOpen); }}
-                        className='p-2 z-[10] right-2'>
-                        <X style={{ color: styles.text.primary }} className="h-4 w-4" />
-                    </DialogClose>
-                </span>
-                <div style={{ color: styles.text.subtitle }} className='text-left w-full whitespace-normal'>
-                    Get those repeated questions answered, copy and paste straight into your application.
-                </div>
-            </div> */}
+         
 
             <div className="sm:max-w-[425px] md:max-w-[625px]  p-6 rounded-lg space-y-4">
                 {userInfo.map((item, index) => (

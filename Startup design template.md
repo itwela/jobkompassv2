@@ -280,3 +280,4 @@ export default function DashboardPage() {
    - Use client components for interactive features
    - Leverage server components for data fetching
    - Implement proper error boundaries
+

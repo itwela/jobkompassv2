@@ -82,9 +82,11 @@ export default function JobStats() {
                             <XAxis 
                                 dataKey="name" 
                                 stroke={styles.text.secondary}
+                                tick={{ fill: styles.text.secondary, fontSize: '0.875rem' }}
                             />
                             <YAxis 
                                 stroke={styles.text.secondary}
+                                tick={{ fill: styles.text.secondary, fontSize: '0.875rem' }}
                             />
                             <Tooltip 
                                 contentStyle={{
@@ -92,7 +94,8 @@ export default function JobStats() {
                                     border: styles.card.border,
                                     borderRadius: '0.5rem'
                                 }}
-                                labelStyle={{ color: styles.text.primary }}
+                                labelStyle={{ color: styles.text.primary, fontSize: '0.875rem' }}
+                                itemStyle={{ color: styles.text.secondary, fontSize: '0.875rem' }}
                             />
                             <Line 
                                 type="monotone" 
@@ -134,14 +137,20 @@ export default function JobStats() {
                                 contentStyle={{
                                     backgroundColor: styles.card.background,
                                     border: styles.card.border,
-                                    borderRadius: '0.5rem'
+                                    borderRadius: '0.5rem',
+                                    color: styles.text.primary
                                 }}
-                                labelStyle={{ color: styles.text.primary }}
+                                labelStyle={{ color: styles.text.primary, fontSize: '0.875rem' }}
+                                itemStyle={{ color: styles.text.secondary, fontSize: '0.875rem' }}
                             />
-                            <Legend 
-                                formatter={(value: any) => (
-                                    <span style={{ color: styles.text.primary }}>{value}</span>
+                            <Legend
+                                formatter={(value: string) => (
+                                    <span style={{ color: styles.text.secondary, fontSize: '0.875rem' }}>{value}</span>
                                 )}
+                                wrapperStyle={{
+                                    fontSize: '0.875rem',
+                                    color: styles.text.secondary
+                                }}
                             />
                         </PieChart>
                     </ResponsiveContainer>

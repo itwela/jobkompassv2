@@ -173,7 +173,7 @@ export default function DocumentEditor() {
                 {/* Editor & Preview Sections */}
                 <div className="flex flex-wrap md:flex-nowrap no-scrollbar justify-between gap-4 h-[calc(100vh-120px)] w-full">
                     <div className="w-full
-                    lg:w-[40%]
+                    lg:w-[60%]
                     md:w-[60%]
                         no-scrollbar
                         h-full
@@ -184,7 +184,7 @@ export default function DocumentEditor() {
                             handleUpdateResumeData={handleUpdateResumeData as (field: string, value: any) => void} 
                         />
                     </div>
-                    <div className="w-full h-full  overflow-x-hidden overflow-y-scroll">
+                    <div className="w-full h-full  overflow-x-hidden no-scrollbar overflow-y-scroll">
                         <ResumeRenderPage 
                             styles={styles} 
                             data={techBroData} 

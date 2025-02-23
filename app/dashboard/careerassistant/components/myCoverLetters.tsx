@@ -19,7 +19,7 @@ export default function MyCoverLetters() {
                 <div>
                     <p>View and even update your saved cover letters!</p>
                 </div>
-                <div className="flex flex-col w-full gap-2 my-5 h-[200px]">
+                <div className="flex flex-col w-full gap-2 my-5 h-max">
 
                     {coverLetterNames?.map((coverLetter, index) => {
                         return (

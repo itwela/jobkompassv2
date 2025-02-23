@@ -79,6 +79,7 @@ interface JobKompassResumeContextType {
   currentTheme: {
     name: string;
     heading: string;
+    sectionHeading: string;
     subheading: string;
     body: string;
     bodySmall: string;
@@ -103,6 +104,10 @@ interface JobKompassResumeContextType {
   setWantsToPrint: (value: boolean) => void;
   currentlyTestingNewTheme: boolean;
   setCurrentlyTestingNewTheme: (value: boolean) => void;
+
+  sectionImCurrentlyEditingRef: React.RefObject<any>;
+  setSectionImCurrentlyEditingRef: (ref: any) => void;
+
 }
 
 const ResumeContext = createContext<JobKompassResumeContextType | null>(null);
@@ -116,9 +121,9 @@ export function JobKompassResumeProvider({ children }: { children: React.ReactNo
 
   const [techBroData, setTechBroData] = useState<TechBroData>({
     personalInfo: {
-      firstName: "Itwela",
-      lastName: "Ibomu",
-      email: "libomu@wgu.edu",
+      firstName: "",
+      lastName: "",
+      email: "",
       citizenship: "US Citizen",
       phone: "(404) 555-0123",
       location: "Atlanta, GA",
@@ -255,7 +260,7 @@ export function JobKompassResumeProvider({ children }: { children: React.ReactNo
       }
     ],
     skills: {
-      technical: ["Python - 3yrs", "JavaScript (React, Next JS, TypeScript, Node JS) - 3yrs", "React Native - 1yr", "SQL, PostgreSQL, Prisma, Supabase, Firebase"],
+      technical: ["Python", "React", "React Native", "SQL"],
       additional: ["UI/UX Design", "Leadership", "Teamwork", "Agile", "Artist", "Musician (Piano, Guitar)"]
     },
     additionalInfo: {
@@ -279,6 +284,22 @@ export function JobKompassResumeProvider({ children }: { children: React.ReactNo
   const fullContentRef = useRef<HTMLElement | HTMLDivElement | null>(null);
   const [wantsToPrint, setWantsToPrint] = useState<boolean>(false);
   const [currentlyTestingNewTheme, setCurrentlyTestingNewTheme] = useState<boolean>(false);
+  const sectionImCurrentlyEditingRef = useRef<any>(null);
+
+  const setSectionImCurrentlyEditingRef = useCallback((sectionId: string) => {
+    console.log("Function called with sectionId:", sectionId);
+    const element = document.getElementById(sectionId);
+    console.log("Found element:", element);
+    
+    if (element) {
+        console.log("Attempting to scroll to element");
+        element.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center',
+            inline: 'nearest'
+        });
+    }
+}, []);
 
   useEffect(() => {
     if (wantsToPrint) {
@@ -350,6 +371,8 @@ export function JobKompassResumeProvider({ children }: { children: React.ReactNo
   }, [])
 
   const [currentTheme, setCurrentTheme] = useState<typeof themes[keyof typeof themes]>(() => {
+    
+    // NOTE how to apply a theme
     return themes['Tech Bro'];
   });
 
@@ -376,7 +399,9 @@ export function JobKompassResumeProvider({ children }: { children: React.ReactNo
     wantsToPrint,
     setWantsToPrint,
     currentlyTestingNewTheme,
-    setCurrentlyTestingNewTheme
+    setCurrentlyTestingNewTheme,
+    sectionImCurrentlyEditingRef,
+    setSectionImCurrentlyEditingRef
   };
 
   return (

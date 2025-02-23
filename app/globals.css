@@ -54,6 +54,50 @@ select:focus-visible {
   border: none !important;
 }
 
+/* Page folding animation for resume preview */
+.resume-preview {
+  position: relative;
+  transform-origin: top left;
+  perspective: 1500px;
+  transform-style: preserve-3d;
+}
+
+.resume-preview::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  background: linear-gradient(135deg, 
+    rgba(79, 70, 229, 0.3) 0%, 
+    rgba(79, 70, 229, 0.3) 49%, 
+    rgba(79, 70, 229, 0.5) 50%,
+    transparent 51%, 
+    transparent 100%
+  );
+  box-shadow: -3px 3px 8px rgba(79, 70, 229, 0.2);
+  transition: all 0.3s ease-out;
+  z-index: 10;
+  border-radius: 0 0 0 4px;
+}
+
+.resume-preview:hover::before {
+  width: 40px;
+  height: 54px;
+}
+
+@keyframes unfold {
+  0% {
+    transform: rotate3d(1, 0, 0, 45deg);
+    opacity: 0;
+  }
+  100% {
+    transform: rotate3d(1, 0, 0, 0deg);
+    opacity: 1;
+  }
+}
+
 @layer base {
   :root {
     --background: 240 10% 3.9%;
@@ -84,8 +128,6 @@ select:focus-visible {
 
     --sidebar-background: 240 7% 14%;
     --sidebar-foreground: 0 0% 96%;
-    /* --sidebar-primary: 240 7% 14%; */
-    /* --sidebar-primary-foreground: 240 7% 14%; */
     --sidebar-accent: 240 3% 20%;
     --sidebar-accent-foreground: 0 0% 96%;
     --sidebar-border: 240 7% 14%;
@@ -128,13 +170,30 @@ select:focus-visible {
   }
 }
 
-
-
 @layer base {
   * {
     @apply border-border;
   }
-  /* body {
-    @apply bg-background text-foreground;
-  } */
+
+  /* Small to 3XL text sizes */
+  .\~jk-text-sm\/3xl {
+    /* NOTE         |min size|   |growth rate|    |max size|*/
+    font-size: clamp(6px, calc(4px + 1.5vw), 12px) !important;
+    /* NOTE         |min size| |growth rate| |max size|*/
+  }
+
+  /* MEDIUM to 4XL text sizes */
+  .\~jk-text-md\/4xl {
+    /* NOTE         |min size|   |growth rate|    |max size|*/
+    font-size: clamp(8px, calc(12px + 2vw), 16px) !important;
+    /* NOTE         |min size| |growth rate| |max size|*/
+  }
+
+  /* 3XL to 8XL text sizes */
+  .\~jk-text-3xl\/8xl {
+    /* NOTE         |min size|   |growth rate|    |max size|*/
+    font-size: clamp(1.875rem, calc(1rem + 3vw), 6rem);
+    /* NOTE         |min size| |growth rate| |max size|*/
+  }
+  
 }

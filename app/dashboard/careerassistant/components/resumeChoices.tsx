@@ -63,6 +63,12 @@ export default function ResumeChoices() {
         }, 61)
     }
 
+    const videoName = [
+        "gradientOneCompressed",
+        "gradient2Compressed",
+        "gradient3Compressed",
+    ]
+
 
 
     return (
@@ -102,8 +108,9 @@ export default function ResumeChoices() {
                         onClick={() => {handleSelectResumeTemplate(index)}}
                         className={`flex flex-col group`}
                     >
+
                         <Card 
-                            className={`cursor-pointer w-[200px] h-[300px] rounded-xl flex place-items-center place-content-center transform transition-all duration-300 hover:translate-y-[-4px] hover:shadow-lg backdrop-blur-sm
+                            className={`cursor-pointer overflow-hidden w-[200px] h-[300px] rounded-xl flex place-items-center place-content-center transform transition-all duration-300 hover:translate-y-[-4px] hover:shadow-lg backdrop-blur-sm
                                 ${myResumeTemplateSelectionIndex === index ? 'shadow-lg' : ''}`}
                             style={{
                                 backgroundColor: styles.card.background,
@@ -111,13 +118,32 @@ export default function ResumeChoices() {
                                 boxShadow: styles.card.boxShadow,
                             }}
                         >
+
+                              {/* Background Video */}
+                                <video
+                                    autoPlay
+                                    loop
+                                    muted
+                                    playsInline
+                                    className="absolute w-full h-full object-cover"
+                                    style={{ filter: 'brightness(0.7) contrast(1.2)' }}
+                                    onLoadedMetadata={(e) => {
+                                        const video = e.target as HTMLVideoElement;
+                                        video.playbackRate = 1.5;
+                                    }}
+                                >
+                                    <source src={`/assets/vids/${videoName[index]}.mp4`} type="video/mp4" />
+                                </video>
+
                             <div className="text-lg font-medium transition-all duration-300 group-hover:scale-105" style={{ color: styles.text.primary }}>
                                 {item.title}
                             </div>
                         </Card>
+
                         <div className="mt-4">
                             <h2 className="text-center font-medium" style={{ color: styles.text.primary }}>{item.title}</h2>
                         </div>
+
                     </div>
                 ))}
 

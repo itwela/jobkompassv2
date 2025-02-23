@@ -15,6 +15,8 @@ import { useJobKompassTheme } from "@/app/helpers/providers/themeProvider";
 import { cn } from "@/lib/utils";
 import { JkInput } from "./jkInput";
 import { color } from "motion/react";
+import { DialogClose } from "@radix-ui/react-dialog";
+import { X } from "lucide-react";
 
 export const JkPopUp = memo(
     ({
@@ -66,9 +68,25 @@ export const JkPopUp = memo(
                 }}
                 className="p-6 h-full rounded-lg overflow-y-scroll no-scrollbar transition-all duration-300 backdrop-blur-md shadow-xl"
               >
-                <DialogHeader className="text-left">
-                  <DialogTitle style={{ color: styles.text.title }}>{header}</DialogTitle>
-                  <DialogDescription style={{ color: styles.text.subtitle }}>{subtitle}</DialogDescription>
+                <DialogHeader>
+                  
+                  <span className="text-left flex place-content-start place-items-start justify-between w-full h-max">
+               
+                    <span className="w-max flex flex-col h-max">
+                      <DialogTitle style={{ color: styles.text.title }}>{header}</DialogTitle>
+                      <DialogDescription style={{ color: styles.text.subtitle }}>{subtitle}</DialogDescription>
+                    </span>
+
+                    <span className="h-full">
+                      <DialogClose className="h-full">
+                        <span className="h-max">
+                        <X className="w-4" />
+                        </span>
+                      </DialogClose>
+                    </span>
+
+                  </span>
+
                 </DialogHeader>
                 <span className="flex flex-col gap-2 my-2">
                   {/* Render Big Field if provided */}

@@ -1,6 +1,6 @@
 'use client'
 
-import { JKLogoSVG } from '@/app/assets/svgs/logo'
+import { JKLogoSVG } from '@/public/assets/svgs/logo'
 import { useJobKompassApplicationBuddy } from '@/app/helpers/providers/applicaitonBuddyProvider'
 import { JobKompassJobsType, useJobKompassJobs } from '@/app/helpers/providers/jobsProvider'
 import { useJobKompassTheme } from '@/app/helpers/providers/themeProvider'

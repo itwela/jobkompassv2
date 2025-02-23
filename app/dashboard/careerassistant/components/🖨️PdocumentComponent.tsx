@@ -9,7 +9,7 @@ import React from "react";
 export default function PrintDocumentComponent({ currentTheme, styles, data,}: {currentTheme: any, styles: any,  data: any;  }) {
     const [isReady, setIsReady] = React.useState(false);
     const [isBrowser, setIsBrowser] = React.useState(false);
-    const { wantsToPrint, setWantsToPrint } = useJobKompassResume()
+    const { wantsToPrint, setWantsToPrint }: { wantsToPrint: boolean; setWantsToPrint: (value: boolean) => void } = useJobKompassResume()
 
     React.useEffect(() => {
         setIsBrowser(true);
@@ -17,6 +17,21 @@ export default function PrintDocumentComponent({ currentTheme, styles, data,}: {
             setIsReady(true);
         }
     }, [data, currentTheme]);
+
+    const handlePrint = () => {
+        setWantsToPrint(true);
+        setTimeout(() => {
+            window.print();
+        }, 100);
+    };
+
+    React.useEffect(() => {
+        if (wantsToPrint) {
+            setTimeout(() => {
+                handlePrint();
+            }, 1000);
+        }
+    }, [wantsToPrint]);
 
     if (!isBrowser) {
         return null;
@@ -30,14 +45,7 @@ export default function PrintDocumentComponent({ currentTheme, styles, data,}: {
             </div>
         );
     }
-
-    const handlePrint = () => {
-        setWantsToPrint(true);
-        setTimeout(() => {
-            window.print();
-        }, 100);
-    };
-
+    
     const hnadleGoBack = () => {
         setWantsToPrint(false)
     }
