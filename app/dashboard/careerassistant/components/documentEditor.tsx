@@ -13,6 +13,8 @@ import EditFields from './editFields';
 import ResumeRenderPage from "./resume/page";
 import { TechBroProps } from "./resume/resumeTemplates";
 import PrintDocumentComponent from "./🖨️PdocumentComponent";
+import { ResumeChat } from "./resumeChat";
+import { Message, useChat } from '@ai-sdk/react';
 
 export default function DocumentEditor() {
 
@@ -28,13 +30,15 @@ export default function DocumentEditor() {
         setMyResumeTemplateSelection, setMyResumeTemplateSelectionIndex,
         setMyCoverLetterTemplateSelection, setMyCoverLetterTemplateSelectionIndex
     } = useJobKompassCareerAssistant()
-
+    const { messages, setMessages, input, setInput, handleSubmit, isLoading } = useChat({});
+    const [additionalResumeContext, setAdditionalResumeContext] = useState('')
+    const [selectedBio, setSelectedBio] = useState<string>('');
 
 
     // Sync user data when available
     useEffect(() => {
         if (user?.[0]) {
-            setTechBroData((prev: any) => ({
+            setUserFieldData((prev: any) => ({
                 ...prev,
                 personalInfo: {
                     firstName: user[0].firstName || prev.personalInfo.firstName,
@@ -52,11 +56,10 @@ export default function DocumentEditor() {
 
     // Update resume data dynamically
     const handleUpdateResumeData = (
-        field: keyof TechBroProps["personalInfo"] | "summary" | "skills" | "education" | "experience" | "projects",
+        field: keyof TechBroProps["personalInfo"] | "summary" | "skills" | "education" | "experience" | "projects" | "additionalInfo",
         value: any
     ) => {
-        setTechBroData((prev: TechBroProps): TechBroProps => {
-
+        setUserFieldData((prev: TechBroProps): TechBroProps => {
             if (field === "skills") {
                 return {
                     ...prev,
@@ -93,6 +96,35 @@ export default function DocumentEditor() {
                     }>
                 };
             }
+            if (field === "projects") {
+                return {
+                    ...prev,
+                    projects: value as Array<{
+                        name: string;
+                        achievement: string;
+                        technologies: string[];
+                        date: string;
+                        details: string[];
+                        title: string;
+                        description: string;
+                        link: string;
+                        skills: string[];
+                    }>
+                };
+            }
+
+            if (field === "additionalInfo") {
+                return {
+                    ...prev,
+                    additionalInfo: value as {
+                        interests: string[];
+                        hobbies: string[];
+                        languages: string[];
+                        references: string[];
+                    }
+                };
+            }
+
             return { ...prev, personalInfo: { ...prev.personalInfo, [field]: value } };
         });
     };
@@ -110,10 +142,9 @@ export default function DocumentEditor() {
     };
 
     const { styles } = useJobKompassTheme()
-    const { currentTheme, setCurrentTheme, techBroData, setTechBroData, wantsToPrint } = useJobKompassResume()
+    const { currentTheme, setCurrentTheme, userFieldData, setUserFieldData, wantsToPrint } = useJobKompassResume()
     const [isReady, setIsReady] = useState(false);
-    console.log("DocumentEditor currentTheme:", currentTheme)
-    console.log("DocumentEditor wantsToPrint:", wantsToPrint)
+
     
     useEffect(() => {
         if (wantsToPrint) {
@@ -129,7 +160,6 @@ export default function DocumentEditor() {
 
     if (!startEditingDocument) return null;
     if (!isReady) {
-        console.log("not ready")
         return (
             <div className="w-full h-full flex items-center justify-center">
                 <p>Loading resume editor...</p>
@@ -138,9 +168,8 @@ export default function DocumentEditor() {
     }
 
     if (wantsToPrint) {
-        console.log("Rendering print view");
         return (
-           <PrintDocumentComponent currentTheme={techBroData} styles={styles} data={techBroData}/>
+           <PrintDocumentComponent currentTheme={userFieldData} styles={styles} data={userFieldData}/>
         );
     }
 
@@ -180,14 +209,30 @@ export default function DocumentEditor() {
                        ">
                         <EditFields 
                             user={user} 
-                            resumeData={techBroData} 
+                            resumeData={userFieldData} 
                             handleUpdateResumeData={handleUpdateResumeData as (field: string, value: any) => void} 
+                            messages={messages}
+                            setMessages={setMessages}
+                            input={input}
+                            setInput={setInput}
+                            handleSubmit={handleSubmit}
+                            isLoading={isLoading}
+                            additionalResumeContext={additionalResumeContext}
+                            selectedBio={selectedBio}
                         />
                     </div>
-                    <div className="w-full h-full  overflow-x-hidden no-scrollbar overflow-y-scroll">
-                        <ResumeRenderPage 
-                            styles={styles} 
-                            data={techBroData} 
+                    <div className="w-full h-full z-[100] overflow-x-hidden no-scrollbar overflow-y-scroll">
+                        <ResumeChat
+                          messages={messages}
+                          setMessages={setMessages}
+                          input={input}
+                          setInput={setInput}
+                          handleSubmit={handleSubmit}
+                          isLoading={isLoading}
+                          additionalResumeContext={additionalResumeContext}
+                          setAdditionalResumeContext={setAdditionalResumeContext}
+                          selectedBio={selectedBio}
+                          setSelectedBio={setSelectedBio}
                         />
                     </div>
                 </div>
@@ -197,19 +242,6 @@ export default function DocumentEditor() {
     );
 }
 
-const ResumeChat = ({ user }: { user: any }) => {
-    return (
-        <>
-            <div
-                style={{
-                    backgroundColor: JK_Colors?.[user?.[0]?.color_theme as ThemeKeys]?.fg_shadow,
-                }}
-                className="absolute bottom-10 right-10 w-[61.8%] h-[300px] z-100 rounded-lg">
-
-            </div>
-        </>
-    )
-}
 
 
 

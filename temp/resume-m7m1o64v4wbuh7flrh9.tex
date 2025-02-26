@@ -1,0 +1,209 @@
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}  % Latin Modern fonts for better coverage
+\usepackage[T1]{fontenc}  % Use T1 encoding for better font support
+\usepackage{latexsym}
+\usepackage{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{babel}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage[pdftex]{bookmark}
+
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting - REDUCED SPACING
+\titleformat{\section}{
+  \vspace{-8pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-2pt}]
+
+% Ensure that generate pdf is machine readable/ATS parsable
+\pdfgentounicode=1
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[1]{\item\small{{#1 \vspace{-2pt}}}}
+
+% REDUCED SPACING in resumeSubheading
+\newcommand{\resumeSubheading}[4]{\vspace{-4pt}\item
+  \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+    \textbf{#1} & #2 \\
+    \textit{\small#3} & \textit{\small #4} \\
+  \end{tabular*}\vspace{-5pt}}
+
+% Modified to handle long technology lists with a comma-separated inline format
+\newcommand{\resumeProjectHeading}[2]{\item
+  \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+    \small#1 & \small#2 \\
+  \end{tabular*}\vspace{-5pt}}
+
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+% Set global paragraph spacing to minimum
+\setlength{\parskip}{0pt}
+
+% Set global paragraph spacing to minimum
+\setlength{\parskip}{0pt}
+
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\setlength{\parskip}{0pt}
+\begin{document}
+
+\begin{center}
+  \textbf{\Huge \scshape Itwela Ibomu} \\ \vspace{1pt}
+  \small (404) 555-0123 $|$ \href{mailto:citwela@gmail.com}{\underline{citwela@gmail.com}} $|$
+  \href{Github.com/itwela}{\underline{Github.com/itwela}} $|$
+  
+\end{center}
+%-----------EDUCATION-----------
+\section{Education}
+\resumeSubHeadingListStart
+         
+           \resumeSubheading
+             {WGU}{}
+             {Bachelor of Science in Software Engineering in Software Engineering}{ -- December 2025}
+             \resumeItemListStart
+               \resumeItem{Studies focus on Math, Programming, Data Management, Application Design and Development, Cloud Foundations}
+             \resumeItemListEnd
+         
+         \resumeSubHeadingListEnd
+%-----------EXPERIENCE-----------
+\section{Experience}
+\resumeSubHeadingListStart
+         
+           \resumeSubheading
+             {Headstarter}{Long Island City, NY}
+             {Software Engineering Fellow}{July 2024 - September 2024}
+             \resumeItemListStart
+               \resumeItem{Built and deployed five AI projects focused on user-centered development and optimization, using React TS, Next.js, Tailwind, Firebase, Supabase, Clerk, LangChain, Pinecone, Docker, and Vercel}
+          \resumeItem{Scaled web applications to over 200 users through collaboration with UI/UX designers, optimizing user interfaces based on feedback and quality testing across deployment stages}
+          \resumeItem{Enhanced SDLC processes, including code reviews and QA testing, to ensure high performance and reliability}
+          \resumeItem{Impact: Achieved funding and support for "CitySwipe" by winning multiple hackathons, leading to its launch with 100+ users}
+             \resumeItemListEnd
+         
+
+           \resumeSubheading
+             {Dataforce}{Atlanta, GA}
+             {AI Software Engineer}{April 2024 - June 2024}
+             \resumeItemListStart
+               \resumeItem{Meet and exceed client captioning targets on a daily and weekly basis, resulting in improved client satisfaction and increased project efficiency}
+          \resumeItem{Documented and notified development team of technical errors, bugs, contributing to the timely resolution of issues}
+          \resumeItem{Created a spreadsheet to track personal productivity, resulting in 50\% increase in captions per day}
+             \resumeItemListEnd
+         
+
+           \resumeSubheading
+             {Forage (J.P Morgan)}{}
+             {Software Engineering Virtual Experience}{December 2023 - January 2024}
+             \resumeItemListStart
+               \resumeItem{Developed live graph generation functionality using JPMorgan's open-source library, Perspective, and gained exposure to financial data visualization and agile methodologies}
+             \resumeItemListEnd
+         
+
+           \resumeSubheading
+             {Freelance}{Atlanta, GA}
+             {Software Engineer}{December 2023 - Present}
+             \resumeItemListStart
+               \resumeItem{Develop and build dynamic UI to support multiple businesses in an Agile environment using web frameworks like React and Nextjs and mobile frameworks such as React Native and Expo Go}
+          \resumeItem{Design, develop, and code web and mobile components for multiple clients, including debugging, diagnosing root causes, \& identifying solutions}
+          \resumeItem{Develop blockchain-based crypto games utilizing Solana, Web3.js, Rust and Anchor}
+             \resumeItemListEnd
+         
+         \resumeSubHeadingListEnd
+%-----------PROJECTS-----------
+\section{Projects}
+\resumeSubHeadingListStart
+   
+     \resumeSubheading
+       {AI Travel \& Vacation Planning Application}{July 2024 - Present}
+       {Led a team of developers, designers, and marketers to create an AI-powered platform for vacation planning}{}
+       \resumeItem{Technologies Used: Next.js, React, Vercel, Supabase, Gemini, Framer Motion, Pexels API}
+       \resumeItemListStart
+         \resumeItem{Led a team of developers, designers, and marketers to create an AI-powered platform for vacation planning, leveraging machine learning for personalized recommendations}
+          \resumeItem{Integrated natural language processing (NLP) to improve user interaction with travel suggestions based on preferences}
+          \resumeItem{Impact: Garnered thousands of social media impressions, secured investment from the CEO of Lunchbox, and grew user engagement by 150\%}
+       \resumeItemListEnd
+   
+
+     \resumeSubheading
+       {Job Tracker \& Data Analysis Application}{January 2024 - April 2024}
+       {Developed a job application tracking tool that automated the data entry and analysis}{}
+       \resumeItem{Technologies Used: Next.js, TypeScript, React, Supabase, Tailwind CSS, Vercel, Chart.js, React Query, Prisma, PostgreSQL}
+       \resumeItemListStart
+         \resumeItem{Developed a job application tracking tool that automated the data entry and analysis of job applications, reducing job search time by 50\%}
+          \resumeItem{Collaborated with users to refine features based on feedback, conducting iterative testing to improve UI and functionality}
+          \resumeItem{I landed my first contract role in tech (Dataforce), and the Software engineering fellowship (Headstarter) role using this tool}
+       \resumeItemListEnd
+   
+
+     \resumeSubheading
+       {RAG AI Rate My Professor Chat Application}{August 2024}
+       {Designed and implemented an AI-powered web application for professor reviews using vector search and real-time data processing}{}
+       \resumeItem{Technologies Used: Nextjs, TypeScript, React, Vercel, Pinecone, OpenAI, Langchain, Framer Motion}
+       \resumeItemListStart
+         \resumeItem{Designed a web app utilizing real-time data and vector search, delivering accurate and up-to-date responses}
+          \resumeItem{Emphasized ML model fine-tuning to maintain high levels of data relevance}
+       \resumeItemListEnd
+   
+
+     \resumeSubheading
+       {Instant Video Caption Generator (Jelly Up!)}{August 2024}
+       {Built a backend AI system for video captioning using OpenAI Whisper}{}
+       \resumeItem{Technologies Used: Nextjs, TypeScript, React, Vercel, Docker, OpenCV, OpenAI (Whisper), Supabase}
+       \resumeItemListStart
+         \resumeItem{Built a backend AI system for video captioning, achieving high transcription accuracy using OpenAI Whisper}
+          \resumeItem{Impact: Won 2nd place at the Headstarter Hiring Hackathon among hundreds of teams, demonstrating excellence in real-time caption generation for diverse media}
+       \resumeItemListEnd
+   
+
+     \resumeSubheading
+       {Voice Activated AI Travel Assistant (Globetrotter AI)}{August 2024}
+       {Developed an AI-powered voice assistant for personalized travel recommendations}{}
+       \resumeItem{Technologies Used: Nextjs, React, Vercel, Gemini, Google TTS, React Three Fiber, Framer Motion}
+       \resumeItemListStart
+         \resumeItem{Designed a conversational AI travel assistant using Flask, integrating multiple travel APIs for seamless itinerary planning}
+          \resumeItem{Impact: Won 1st place at the Headstarter Hiring Hackathon, recognized for innovation and utility in travel assistance}
+       \resumeItemListEnd
+   
+   \resumeSubHeadingListEnd
+%-----------TECHNICAL SKILLS-----------
+\section{Skills}
+\begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+          \textbf{Technical Skills} & Python, React, React Native, SQL \\
+          \textbf{Additional Skills} & UI/UX Design, Leadership, Teamwork, Agile, Artist, Musician (Piano, Guitar)
+        \end{tabular*}
+%-----------ADDITIONAL INFO-----------
+\end{document}

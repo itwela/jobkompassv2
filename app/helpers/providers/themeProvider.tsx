@@ -78,6 +78,8 @@ type ThemeStyles = {
       shadow: string;
     };
   };
+  black: string;
+  white: string;
 };
 
 interface JobKompassThemeContextType {
@@ -167,7 +169,9 @@ export function JobKompassThemeProvider({ children }: { children: React.ReactNod
           backdropFilter: 'blur(8px)',
           shadow: '0 8px 32px rgba(0, 0, 0, 0.2)'
         }
-      }
+      },
+      black: '#0f0f0f',
+      white: '#f8f9fa',
     },
     light: {
       background: '#ffffff',
@@ -244,7 +248,9 @@ export function JobKompassThemeProvider({ children }: { children: React.ReactNod
           backdropFilter: 'blur(8px)',
           shadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
         }
-      }
+      },
+      black: '#0f0f0f',
+      white: '#f8f9fa',
     },
   };
 

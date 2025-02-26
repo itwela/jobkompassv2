@@ -40,5 +40,8 @@ ffmpeg -i ./amazingRetro.mov -c:v libvpx-vp9 -crf 30 -b:v 0 -vf "scale=1280:-1" 
 
 ```
 ```
+cd Documents/Github/jobkompassv2/public/assets/vids
 
-ffmpeg -i ./gradient4.mov -vf "scale=1280:-1" -c:v libx264 -crf 23 -preset medium -movflags +faststart ./gradient4Compressed.mp4
+cd Documents/Github/jobkompassv2/public/assets/vids
+
+ffmpeg -i ./brown-gradient-video.mov -vf "scale=1280:-1" -c:v libx264 -crf 23 -preset medium -movflags +faststart ./brown-gradient-videoCompressed.mp4

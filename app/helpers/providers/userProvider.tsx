@@ -6,7 +6,7 @@ import { createSupClientInstance, supabaseClientClient } from '@/app/utils/supab
 import { useRouter } from 'next/navigation';
 import { queryKeys } from '@/app/jkUtilities_and_Tokens/tokens';
 import { getCurrentUser, getUserInfo, getUserJobs } from '../functions';
-
+import { UserFieldData } from '@/app/jkComponents/TechBro/types';
 export interface JobKompassUserType {
     user_id: any;
     firstName: any;
@@ -16,6 +16,15 @@ export interface JobKompassUserType {
     color_theme?: any  
     resumes: string[];
     cover_letters: string[];
+    bios?: {
+        title: string;
+        text: string;
+    }[];
+    // TODO
+    fields? : {
+        title: string;
+        data: UserFieldData[];
+    }[];
 }
 interface JobKompassUserContextType {
     userId: any;

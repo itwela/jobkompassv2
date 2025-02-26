@@ -18,7 +18,7 @@ export default function ApplicationsClient() {
     const {} = useJobKompassJobs()
     const { open } = useSidebar()
 
-    if (!userDataIsLoading) {
+    if (userDataIsLoading) {
         return (
             <div className="fixed w-screen z-[30] h-screen flex items-center justify-center">
                 <SplashScreen />

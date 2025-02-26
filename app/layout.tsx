@@ -13,6 +13,8 @@ import { JobKompassToastProvider } from "./helpers/providers/toastProvider";
 import { JobKompassResumeProvider } from "./helpers/providers/JobKompassResumeProvider";
 import { JobKompassThemeProvider } from "./helpers/providers/themeProvider";
 import { JobKompassApplicationBuddyProvider } from "./helpers/providers/applicaitonBuddyProvider";
+import { JobKompassAiResumeProvider } from "./helpers/providers/aiResumeProvider";
+import { DialogProvider } from "./helpers/providers/dialogProvider";
 
 dotenv.config();
 
@@ -50,11 +52,15 @@ export default function RootLayout({
                     <JobKompassApplicationBuddyProvider>
                       <JobKompassCareerAssistantProvider>
                         <JobKompassResumeProvider>
+                          <JobKompassAiResumeProvider>
                           <JobKompassLandingProvider>
+                            <DialogProvider>
                             <div className="no-scrollbar">
                               {children}
                             </div>
+                            </DialogProvider>
                           </JobKompassLandingProvider>
+                          </JobKompassAiResumeProvider>
                         </JobKompassResumeProvider>
                       </JobKompassCareerAssistantProvider>
                     </JobKompassApplicationBuddyProvider>

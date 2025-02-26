@@ -22,7 +22,9 @@ export const JkSelect = memo(
 
         return (
             <div className="flex flex-col gap-2 w-full">
-                <p style={{color: styles.text.primary}} className={`${JK_Styles().subTitleSize} opacity-[61.8%]`}>{label}</p>
+                {label !== "" && (
+                    <p style={{color: styles.text.primary}} className={`${JK_Styles().subTitleSize} opacity-[61.8%]`}>{label}</p>
+                )}
                 <Select value={value} onValueChange={onChange}>
                     <SelectTrigger
                         className="w-full rounded-lg border-none outline-none transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"

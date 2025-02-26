@@ -9,28 +9,25 @@ export default function JobFilters({searchQuery, setSearchQuery, filterColors, r
     const { user } = useJobKompassUser()
     const { styles } = useJobKompassTheme()
 
-    const handleSearch = (e: any) => {
-
-        console.log("e is",e)
-
-        // if (e.target.value != '') {
-        //     setSearchQuery('')
-        //     return
-        // }
-
-        // setSearchQuery(e.target.value)
+    const handleFilterClick = (status: string) => {
+        // If clicking the same filter, clear it
+        if (searchQuery === status) {
+            setSearchQuery('')
+            return
+        }
+        // Set the filter to the clicked status
+        setSearchQuery(status)
     }
 
-
     return (
-        <div className="flex gap-2 h-max overflow-x-auto no-scrollbar">
-            {filterColors && Object.entries(filterColors).map(([status, color]) => (
+        <div className="flex px-2 gap-2 h-max overflow-x-auto no-scrollbar">
+   {filterColors && Object.entries(filterColors).map(([status, color]) => (
                 <div 
                     key={status} 
-                    onClick={(e) => {handleSearch(e)}}
-                    className="flex z-[10] cursor-pointer px-3 py-2 my-2 rounded-lg items-center gap-2 transition-all duration-300 hover:translate-y-[-2px] hover:scale-[1.02]"
+                    onClick={() => handleFilterClick(status)}
+                    className={`flex z-[10] cursor-pointer px-3 py-2 my-2 outline-none rounded-lg items-center gap-2 transition-all duration-300 hover:translate-y-[-2px] hover:scale-[1.02]`}
                     style={{
-                        backgroundColor: `${styles.card.background}90`,
+                        backgroundColor: searchQuery === status ? (color as string) : `${styles.card.background}90`,
                         border: styles.card.border,
                         backdropFilter: 'blur(8px)',
                         WebkitBackdropFilter: 'blur(8px)',
@@ -39,7 +36,7 @@ export default function JobFilters({searchQuery, setSearchQuery, filterColors, r
                     <span 
                         className="text-sm font-medium"
                         style={{
-                            color: styles.text.primary
+                            color: searchQuery === status ? '#ffffff' : styles.text.primary
                         }}
                     >
                         {status}
@@ -47,9 +44,7 @@ export default function JobFilters({searchQuery, setSearchQuery, filterColors, r
                     <div 
                         className="w-4 h-4 rounded-full transition-transform duration-300 hover:scale-110" 
                         style={{ 
-                            backgroundColor: status === 'Interested' ? styles.status.interested : 
-                                        status === 'Ghosted' ? styles.status.ghosted :
-                                        color as string,
+                            backgroundColor: searchQuery === status ? '#ffffff' : (color as string),
                             boxShadow: `0 0 10px ${color}`
                         }}
                     />

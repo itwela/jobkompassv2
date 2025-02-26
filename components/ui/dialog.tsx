@@ -1,161 +1,208 @@
 "use client"
 
 import * as React from "react"
-import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { X } from "lucide-react"
-
 import { cn } from "@/lib/utils"
+import { useDialog } from "@/app/helpers/providers/dialogProvider";
+import { useSidebar } from "./sidebar";
+import { useJobKompassResume } from "@/app/helpers/providers/JobKompassResumeProvider";
+import { useJobKompassTheme } from "@/app/helpers/providers/themeProvider";
 
-const Dialog = DialogPrimitive.Root
-
-const DialogTrigger = DialogPrimitive.Trigger
-
-const DialogPortal = DialogPrimitive.Portal
-
-const DialogClose = DialogPrimitive.Close
-
-const DialogOverlay = React.forwardRef<
-  React.ElementRef<typeof DialogPrimitive.Overlay>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
->(({ className, ...props }, ref) => (
-  <DialogPrimitive.Overlay
-    ref={ref}
-    className={cn(
-      "fixed w-[100%] h-[100%] z-50 bg-black/80  data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
-      className
-    )}
-    {...props}
-  />
-))
-DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
-
-interface DialogContentProps extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> {
-  containerRef?: React.RefObject<HTMLDivElement | HTMLElement>
+interface DialogProps {
+  children: React.ReactNode;
+  id?: string; // Add unique identifier for each dialog
 }
 
-const DialogContent = React.forwardRef<
-  React.ElementRef<typeof DialogPrimitive.Content>,
-  DialogContentProps
->(({ className, children, containerRef, ...props }, ref) => {
-  const [dimensions, setDimensions] = React.useState({ width: 0, height: 0, top: 0, left: 0 })
+const Dialog: React.FC<DialogProps> = ({ children, id }) => {
+  return <>{children}</>;
+};
 
-  React.useEffect(() => {
-    const updateDimensions = () => {
-      if (containerRef?.current) {
-        const rect = containerRef.current.getBoundingClientRect()
-        setDimensions({
-          width: rect.width,
-          height: rect.height,
-          top: rect.top,
-          left: rect.left
-        })
-      }
+interface TriggerProps {
+  text?: string;
+  baseStyles?: string;
+  customClassName?: string;
+  customStyles?: React.CSSProperties;
+  element?: React.ReactNode;
+  dialogId?: string; // Add dialog identifier
+}
+
+const DialogTrigger = ({ text, baseStyles, customClassName, customStyles, element, dialogId }: TriggerProps) => {
+  const { openDialog } = useDialog()
+
+  const handleOpen = () => {
+    if (dialogId) {
+      openDialog(dialogId);
     }
+  }
 
-    updateDimensions()
-
-    // Add resize listener to update dimensions when window size changes
-    window.addEventListener('resize', updateDimensions)
-
-    return () => {
-      window.removeEventListener('resize', updateDimensions)
-    }
-  }, [containerRef]) // Remove dimensions from dependency array to prevent infinite updates
+  if (element) {
+    return (
+      <div onClick={handleOpen}>
+        {element}
+      </div>
+    )
+  }
 
   return (
-    <DialogPortal>
-      <DialogOverlay />
-      <DialogPrimitive.Content
-        ref={ref}
-        style={containerRef ? {
-          width: dimensions.width,
-          height: dimensions.height,
-          top: dimensions.top,
-          left: dimensions.left,
-          transform: 'none'
-        } : undefined}
-        className={cn(
-          "fixed z-[25] rounded-md grid gap-4  shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
-          !containerRef && "left-[50%] top-[50%] w-full max-w-lg translate-x-[-50%] translate-y-[-50%] data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
-          className
-        )}
-        {...props}
-      >
-        {children}
-        {/* <DialogPrimitive.Close className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-          <X className="h-4 w-4" />
-          <span className="sr-only">Close</span>
-        </DialogPrimitive.Close> */}
-      </DialogPrimitive.Content>
-    </DialogPortal>
-  )
-})
-DialogContent.displayName = DialogPrimitive.Content.displayName
+    <button 
+      className={`${cn(baseStyles)} ${customClassName} cursor-pointer`}
+      style={customStyles}
+      onClick={handleOpen}
+    >
+      {text}
+    </button>
+  );
+};
+
+interface DialogContentProps {
+  containerRef?: React.RefObject<HTMLDivElement | HTMLElement>;
+  className?: string;
+  style?: React.CSSProperties;
+  children: React.ReactNode;
+  dialogId?: string; // Add dialog identifier
+}
+
+const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps>(
+  ({ className, style, children, containerRef, dialogId, ...props }, ref) => {
+    const { isOpen, activeDialog, setIsOpen } = useDialog()
+    const [dimensions, setDimensions] = React.useState({ width: 0, height: 0, top: 0, left: 0 })
+    const { styles } = useJobKompassTheme();
+
+    React.useEffect(() => {
+      const updateDimensions = () => {
+        if (containerRef?.current) {
+          const rect = containerRef.current.getBoundingClientRect()
+          setDimensions({
+            width: rect.width,
+            height: rect.height,
+            top: rect.top,
+            left: rect.left
+          })
+        }
+      }
+
+      if (isOpen && activeDialog === dialogId) {
+        updateDimensions()
+        window.addEventListener('resize', updateDimensions)
+        return () => window.removeEventListener('resize', updateDimensions)
+      }
+    }, [containerRef, isOpen, activeDialog, dialogId])
+
+    if (!isOpen || activeDialog !== dialogId) {
+      return null;
+    }
+
+    return (
+      <>
+        <div 
+          className="fixed inset-0 z-[49]"
+          onClick={() => setIsOpen(false)}
+          style={{
+            backgroundColor: `${style?.background}70`,
+          }}
+        />
+        <div
+          ref={ref}
+          style={{
+            ...style,
+            ...(containerRef ? {
+              width: dimensions.width,
+              height: dimensions.height,
+              top: dimensions.top,
+              left: dimensions.left,
+              position: 'fixed',
+            } : {})
+          }}
+          className={cn(
+            "fixed z-[50] rounded-md grid gap-4 shadow-lg",
+            !containerRef && "left-[50%] top-[50%] w-full max-w-lg -translate-x-1/2 -translate-y-1/2 sm:rounded-lg",
+            className
+          )}
+          {...props}
+        >
+          {children}
+        </div>
+      </>
+    )
+  }
+)
+DialogContent.displayName = "DialogContent"
 
 const DialogHeader = ({
   className,
   ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={cn(
-      "flex flex-col space-y-1.5 text-center sm:text-left",
-      className
-    )}
-    {...props}
-  />
-)
-DialogHeader.displayName = "DialogHeader"
+}: React.HTMLAttributes<HTMLDivElement>) => {
+  return (
+    <div className={cn("flex items-center justify-between p-4 sm:p-6", className)} {...props} />
+  );
+}
 
 const DialogFooter = ({
   className,
   ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={cn(
-      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
-      className
-    )}
-    {...props}
-  />
-)
-DialogFooter.displayName = "DialogFooter"
+}: React.HTMLAttributes<HTMLDivElement>) => {
+  return (
+    <div className={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className)} {...props} />
+  )
+}
 
-const DialogTitle = React.forwardRef<
-  React.ElementRef<typeof DialogPrimitive.Title>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
->(({ className, ...props }, ref) => (
-  <DialogPrimitive.Title
-    ref={ref}
-    className={cn(
-      "text-lg font-semibold leading-none tracking-tight",
-      className
-    )}
-    {...props}
-  />
-))
-DialogTitle.displayName = DialogPrimitive.Title.displayName
+const DialogClose = ({
+  className,
+  element,
+  customclosefunction,
+  ...props
+}: any) => {
+  const { setIsOpen } = useDialog();
+  const { styles } = useJobKompassTheme();
+  
+  if (element) {
+    return (
+      <div onClick={() => {
+        if (customclosefunction) {
+          customclosefunction();
+          setIsOpen(false);
+        } else {
+          setIsOpen(false);
+        }
+      }}>
+        {element}
+      </div>
+    )
+  }
 
-const DialogDescription = React.forwardRef<
-  React.ElementRef<typeof DialogPrimitive.Description>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
->(({ className, ...props }, ref) => (
-  <DialogPrimitive.Description
-    ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
-    {...props}
-  />
-))
-DialogDescription.displayName = DialogPrimitive.Description.displayName
+  return (
+    <button
+      type="button"
+      style={{
+        backgroundColor: "transparent",
+        color: styles.text.primary,
+      }}
+      className={cn(
+        "flex items-center justify-center rounded-md p-2",
+        className
+      )}
+      {...props}
+      onClick={() => {
+        if (customclosefunction) {
+          customclosefunction();
+          setIsOpen(false);
+        } else {
+          setIsOpen(false);
+        }
+      }}
+    >
+      <span className="sr-only">Close</span>
+      <X className="w-4 h-4" />
+    </button>
+  );
+  
+};
 
 export {
   Dialog,
-  DialogPortal,
-  DialogOverlay,
-  DialogClose,
   DialogTrigger,
   DialogContent,
   DialogHeader,
   DialogFooter,
-  DialogTitle,
-  DialogDescription,
+  DialogClose
 }

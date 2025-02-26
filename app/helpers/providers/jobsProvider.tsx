@@ -22,6 +22,8 @@ export interface JobKompassJobsType {
     "Cover letter used": string;
     Description: string;
     Skills: string[];
+    created_at: string;
+    updated_at: string;
 }
 interface JobKompassJobsContextType {
 

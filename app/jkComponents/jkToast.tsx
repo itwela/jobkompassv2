@@ -26,6 +26,7 @@ export default function JobKompassToast() {
                 backgroundColor: styles.card.background,
                 boxShadow: `3.18px 3.18px 0px ${styles.card.accent}`
             }}
+            onClick={() => setToastIsVisible(false)}
             className="fixed top-4 right-[2%] place-self-center min-w-[280px] max-w-[30%] py-3 px-4 rounded-lg z-50 flex flex-col items-center justify-center transition-all duration-300 ease-in-out"
         >
             <div className="w-full h-full relative">

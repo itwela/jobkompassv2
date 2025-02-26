@@ -1,60 +1,121 @@
 import { TechBroThemeTypes } from "./types";
 
+const nameStyle = `lg:text-4xl text-3xl  font-bold leading-tight`;
+const detailItem = `text-gray-600 leading-relaxed mb-3 last:mb-0`;
+
+// export const techBroStyles: TechBroThemeTypes = {
+//   name: nameStyle,
+//   heading: `font-bold text-gray-800`,
+//   sectionHeading: `
+//     ~jk-text-md/4xl 
+//     mb-4 underline font-semibold text-gray-800 uppercase tracking-wide`,
+//   subheading: `
+//     ~jk-text-md/4xl 
+//     font-semibold`,
+//   body: `
+//     ~jk-text-sm/3xl 
+//     text-gray-600 mb-2 leading-relaxed`,
+//   bodySmall: `
+//     ~jk-text-sm/3xl 
+//     text-gray-500 mb-1 leading-snug flex items-center`,
+
+//   spacing: {
+//     section: "mb-6 pb-4 border-b-[1px] border-black/10 last:mb-0 last:pb-0 last:border-none",
+//     item: "mb-3 last:mb-0",
+//   },
+
+//   container: "min-w-[8in] max-w-[95%] bg-white h-max text-base",
+//   // container: "min-w-[8in] max-w-[95%] bg-white h-max text-base",
+
+//   header: {
+//     wrapper: "flex justify-between items-start w-full mb-4",
+//     nameSection: "flex flex-col",
+//     contactSection: "flex gap-4",
+//     contactColumn: "flex flex-col items-end",
+//   },
+
+//   section: {
+//     wrapper: "w-full space-y-3",
+//     title: "font-semibold mb-2",
+//     content: "space-y-3",
+//   },
+
+//   education: {
+//     item: "mb-3 last:mb-0",
+//     details: "pl-4 list-disc",
+//     detailItem: "text-gray-600 leading-relaxed",
+//   },
+
+//   experience: {
+//     item: "mb-3 last:mb-0",
+//     details: "pl-4 list-disc",
+//     detailItem: "text-gray-600 leading-relaxed",
+//   },
+
+//   projects: {
+//     item: "mb-3 last:mb-0",
+//     details: "pl-4 list-disc",
+//     detailItem: "text-gray-600 leading-relaxed",
+//   },
+
+//   skills: {
+//     wrapper: "flex flex-wrap gap-x-6 gap-y-3",
+//     section: "flex-1 min-w-[45%]",
+//     list: "flex flex-wrap bread-word max-w-[96%] ",
+//     item: "text-gray-600 after:content-[','] after:mr-1 last:after:content-none",
+//   },
+// };
+
 export const techBroStyles: TechBroThemeTypes = {
-  name: "text-clamp-[5px-2.5em-5xl] font-bold text-gray-900 leading-tight",
-  heading: "text-clamp-[xl-1.8em-5xl] font-bold text-gray-800 mb-4",
-  sectionHeading: "text-[1.4em] font-semibold text-gray-800 mb-[2%] uppercase tracking-wide",
-  subheading: "text-[1.2em] font-medium text-gray-700 mb-1",
-  body: "text-[1em] text-gray-600 leading-relaxed",
-  bodySmall: "text-[0.9em] text-gray-500 leading-relaxed",
+  name: `text-[length:2.4cqw] font-bold leading-tight`,
+  heading: `font-bold text-[length:2.8cqw] text-gray-800`,
+  sectionHeading: `text-[length:2.4cqw] mb-[1cqw] underline font-semibold uppercase tracking-wide text-gray-800`,
+  subheading: `text-[length:2cqw] font-semibold text-gray-700`,
+  body: `text-[length:1.6cqw] mb-[0.5cqw] leading-relaxed text-gray-600`,
+  bodySmall: `text-[length:1.4cqw] leading-snug flex items-center text-gray-500`,
+
   spacing: {
-    section: "mb-[4%] last:mb-0",
-    item: "mb-[2%] last:mb-0"
+    section: "mb-[1.5cqw] pb-[0.75cqw] border-b-[1px] border-black/10 last:mb-0 last:pb-0 last:border-none",
+    item: "mb-[0.75cqw] last:mb-0",
   },
-// Container
-container: "w-full bg-white h-max p-[3%] text-base",
-  
-// Header Section
-header: {
-  wrapper: "flex h-max place-items-end justify-between w-full mb-[2%]",
-  nameSection: "relative flex flex-col place-items-start h-max pb-[0.5%] leading-none gap-1",
-  contactSection: "flex leading-none gap-[3%]",
-  contactColumn: "flex flex-col h-max leading-none place-items-end text-[0.9em] gap-1"
-},
 
-// Content Sections
-section: {
-  wrapper: "space-y-[2%]",
-  title: "text-[1.2em] font-semibold mb-[1%]",
-  content: "space-y-[2%]"
-},
+  container: "w-full bg-white h-max",
 
-// Education Section
-education: {
-  item: "mb-[2%] last:mb-0",
-  details: "pl-[4%] mt-2 space-y-1",
-  detailItem: "list-disc text-[0.9em] leading-relaxed"
-},
+  header: {
+    wrapper: "flex justify-between items-start w-full mb-[1.5cqw]",
+    nameSection: "flex flex-col gap-[0.25cqw]",
+    contactSection: "flex gap-[1cqw]",
+    contactColumn: "flex flex-col items-end gap-[0.25cqw]",
+  },
 
-// Experience Section
-experience: {
-  item: "mb-[2%] last:mb-0",
-  details: "pl-[4%] mt-2 space-y-1",
-  detailItem: "list-disc text-[0.9em] leading-relaxed"
-},
+  section: {
+    wrapper: "w-full space-y-[1cqw]",
+    title: "font-semibold mb-[0.5cqw]",
+    content: "space-y-[0.75cqw]",
+  },
 
-// Projects Section
-projects: {
-  item: "mb-[2%] last:mb-0",
-  details: "pl-[4%] mt-2 space-y-1",
-  detailItem: "list-disc text-[0.9em] leading-relaxed"
-},
+  education: {
+    item: "mb-[1cqw] last:mb-0",
+    details: "pl-[1.5cqw] list-disc mt-[0.25cqw]",
+    detailItem: "text-gray-600 leading-relaxed mb-[0.25cqw]",
+  },
 
-// Skills Section
-skills: {
-  wrapper: "flex flex-wrap gap-x-[4%] gap-y-[2%]",
-  section: "flex-1 min-w-[45%]",
-  list: "flex flex-wrap gap-x-[0.5%] gap-y-[1%] mt-2",
-  item: "text-[0.9em] after:content-[','] last:after:content-none after:mr-[0.5%]"
-}
-}
+  experience: {
+    item: "mb-[1cqw] last:mb-0",
+    details: "pl-[1.5cqw] list-disc mt-[0.25cqw]",
+    detailItem: "text-gray-600 leading-relaxed mb-[0.25cqw]",
+  },
+
+  projects: {
+    item: "mb-[1cqw] last:mb-0",
+    details: "pl-[1.5cqw] list-disc mt-[0.25cqw]",
+    detailItem: "text-gray-600 leading-relaxed mb-[0.25cqw]",
+  },
+
+  skills: {
+    wrapper: "flex flex-wrap gap-x-[1.5cqw] gap-y-[0.75cqw]",
+    section: "flex-1 min-w-[45%]",
+    list: "flex flex-wrap break-words max-w-[96%] gap-[0.25cqw]",
+    item: "text-gray-600 after:content-[','] after:mr-[0.25cqw] last:after:content-none",
+  },
+};

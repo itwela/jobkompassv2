@@ -11,6 +11,7 @@ export const JkCombobox = memo(
     ({
         user,
         label,
+        placeholderText,
         initialObjectOfThings,
         notFoundComponent,
         onChange,
@@ -24,10 +25,10 @@ export const JkCombobox = memo(
     const searchInputRef = useRef<HTMLInputElement>(null);
     const { styles } = useJobKompassTheme();
 
-    const handleSelect = (currentValue: string) => {
+    const handleSelect = (currentValue: string, index?: number, ) => {
         setValue(currentValue === value ? "" : currentValue);
         setOpen(false);
-        // onChange?.(currentValue);
+        onChange?.(currentValue, index);
     };
 
     const handleClear = (e?: React.MouseEvent) => {
@@ -86,9 +87,11 @@ export const JkCombobox = memo(
 
     return (
         <div className="flex flex-col gap-2 w-full" ref={dropdownRef}>
+            {label !== "" && (
             <label style={{color: styles.text.primary}}  className={`${JK_Styles().subTitleSize} text-sm font-medium tracking-wide opacity-[61.8%] transition-opacity duration-200 group-hover:opacity-100`}>
                 {label}
             </label>
+            )}
             <div className="relative w-full">
                 <button
                     onClick={() => setOpen(!open)}
@@ -98,8 +101,7 @@ export const JkCombobox = memo(
                         "outline-none transition-all duration-300",
                         "hover:bg-opacity-90 hover:translate-y-[-1px] hover:shadow-lg",
                         "active:translate-y-[1px]",
-                        "focus:ring-2 focus:ring-opacity-50",
-                        open && "ring-2 ring-opacity-50 translate-y-[-1px]"
+                        open && "translate-y-[-1px]"
                     )}
                     style={{
                         backgroundColor: styles.form.select.background,
@@ -108,7 +110,7 @@ export const JkCombobox = memo(
                     }}
                 >
                     <span className="flex-1 text-left truncate">
-                        {selectedItem ? selectedItem.label : "Select skill..."}
+                        {selectedItem ? selectedItem.label : `${placeholderText}`}
                     </span>
                     <span className="flex items-center gap-2">
                         {value && (
@@ -143,7 +145,7 @@ export const JkCombobox = memo(
                             <input
                                 ref={searchInputRef}
                                 type="text"
-                                placeholder="Search skills..."
+                                placeholder="Search"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 onKeyDown={handleKeyDown}
@@ -154,7 +156,7 @@ export const JkCombobox = memo(
                             />
                         </div>
                         
-                        <div className="max-h-[300px] overflow-auto p-2">
+                        <div className="max-h-[300px] overflow-y-scroll no-scrollbar p-2">
                             {filteredItems.length === 0 ? (
                                 <div className="py-6 text-center text-sm opacity-50">
                                     {notFoundComponent}
@@ -164,7 +166,7 @@ export const JkCombobox = memo(
                                     {filteredItems.map((item: any, index: number) => (
                                         <button
                                             key={item.value}
-                                            onClick={() => handleSelect(item.value)}
+                                            onClick={() => handleSelect(item.value, index)}
                                             className={cn(
                                                 "w-full flex items-center gap-2 px-2 py-2 rounded-md",
                                                 "transition-all duration-200 cursor-pointer",

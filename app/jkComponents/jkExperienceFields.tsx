@@ -4,9 +4,10 @@ import { useJobKompassTheme } from "@/app/helpers/providers/themeProvider";
 import { JK_Colors } from "@/app/jkUtilities_and_Tokens/colors";
 import { ThemeKeys } from "@/app/types";
 import { Check, Pencil, Plus, Trash } from "lucide-react";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { JkInput } from "./jkInput";
 import { useJobKompassResume } from "../helpers/providers/JobKompassResumeProvider";
+import { JkTextArea } from "./jkTextArea";
 
 export interface JkExperienceFieldsProps {
     user: any;
@@ -18,93 +19,80 @@ export interface JkExperienceFieldsProps {
         description: string;
         details: string[];
     }>;
-    onCreate?: () => void;
-    onSave?: (index: number, experienceData: any) => void;
-    onDelete?: (index: number) => void;
 }
 
 export const JkExperienceFields = memo(
     ({
         user,
         experience,
-        onCreate,
-        onSave,
-        onDelete,
     }: JkExperienceFieldsProps) => {
         const [experienceNumber, setExperienceNumber] = useState(-1);
         const [isAddingNew, setIsAddingNew] = useState(false);
         const [isEditingExisting, setIsEditingExisting] = useState(false);
         const { styles } = useJobKompassTheme();
-        const { sectionImCurrentlyEditingRef, setSectionImCurrentlyEditingRef } = useJobKompassResume();
+        const { handleCreateNewComplexField, handleSaveComplexFields, handleDeleteComplexField, sectionImCurrentlyEditingRef, setSectionImCurrentlyEditingRef, currentThemeName } = useJobKompassResume();
+
+        const experienceFormRef = useRef<() => any>(null); // Ref to get experience state
 
         const handleStartUpdatingSelectedExperience = (index: number) => {
             setIsEditingExisting(true);
             setExperienceNumber(index);
-            setTitle(experience[index].title);
-            setCompany(experience[index].company);
-            setLocation(experience[index].location);
-            setDate(experience[index].date);
-            setDescription(experience[index].description);
-            const detailsArray = experience[index].details || [];
-            setDetails([...detailsArray] as any);
         };
 
-        const handleLooksGoodExperience = () => {
+        const handleSave = () => {
+            if (experienceFormRef.current) {
+                const experienceData = experienceFormRef.current();
+                console.log("Saving experience data:", experienceNumber, experienceData); // Debug
+                handleSaveComplexFields(currentThemeName, experienceNumber, experienceData, "Experience");
+            }
             setIsAddingNew(false);
             setIsEditingExisting(false);
             setExperienceNumber(-1);
         };
 
-        const handleDeleteExperience = (index: number) => {
-            onDelete && onDelete(index);
-            setExperienceNumber(-1);
-            setIsAddingNew(false);
-        };
-
-        const [title, setTitle] = useState("");
-        const [company, setCompany] = useState("");
-        const [location, setLocation] = useState("");
-        const [date, setDate] = useState("");
-        const [description, setDescription] = useState("");
-        const [details, setDetails] = useState([]);
-
-        const handleSave = () => {
-            const updatedExperience = {
-                title,
-                company,
-                location,
-                date,
-                description,
-                details
-            };
-            onSave && onSave(experienceNumber, updatedExperience);
-            handleLooksGoodExperience();
-        };
-
         const ExperienceForm = ({ index }: { index: number }) => {
-            const [localTitle, setLocalTitle] = useState(title);
-            const [localCompany, setLocalCompany] = useState(company);
-            const [localLocation, setLocalLocation] = useState(location);
-            const [localDate, setLocalDate] = useState(date);
-            const [localDescription, setLocalDescription] = useState(description);
-            const [localDetails, setLocalDetails] = useState(details);
+
+            const [localTitle, setLocalTitle] = useState(experience[index]?.title || "");
+            const [localCompany, setLocalCompany] = useState(experience[index]?.company || "");
+            const [localLocation, setLocalLocation] = useState(experience[index]?.location || "");
+            const [localDate, setLocalDate] = useState(experience[index]?.date || "");
+            const [localDescription, setLocalDescription] = useState(experience[index]?.description || "");
+            const [localDetails, setLocalDetails] = useState(experience[index]?.details || [""]);
 
             const handleFocus = (e: any) => {
                 console.log("Focus event triggered for project:", index, e);
                 setSectionImCurrentlyEditingRef(`experience-${index}`);
             };
 
+            const setAllFieldsWithDebugData = () => {
+                setLocalTitle("Software Engineer");
+                setLocalCompany("Tech Corp");
+                setLocalLocation("San Francisco, CA");
+                setLocalDate("Jan 2020 - Present");
+                setLocalDescription("Led development of core platform features");
+                setLocalDetails([
+                    "Increased system performance by 40%",
+                    "Managed team of 5 developers",
+                    "Implemented CI/CD pipeline"
+                ]);
+            };
+
             useEffect(() => {
-                setLocalTitle(title);
-                setLocalCompany(company);
-                setLocalLocation(location);
-                setLocalDate(date);
-                setLocalDescription(description);
-                setLocalDetails(details);
-            }, [title, company, location, date, description, details]);
+                experienceFormRef.current = () => ({
+                    title: localTitle,
+                    company: localCompany,
+                    location: localLocation,
+                    date: localDate,
+                    description: localDescription,
+                    details: localDetails,
+                });
+            }, [localTitle, localCompany, localLocation, localDate, localDescription, localDetails]);
 
             return (
                 <span className="flex flex-col h-max  gap-5">
+
+                    <span onClick={setAllFieldsWithDebugData}>debug</span>
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <JkInput
                             user={user}
@@ -168,23 +156,44 @@ export const JkExperienceFields = memo(
                     />
 
                     {localDetails.map((detail, detailIndex) => (
-                        <JkInput
+                        <JkTextArea
                             key={detailIndex}
                             user={user}
-                            label={`Achievement ${detailIndex + 1}`}
-                            placeholderText="Add Achievement"
+                            label={`Detail ${detailIndex + 1}`}
+                            placeholderText="Add Detail"
                             type="text"
                             className="w-full"
                             value={detail}
-                            onChange={(e) => {
-                                const newDetails = [...localDetails];
-                                (newDetails as any)[detailIndex] = e.target.value;
-                                setLocalDetails(newDetails);
-                            }}
+                            onChange={(e) => setLocalDetails((prevDetails) => {
+                                const newDetails = [...prevDetails];
+                                newDetails[detailIndex] = e.target.value;
+                                return newDetails;
+                            })}
+                            onDelete={() => setLocalDetails((prevDetails) => {
+                                const newDetails = [...prevDetails];
+                                newDetails.splice(detailIndex, 1);
+                                return newDetails;
+                            })}
                             onMouseEnter={handleFocus}
                             fieldImIn="Experience"
                         />
                     ))}
+
+                    <button
+                        onClick={() => {
+                            const newDetails = [...localDetails];
+                            newDetails.push("");
+                            setLocalDetails(newDetails);
+                        }}
+                        className="w-full p-4 rounded-xl border border-dashed flex items-center justify-center gap-3 transition-all duration-300 hover:border-solid hover:bg-white/5 hover:scale-[1.01] active:scale-[0.99]"
+                        style={{
+                            borderColor: styles.card.border,
+                            color: styles.text.primary,
+                        }}
+                    >
+                        <Plus className="h-[14px] w-[14px]" />
+                        <span>Add Detail</span>
+                    </button>
                 </span>
             );
         };
@@ -221,14 +230,17 @@ export const JkExperienceFields = memo(
                                                 onClick={() => handleStartUpdatingSelectedExperience(index)}
                                             >
                                                 <a href="#start-of-experience-form">
-                                                <Pencil size={15} />
+                                                    <Pencil size={15} />
                                                 </a>
                                             </button>
                                             <button
-                                                className="p-1 outline-none border-none rounded-full transition-all duration-300 hover:bg-white/10"
-                                                onClick={() => handleDeleteExperience(index)}
+                                                onClick={() => handleDeleteComplexField(currentThemeName, index, "Experience")}
+                                                className="p-2 outline-none border-none rounded-lg hover:bg-white/5"
+                                                style={{ color: styles.text.primary }}
                                             >
-                                                <Trash size={15} />
+                                                <a>
+                                                    <Trash className="h-[14px] w-[14px]" />
+                                                </a>
                                             </button>
                                         </span>
                                         <p className="font-medium">{exp.title || "Add Job Title"}</p>
@@ -245,38 +257,28 @@ export const JkExperienceFields = memo(
 
                 {(isAddingNew || isEditingExisting) && (
                     <>
-                    <span className="w-full relative h-max">
+                        <span className="w-full relative h-max">
 
-                    <span id="start-of-experience-form"></span>
-                        <span 
-                        style={{
-                            backgroundColor: styles.nav.colors.careerAssistant,
-                            color: '#ffffff'
-                        }} className="flex sticky top-0 mb-4 items-center justify-between gap-2 py-2 px-4 rounded-lg transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]">
-                            <span className="font-bold">
-                                Editing: {experience[experienceNumber]?.title || "New Experience"}
+                            <span id="start-of-experience-form"></span>
+                            <span
+                                style={{
+                                    backgroundColor: styles.nav.colors.careerAssistant,
+                                    color: '#ffffff'
+                                }} className="flex sticky top-0 mb-4 items-center justify-between gap-2 py-2 px-4 rounded-lg transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]">
+                                <span className="font-bold">
+                                    Editing: {experience[experienceNumber]?.title || "New Experience"}
+                                </span>
+                                <span className="p-2 cursor-pointer" onClick={handleSave}>
+                                    Save?
+                                </span>
                             </span>
-                            <span className="p-2 cursor-pointer" onClick={handleSave}>
-                                Save?
-                            </span>
+                            <ExperienceForm index={experienceNumber} />
                         </span>
-                    <ExperienceForm index={experienceNumber} />
-                    </span>
                     </>
                 )}
 
                 <button
-                    onClick={() => {
-                        setIsAddingNew(true);
-                        setExperienceNumber(experience.length);
-                        setTitle("");
-                        setCompany("");
-                        setLocation("");
-                        setDate("");
-                        setDescription("");
-                        setDetails([]);
-                        onCreate && onCreate();
-                    }}
+                    onClick={() => handleCreateNewComplexField(currentThemeName, "Experience")}
                     className="w-full p-4 rounded-xl border border-dashed flex items-center justify-center gap-3 transition-all duration-300 hover:border-solid hover:bg-white/5 hover:scale-[1.01] active:scale-[0.99]"
                     style={{
                         borderColor: styles.card.border,

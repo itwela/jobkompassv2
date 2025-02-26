@@ -13,12 +13,15 @@ import { useSidebar } from '@/components/ui/sidebar';
 import RecentJobs from './components/recentJobs';
 import ShortCuts from './components/shortcuts';
 import { useJobKompassTheme } from '@/app/helpers/providers/themeProvider';
+import JkGradientImage from '@/app/jkComponents/jkGradientImage';
+import { useJobKompassAssets } from '@/app/helpers/hooks/useJobKompassAssets';
 
 export default function Dashboard({ getJobInformationStagehand }: { getJobInformationStagehand: any }) {
     const { user, userDataIsLoading } = useJobKompassUser();
     const { styles } = useJobKompassTheme();
     const supabase = createSupClientInstance();
     const { open } = useSidebar()
+    const { getAsset } = useJobKompassAssets();
 
     if (userDataIsLoading) {
         return (

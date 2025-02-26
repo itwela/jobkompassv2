@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useJobKompassTheme } from "@/app/helpers/providers/themeProvider";
@@ -7,101 +8,94 @@ import { Check, Pencil, Plus, Trash } from "lucide-react";
 import { memo, useEffect, useRef, useState } from "react";
 import { JkInput } from "./jkInput";
 import { useJobKompassResume } from "../helpers/providers/JobKompassResumeProvider";
+import { JkTextArea } from "./jkTextArea";
 
 export interface JkProjectFieldsProps {
     user: any;
     projects: Array<{
         name: string;
+        achievement: string;
         description: string;
+        link: string;
         technologies: string[];
         date: string;
         details: string[];
-    }>;
-    onCreate?: () => void;
-    onSave?: (index: number, projectData: any) => void;
-    onDelete?: (index: number) => void;
+      }>;
 }
 
 export const JkProjectFields = memo(
     ({
         user,
         projects,
-        onCreate,
-        onSave,
-        onDelete,
     }: JkProjectFieldsProps) => {
         const [projectNumber, setProjectNumber] = useState(-1);
         const [isAddingNew, setIsAddingNew] = useState(false);
         const [isEditingExisting, setIsEditingExisting] = useState(false);
         const { styles } = useJobKompassTheme();
-        const { sectionImCurrentlyEditingRef, setSectionImCurrentlyEditingRef } = useJobKompassResume();
+        const { handleCreateNewComplexField, handleSaveComplexFields, handleDeleteComplexField, sectionImCurrentlyEditingRef, setSectionImCurrentlyEditingRef , currentThemeName } = useJobKompassResume();
 
-        const projectCount = projects?.length;
+        const projectFormRef = useRef<() => any>(null); // Ref to get ProjectForm state
 
         const handleStartUpdatingSelectedProject = (index: number) => {
             setIsEditingExisting(true);
             setProjectNumber(index);
-            setName(projects[index].name);
-            setDescription(projects[index].description);
-            setTechnologies(projects[index].technologies);
-            setDate(projects[index].date);
-            const detailsArray = projects[index].details || [];
-            setDetails([...detailsArray] as any);
         };
 
-        const handleLooksGoodProject = () => {
+        const handleSave = () => {
+            if (projectFormRef.current) {
+                const projectData = projectFormRef.current();
+                console.log("Saving project data:", projectNumber, projectData); // Debug
+                handleSaveComplexFields( currentThemeName, projectNumber, projectData, "Projects");
+            }
             setIsAddingNew(false);
             setIsEditingExisting(false);
             setProjectNumber(-1);
         };
 
-        const handleDeleteProject = (index: number) => {
-            onDelete && onDelete(index);
-            setProjectNumber(-1);
-            setIsAddingNew(false);
-        };
-
-        const [name, setName] = useState("");
-        const [description, setDescription] = useState("");
-        const [technologies, setTechnologies] = useState<string[]>([]);
-        const [date, setDate] = useState("");
-        const [details, setDetails] = useState([]);
-
-        const handleSave = () => {
-            const updatedProject = {
-                name,
-                description,
-                technologies,
-                date,
-                details
-            };
-            onSave && onSave(projectNumber, updatedProject);
-            handleLooksGoodProject();
-        };
-
         const ProjectForm = ({ index }: { index: number }) => {
-            const [localName, setLocalName] = useState(name);
-            const [localDescription, setLocalDescription] = useState(description);
-            const [localTechnologies, setLocalTechnologies] = useState(technologies);
-            const [localDate, setLocalDate] = useState(date);
-            const [localDetails, setLocalDetails] = useState(details);
             
+            const [localName, setLocalName] = useState(projects[index]?.name || "");
+            const [localDescription, setLocalDescription] = useState(projects[index]?.description || "");
+            const [localTechnologies, setLocalTechnologies] = useState(projects[index]?.technologies || [""]);
+            const [localDate, setLocalDate] = useState(projects[index]?.date || "");
+            const [localDetails, setLocalDetails] = useState(projects[index]?.details || [""]);
+            const [localAchievement, setLocalAchievement] = useState(projects[index]?.achievement || "");
+            const [localLink, setLocalLink] = useState(projects[index]?.link || "");
+
             const handleFocus = (e: any) => {
                 console.log("Focus event triggered for project:", index, e);
                 setSectionImCurrentlyEditingRef(`project-${index}`);
             };
 
+            const setALlFeildsWIthDebugData = () => {
+                setLocalName("Project Name");
+                setLocalDescription("Project Description");
+                setLocalTechnologies(["React", "Node.js", "TypeScript"]);
+                setLocalDate("Jan 2023 - Mar 2023");
+                setLocalDetails?.(["Achievement 1", "Achievement 2", "Achievement 3"]);
+                setLocalAchievement("Project Achievement");
+                setLocalLink?.("setLocalLink");
+            };
 
+
+            // Update the ref with a function to get current state
             useEffect(() => {
-                setLocalName(name);
-                setLocalDescription(description);
-                setLocalTechnologies(technologies);
-                setLocalDate(date);
-                setLocalDetails(details);
-            }, [name, description, technologies, date, details]);
+                projectFormRef.current = () => ({
+                    name: localName,
+                    description: localDescription,
+                    technologies: localTechnologies,
+                    date: localDate,
+                    details: localDetails,
+                    achievement: localAchievement,
+                    link: localLink,
+                });
+            }, [localName, localDescription, localTechnologies, localDate, localDetails, localAchievement, localLink]);
 
             return (
                 <span className="flex flex-col gap-5">
+                    
+                    <span onClick={setALlFeildsWIthDebugData}>debug</span>
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <JkInput
                             user={user}
@@ -114,6 +108,11 @@ export const JkProjectFields = memo(
                             onMouseEnter={handleFocus}
                             fieldImIn="Projects"
                         />
+                        
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        
                         <JkInput
                             user={user}
                             label="Date"
@@ -122,6 +121,18 @@ export const JkProjectFields = memo(
                             className="w-full"
                             value={localDate}
                             onChange={(e) => setLocalDate(e.target.value)}
+                            onMouseEnter={handleFocus}
+                            fieldImIn="Projects"
+                        />
+
+                        <JkInput
+                            user={user}
+                            label="Link"
+                            placeholderText="Add Project Link"
+                            type="text"
+                            className="w-full"
+                            value={localLink}
+                            onChange={(e) => setLocalLink(e.target.value)}
                             onMouseEnter={handleFocus}
                             fieldImIn="Projects"
                         />
@@ -134,12 +145,22 @@ export const JkProjectFields = memo(
                         type="text"
                         className="w-full"
                         value={localDescription}
-                        onChange={(e) => {
-                            setLocalDescription(e.target.value); 
-                        }}
+                        onChange={(e) => setLocalDescription(e.target.value)}
                         onMouseEnter={handleFocus}
                         fieldImIn="Projects"
-                        />
+                    />
+
+                    <JkInput
+                        user={user}
+                        label="Achievement"
+                        placeholderText="Add Project Achievement"
+                        type="text"
+                        className="w-full"
+                        value={localAchievement}
+                        onChange={(e) => setLocalAchievement(e.target.value)}
+                        onMouseEnter={handleFocus}
+                        fieldImIn="Projects"
+                    />
 
                     <JkInput
                         user={user}
@@ -148,15 +169,16 @@ export const JkProjectFields = memo(
                         type="text"
                         className="w-full"
                         value={localTechnologies.join(", ")}
-                        onChange={(e) => {
-                            setLocalTechnologies(e.target.value.split(", ")); 
-                        }}
+                        onChange={(e) => setLocalTechnologies(e.target.value.split(", "))}
                         onMouseEnter={handleFocus}
                         fieldImIn="Projects"
                     />
 
+
                     {projects[index]?.details.map((detail, detailIndex) => (
-                        <JkInput
+                        
+                        // TODO
+                        <JkTextArea
                             key={detailIndex}
                             user={user}
                             label={`Detail ${detailIndex + 1}`}
@@ -174,7 +196,8 @@ export const JkProjectFields = memo(
                         />
                     ))}
 
-                    <button
+                    {/* TODO */}
+                    {/* <button
                         onClick={() => {
                             const newDetails = [...localDetails, ""];
                             setLocalDetails(newDetails as any);
@@ -188,7 +211,7 @@ export const JkProjectFields = memo(
                     >
                         <Plus className="h-[14px] w-[14px]" />
                         <span>Add Detail</span>
-                    </button>
+                    </button> */}
                 </span>
             );
         };
@@ -242,31 +265,36 @@ export const JkProjectFields = memo(
                                         {project.date || "No date specified"}
                                     </p>
                                 </span>
-                                <button
-                                    onClick={() => handleStartUpdatingSelectedProject(index)}
-                                    className="p-2 outline-none border-none rounded-lg hover:bg-white/5"
-                                    style={{ color: styles.text.primary }}
-                                >
-                                    <a href="#start-of-project-form">
-                                        <Pencil className="h-[14px] w-[14px]" />
-                                    </a>
-                                </button>
+
+                                <span className="flex flex-col gap-2">
+                                    <button
+                                        onClick={() => handleStartUpdatingSelectedProject(index)}
+                                        className="p-2 outline-none border-none rounded-lg hover:bg-white/5"
+                                        style={{ color: styles.text.primary }}
+                                    >
+                                        <a href="#start-of-project-form">
+                                            <Pencil className="h-[14px] w-[14px]" />
+                                        </a>
+                                    </button>
+                                    <button
+                                        onClick={() => handleDeleteComplexField(currentThemeName, index, "Projects")}
+                                        className="p-2 outline-none border-none rounded-lg hover:bg-white/5"
+                                        style={{ color: styles.text.primary }}
+                                    >
+                                        <a>
+                                            <Trash className="h-[14px] w-[14px]" />
+                                        </a>
+                                    </button>
+                                </span>
+
                             </span>
                         )}
                     </div>
                 ))}
 
+                {/* REVIEW */}
                 <button
-                    onClick={() => {
-                        setIsAddingNew(true);
-                        setProjectNumber(projects.length);
-                        setName("");
-                        setDescription("");
-                        setTechnologies([]);
-                        setDate("");
-                        setDetails([]);
-                        onCreate && onCreate();
-                    }}
+                    onClick={() => handleCreateNewComplexField( currentThemeName, "Projects")}
                     className="w-full p-4 rounded-xl border border-dashed flex items-center justify-center gap-3 transition-all duration-300 hover:border-solid hover:bg-white/5 hover:scale-[1.01] active:scale-[0.99]"
                     style={{
                         borderColor: styles.card.border,

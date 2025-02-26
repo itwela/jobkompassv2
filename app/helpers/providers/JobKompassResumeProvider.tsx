@@ -2,8 +2,9 @@
 
 import React, { createContext, useCallback, useContext, useEffect, useState, useRef } from 'react';
 import { themes } from '@/app/dashboard/careerassistant/components/resume/resumeTemplates';
+import { template } from 'lodash';
 
-interface TechBroData {
+interface userFieldData {
   personalInfo: {
     firstName: string;
     lastName: string;
@@ -36,12 +37,12 @@ interface TechBroData {
   }>;
   projects: Array<{
     name: string;
-    achievement: string;
     description: string;
-    link: string;
     technologies: string[];
     date: string;
     details: string[];
+    achievement: string;
+    link: string;
   }>;
   skills: {
     technical: string[];
@@ -56,11 +57,7 @@ interface TechBroData {
 }
 
 interface JobKompassResumeContextType {
-  textScales: {
-    heading: number;
-    subheading: number;
-    body: number;
-  };
+
   techBroTheme: {
     name: string;
     heading: string;
@@ -72,8 +69,14 @@ interface JobKompassResumeContextType {
       item: string;
     };
   };
-  techBroData: TechBroData;
-  setTechBroData: React.Dispatch<React.SetStateAction<TechBroData>>;
+  userFieldData: userFieldData;
+  setUserFieldData: React.Dispatch<React.SetStateAction<userFieldData>>;
+
+  textScales: {
+    heading: number;
+    subheading: number;
+    body: number;
+  };
   calculateTextScales: (containerWidth: number) => void;
   currentThemeName: string;
   currentTheme: {
@@ -98,7 +101,7 @@ interface JobKompassResumeContextType {
   contentHeight: number;
   pageHeight: number;
   fullContentRef: any;
-  registerContentRef: (ref: HTMLDivElement | null) => void;
+  registerContentRef: (ref: HTMLElement | null) => void;
   checkOverflow: () => void;
   wantsToPrint: boolean;
   setWantsToPrint: (value: boolean) => void;
@@ -107,19 +110,44 @@ interface JobKompassResumeContextType {
 
   sectionImCurrentlyEditingRef: React.RefObject<any>;
   setSectionImCurrentlyEditingRef: (ref: any) => void;
+  currentJobForResumeCreation: any; 
+  setCurrentJobForResumeCreation: (job: any) => void;
+
+  complexFieldIndex: number;
+  setComplexFieldIndex: (index: number) => void;
+  complexFieldData: any;
+  setComplexFieldData: (data: any) => void;
+  readyToSaveComplexFields: boolean;
+  setReadyToSaveComplexFields: (value: boolean) => void;
+
+  handleCreateNewComplexField: (template: string, category: any) => void;
+  handleSaveComplexFields: (template: string, index: number, data: any, category: any) => void;
+  handleDeleteComplexField: (template: string, index: number, category: any) => void;
+  
+  clearResumeDataDeepseek: () => void;
+  updateResumeWithAIDataDeepseek: (aiData: Partial<userFieldData>) => void;  
+
+  customSymbol: any;
+  setCustomSymbol: (symbol: any) => void;
+
+  handleAddDetail: (category: string, index: number, newDetail: string) => void;
+  handleRemoveDetail: (category: string, itemIndex: number, detailIndex: number) => void;
+
 
 }
 
 const ResumeContext = createContext<JobKompassResumeContextType | null>(null);
 
 export function JobKompassResumeProvider({ children }: { children: React.ReactNode }) {
+  
+  // STUB -------- CONSTS
+
   const [textScales, setTextScales] = useState({
     heading: 0,
     subheading: 0,
     body: 0
   });
-
-  const [techBroData, setTechBroData] = useState<TechBroData>({
+  const [userFieldData, setUserFieldData] = useState<userFieldData>({
     personalInfo: {
       firstName: "",
       lastName: "",
@@ -270,7 +298,6 @@ export function JobKompassResumeProvider({ children }: { children: React.ReactNo
       references: ["Available upon request"],
     },
   });
-
   const [currentThemeName, setCurrentThemeName] = useState<string>('Tech Bro');
   const techBroTheme = themes['Tech Bro'];
   const [screenWidth, setScreenWidth] = useState(
@@ -285,27 +312,29 @@ export function JobKompassResumeProvider({ children }: { children: React.ReactNo
   const [wantsToPrint, setWantsToPrint] = useState<boolean>(false);
   const [currentlyTestingNewTheme, setCurrentlyTestingNewTheme] = useState<boolean>(false);
   const sectionImCurrentlyEditingRef = useRef<any>(null);
+  const [currentJobForResumeCreation, setCurrentJobForResumeCreation] = useState<any>(null);
+
+  const [complexFieldIndex, setComplexFieldIndex] = useState<number>(0);
+  const [complexFieldData, setComplexFieldData] = useState<any>(null);
+  const [readyToSaveComplexFields, setReadyToSaveComplexFields] = useState<boolean>(false);
+
+  const [customSymbol, setCustomSymbol] = useState<any>(null);
+
+  // STUB -------- CALLBACKS
 
   const setSectionImCurrentlyEditingRef = useCallback((sectionId: string) => {
     console.log("Function called with sectionId:", sectionId);
     const element = document.getElementById(sectionId);
-    console.log("Found element:", element);
     
     if (element) {
-        console.log("Attempting to scroll to element");
         element.scrollIntoView({ 
             behavior: 'smooth', 
             block: 'center',
             inline: 'nearest'
         });
     }
-}, []);
+  }, []);
 
-  useEffect(() => {
-    if (wantsToPrint) {
-      console.log('Print state updated in provider:', wantsToPrint);
-    }
-  }, [wantsToPrint]);
   const calculateTextScales = useCallback((containerWidth: number) => {
     setTextScales({
       heading: 24,
@@ -314,7 +343,7 @@ export function JobKompassResumeProvider({ children }: { children: React.ReactNo
     });
   }, []);
 
-  const registerContentRef = useCallback((ref: HTMLDivElement | null) => {
+  const registerContentRef = useCallback((ref: HTMLElement | null) => {
     if (ref) {
       fullContentRef.current = ref;
       checkOverflow();
@@ -336,6 +365,14 @@ export function JobKompassResumeProvider({ children }: { children: React.ReactNo
       setContentHeight(height);
     }, 100);
   }, []);
+
+  // STUB -------- USEEFFECTS
+
+  useEffect(() => {
+    if (wantsToPrint) {
+      console.log('Print state updated in provider:', wantsToPrint);
+    }
+  }, [wantsToPrint]);
 
   useEffect(() => {
     const observer = new ResizeObserver(() => {
@@ -370,17 +407,255 @@ export function JobKompassResumeProvider({ children }: { children: React.ReactNo
   useEffect(() => {
   }, [])
 
-  const [currentTheme, setCurrentTheme] = useState<typeof themes[keyof typeof themes]>(() => {
-    
+  const [currentTheme, setCurrentTheme] = useState<typeof themes[keyof typeof themes]>(() => {   
     // NOTE how to apply a theme
     return themes['Tech Bro'];
   });
 
+  const handleCreateNewComplexField = (template: string, category: string) => {
+    console.log(`Creating new entry for theme "${template}" in category "${category}"...`);
+  
+    if (template === "Tech Bro") {
+      let newEntry = {};
+  
+      if (category === "Projects") {
+        newEntry = {
+          name: "",
+          description: "",
+          technologies: [],
+          date: "",
+          details: [],
+          achievement: "",
+          link: "",
+        };
+        console.log("New Entry:", newEntry);
+        // Use a callback function to ensure we're working with the latest state
+        setUserFieldData((prev: any) => {
+          // Make sure we're creating a new array reference
+          const updatedProjects = Array.isArray(prev.projects) ? [...prev.projects, newEntry] : [newEntry];
+          console.log("Updated Projects:", updatedProjects);
+          // Return a new object reference to trigger re-render
+          return { ...prev, projects: updatedProjects };
+        });
+      }
+  
+      if (category === "Education") {
+        newEntry = {
+          name: "",
+          school: "",
+          startDate: "",
+          endDate: "",
+          degree: "",
+          field: "",
+          date: "",
+          details: [],
+          description: "",
+          technologies: [],
+        };
+        // Use a callback function to ensure we're working with the latest state
+        setUserFieldData((prev: any) => {
+          // Make sure we're creating a new array reference
+          const updatedEducation = Array.isArray(prev.education) ? [...prev.education, newEntry] : [newEntry];
+          console.log("Updated Education:", updatedEducation);
+          // Return a new object reference to trigger re-render
+          return { ...prev, education: updatedEducation };
+        });
+      }
+  
+      if (category === "Experience") {
+        newEntry = {
+          title: "",
+          company: "",
+          location: "",
+          date: "",
+          description: "",
+          details: [],
+        };
+        // Use a callback function to ensure we're working with the latest state
+        setUserFieldData((prev: any) => {
+          // Make sure we're creating a new array reference
+          const updatedExperience = Array.isArray(prev.experience) ? [...prev.experience, newEntry] : [newEntry];
+          console.log("Updated Experience:", updatedExperience);
+          // Return a new object reference to trigger re-render
+          return { ...prev, experience: updatedExperience };
+        });
+      }
+  
+      if (Object.keys(newEntry).length === 0) {
+        console.warn("Invalid category:", category);
+      }
+  
+      return;
+    }
+  };
+
+  const handleSaveComplexFields = (template: string, index: number, data: any, category: string) => {
+    // Cleaner logging to confirm all values
+    console.log("Saving complex fields:", { index, data, category });
+
+    setUserFieldData((prev) => {
+      if (category === "Projects") {
+        const updatedProjects = [...prev.projects];
+        if (index >= 0 && index < updatedProjects.length) {
+          updatedProjects[index] = data; // Update existing project
+        } else {
+          updatedProjects.push(data); // Fallback for new project
+        }
+        console.log("Updated projects:", updatedProjects); // Debug
+        return { ...prev, projects: updatedProjects };
+      }
+
+      if (category === "Education") {
+        const updatedEducation = [...prev.education];
+        if (index >= 0 && index < updatedEducation.length) {
+          updatedEducation[index] = data; // Update existing education entry
+        } else {
+          updatedEducation.push(data); // Fallback for new education entry
+        }
+        console.log("Updated education:", updatedEducation); // Debug
+        return { ...prev, education: updatedEducation };
+      }
+
+      if (category === "Experience") {
+        const updatedExperience = [...prev.experience];
+        if (index >= 0 && index < updatedExperience.length) {
+          updatedExperience[index] = data; // Update existing experience entry
+        } else {
+          updatedExperience.push(data); // Fallback for new experience entry
+        }
+        console.log("Updated experience:", updatedExperience); // Debug
+        return { ...prev, experience: updatedExperience };
+      }
+
+      // If category doesn’t match, return unchanged state
+      console.warn("Unknown category:", category);
+      return prev;
+
+    });
+    // if (template === "Tech Bro") {
+    // }   
+
+  };
+
+  const handleDeleteComplexField = (template: string, index: number, category: string) => {
+    console.log(`Deleting entry at index ${index} for theme "${template}" in category "${category}"...`);
+
+    setUserFieldData((prev: any) => {
+      if (category === "Projects") {
+        const updatedProjects = [...prev.projects];
+        updatedProjects.splice(index, 1);
+        console.log("Updated projects:", updatedProjects);
+        return {...prev, projects: updatedProjects };
+      }
+
+      if (category === "Education") {
+        const updatedEducation = [...prev.education];
+        updatedEducation.splice(index, 1);
+        console.log("Updated education:", updatedEducation);
+        return {...prev, education: updatedEducation };
+      }
+      if (category === "Experience") {
+        const updatedExperience = [...prev.experience];
+        updatedExperience.splice(index, 1);
+        console.log("Updated experience:", updatedExperience);
+        return {...prev, experience: updatedExperience };
+      }
+      // If category doesn’t match, return unchanged state
+      console.warn("Unknown category:", category);
+      return prev;
+    });
+
+    // if (template === "Tech Bro") {
+    // }
+  };
+
+  const handleAddDetail = (category: string, index: number, newDetail: string) => {
+    setUserFieldData((prev) => {
+      if (category === "Projects") {
+        const updatedProjects = [...prev.projects];
+        updatedProjects[index].details = [...(updatedProjects[index].details || []), newDetail];
+        return { ...prev, projects: updatedProjects };
+      }
+  
+      if (category === "Education") {
+        const updatedEducation = [...prev.education];
+        updatedEducation[index].details = [...(updatedEducation[index].details || []), newDetail];
+        return { ...prev, education: updatedEducation };
+      }
+  
+      if (category === "Experience") {
+        const updatedExperience = [...prev.experience];
+        updatedExperience[index].details = [...(updatedExperience[index].details || []), newDetail];
+        return { ...prev, experience: updatedExperience };
+      }
+  
+      return prev;
+    });
+  };
+  
+  const handleRemoveDetail = (category: string, itemIndex: number, detailIndex: number) => {
+    setUserFieldData((prev) => {
+      if (category === "Projects") {
+        const updatedProjects = [...prev.projects];
+        updatedProjects[itemIndex].details = updatedProjects[itemIndex].details.filter((_, i) => i !== detailIndex);
+        return { ...prev, projects: updatedProjects };
+      }
+  
+      if (category === "Education") {
+        const updatedEducation = [...prev.education];
+        updatedEducation[itemIndex].details = updatedEducation[itemIndex].details.filter((_, i) => i !== detailIndex);
+        return { ...prev, education: updatedEducation };
+      }
+  
+      if (category === "Experience") {
+        const updatedExperience = [...prev.experience];
+        updatedExperience[itemIndex].details = updatedExperience[itemIndex].details.filter((_, i) => i !== detailIndex);
+        return { ...prev, experience: updatedExperience };
+      }
+  
+      return prev;
+    });
+  };
+
+
+const clearResumeDataDeepseek = (setUserFieldData: React.Dispatch<React.SetStateAction<userFieldData>>) => {
+  setUserFieldData(prev => ({
+    ...prev,
+    education: [],
+    experience: [],
+    projects: [],
+    skills: {
+      technical: [],
+      additional: []
+    },
+    additionalInfo: {
+      interests: [],
+      hobbies: [],
+      languages: [],
+      references: []
+    }
+  }));
+};
+
+  const updateResumeWithAIDataDeepseek = (
+    setUserFieldData: React.Dispatch<React.SetStateAction<userFieldData>>,
+    aiData: Partial<userFieldData>
+  ) => {
+    setUserFieldData(prev => ({
+      ...prev,
+      education: aiData.education || prev.education,
+      experience: aiData.experience || prev.experience,
+      projects: aiData.projects || prev.projects,
+      skills: aiData.skills || prev.skills,
+      additionalInfo: aiData.additionalInfo || prev.additionalInfo
+    }));
+  };
+
   const value = {
     textScales,
     techBroTheme,
-    techBroData,
-    setTechBroData,
+    userFieldData,
+    setUserFieldData,
     currentTheme,
     currentThemeName,
     setCurrentThemeName,
@@ -401,7 +676,30 @@ export function JobKompassResumeProvider({ children }: { children: React.ReactNo
     currentlyTestingNewTheme,
     setCurrentlyTestingNewTheme,
     sectionImCurrentlyEditingRef,
-    setSectionImCurrentlyEditingRef
+    setSectionImCurrentlyEditingRef,
+    currentJobForResumeCreation, 
+    setCurrentJobForResumeCreation,
+
+    complexFieldIndex,
+    setComplexFieldIndex,
+    complexFieldData,
+    setComplexFieldData,
+    readyToSaveComplexFields,
+    setReadyToSaveComplexFields,
+
+    handleCreateNewComplexField,
+    handleSaveComplexFields,
+    handleDeleteComplexField,
+
+    customSymbol,
+    setCustomSymbol,
+
+    clearResumeDataDeepseek: () => clearResumeDataDeepseek(setUserFieldData),
+    updateResumeWithAIDataDeepseek: (aiData: Partial<userFieldData>) => updateResumeWithAIDataDeepseek(setUserFieldData, aiData),
+
+    handleAddDetail,
+    handleRemoveDetail,
+  
   };
 
   return (

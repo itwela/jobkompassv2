@@ -1,4 +1,4 @@
-export interface TechBroData {
+export interface UserFieldData {
   personalInfo: {
     firstName: string;
     lastName: string;
@@ -98,7 +98,7 @@ export interface TechBroThemeTypes {
 
 
 export interface TechBroProps {
-  data: TechBroData;
+  data: UserFieldData;
   theme: TechBroThemeTypes;
   registerContentRef?: (ref: HTMLDivElement | null) => void;
   scale?: number;

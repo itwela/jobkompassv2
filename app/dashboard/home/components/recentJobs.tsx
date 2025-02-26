@@ -26,14 +26,17 @@ export default function RecentJobs () {
                 <p style={{color: styles.text.subtitle}}>Your most recent applications</p>
             </div>
             <div className="space-y-6">
-                {userJobs?.slice(0, 5)?.map((job: JobKompassJobsType, i: number) => (
-                    <JKJobCard
-                        key={i}
-                        job={job}
-                        filterColors={filterColors}
-                        onBuddyOpen={() => setIsBuddyOpen(!isBuddyOpen)}
-                    />
-                ))}
+                {userJobs
+                    ?.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+                    ?.slice(0, 5)
+                    ?.map((job: JobKompassJobsType, i: number) => (
+                        <JKJobCard
+                            key={i}
+                            job={job}
+                            filterColors={filterColors}
+                            onBuddyOpen={() => setIsBuddyOpen(!isBuddyOpen)}
+                        />
+                    ))}
             </div>
         </div>
     )

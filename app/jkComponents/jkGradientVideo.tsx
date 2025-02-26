@@ -1,50 +1,26 @@
 'use client'
 
-import Image from "next/image";
 import { useJobKompassTheme } from "../helpers/providers/themeProvider";
 
-interface JkGradientImageProps {
-    videoName: string;
-    typeOfVideo?: string;
-    imageAlt?: string;
-    width?: number;
-    height?: number;
-    opacity?: string;
-    flip?: boolean;
+interface JkGradientVideoProps {
+    videoSrc: string;
     gradientDirection?: 'right' | 'left' | 'top' | 'bottom';
     gradientColors?: {
         start: string;
         end: string;
     };
-    className?: string;
-    imageTop?: string;
-    imageBottom?: string;
-    imageLeft?: string;
-    imageRight?: string;
-    needsInversion?: boolean;
 }
 
-export default function JkGradientVideo({
-    videoName,
-    typeOfVideo,
-    imageAlt = "",
-    width = 1000,
-    height = 1000,
-    opacity = "100%",
-    flip = false,
+export default function JkGradientVideo({ 
+    videoSrc,
     gradientDirection = 'right',
     gradientColors,
-    className = "",
-    imageTop,
-    imageBottom,
-    imageLeft,
-    imageRight,
-    needsInversion
-}: JkGradientImageProps) {
+ }: JkGradientVideoProps) {
+
     const { styles, theme } = useJobKompassTheme();
 
     const getGradientDirection = () => {
-        switch (gradientDirection) {
+        switch(gradientDirection) {
             case 'left':
                 return 'to left';
             case 'top':
@@ -57,7 +33,7 @@ export default function JkGradientVideo({
     };
 
     const defaultColors = {
-        start: styles.background,
+        start: styles.black,
         end: 'transparent'
     };
 
@@ -65,34 +41,33 @@ export default function JkGradientVideo({
 
     return (
         <>
-
-            <video
-                autoPlay
-                loop
-                muted
-                playsInline
-                className={`absolute z-[1] object-cover ${className}`}
-                style={{  }}
-                onLoadedMetadata={(e) => {
-                    const video = e.target as HTMLVideoElement;
-                    video.playbackRate = 1.5;
-                    console.log("the videoath pis.....", video)
-                }}
+        <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute z-[1] object-cover"
+            style={{ width: '100%', height: '100%', opacity: '100%', filter: 'none' }}
+            onLoadedMetadata={(e) => {
+                const video = e.target as HTMLVideoElement;
+                video.playbackRate = 0.818;
+            }}
             >
-                <source src={`/assets/vids/${videoName}`} type={`video/${typeOfVideo} || mp4`} />
-            </video>
-            {/* <div
-                className="absolute w-[70%] h-full z-[2]"
+            <source src={`/assets/vids/${videoSrc}`} type="video/mp4" />
+        </video>
+        <div 
+                className="absolute w-full h-full z-[2]"
                 style={{
-                    background: `linear-gradient(${getGradientDirection()}, ${colors.start}, ${colors.start} 40%, ${colors.end})`,
+                    background: `linear-gradient(to bottom, ${colors.start}, ${colors.start}, ${colors.end})`,
                 }}
             />
-            <div
+            {/* <div 
                 className="absolute w-full h-[80%] z-[2]"
                 style={{
-                    background: `linear-gradient(to top, ${colors.start}, ${colors.start} 40%, ${colors.end})`,
+                    background: `linear-gradient(to bottom, ${colors.start}, ${colors.start} 20%, ${colors.end})`,
                 }}
             /> */}
-        </>
+
+            </>
     );
 }

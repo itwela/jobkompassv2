@@ -25,14 +25,21 @@ export interface JkInputProps {
 }
 
 export interface JkTextAreaProps {
-    user: any
+    user: any;
     label: string;
+    maxlen?: number;
     placeholderText: string;
-    value: string | any | undefined;
+    type: string;
+    value: string | undefined;
     onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    onDelete?: (e: React.MouseEvent<HTMLTextAreaElement>) => void;
+    onKeyDown?: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
+    onMouseEnter?: (e: React.MouseEvent<HTMLTextAreaElement>) => void;
     className?: string;
     style?: React.CSSProperties;
+    fieldImIn?: string;
 }
+
 export interface JkSelectProps {
     user: any;
     label: string;
@@ -50,6 +57,8 @@ export interface JkPopUpProps {
     className?: string;
     styledTrigger?: boolean;
     triggerClassName?: string;
+    dialogId?: string;
+    triggerText?: string;
     refComponent?: React.RefObject<HTMLDivElement> | any;
     label: string;
     header: string;
@@ -59,6 +68,7 @@ export interface JkPopUpProps {
     onChangeBigField?: (index: number, field: string, value: string | string[] | any) => void;
     smallFields?: any[];
     onChangeSmallField?: (index: number, field: string, value: string | string[] | any) => void;
+    customclosefunction?: () => void;
 }
 
 export interface JkEducationProps {
@@ -79,8 +89,9 @@ export interface JkSkillsFieldsProps {
 export interface JkComboboxProps {
     user: any;
     label: string;
+    placeholderText: string;
     initialObjectOfThings: any;
     notFoundComponent: React.ReactNode;
-    onChange?: (index: number, field: string, value: string | string[] | any) => void;
+    onChange?: (value: string | string[] | any, index?: number,  field?: string,) => void;
     onDelete?: (index: number) => void;
 }

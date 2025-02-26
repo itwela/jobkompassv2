@@ -30,9 +30,9 @@ export function AppSidebar() {
   const { wantsToPrint } = useJobKompassResume()
   const { open } = useSidebar()
   
-  if (wantsToPrint === true) return null
+  if (wantsToPrint === true) return <></>
 
-  return (
+  if (wantsToPrint === false) return (
     <Sidebar 
       collapsible='icon' 
       className=""

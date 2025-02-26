@@ -10,6 +10,8 @@ import Link from "next/link"
 import debounce from 'lodash/debounce';
 import TechBroResume from "@/app/jkComponents/TechBro/jkTechBroResume"
 import '@/app/globals.css'
+import { themes } from "../careerassistant/components/resume/resumeTemplates"
+import { UserFieldData } from "@/app/jkComponents/TechBro/types"
 
 // Dummy resume dummyResumeData for testing
 const dummyResumeData = {
@@ -127,105 +129,261 @@ export default function ThemePlayground() {
     const [themeData] = useState(dummyResumeData)
     const [selectedElement, setSelectedElement] = useState<string>('')
     const [selectedElementClass, setSelectedElementClass] = useState<string>('')
-    const currentTheme = {
-        
-        //ANCHOR -------------------------------------------
-        name: `
-        ~text-xl/5xl  
-
-        font-bold leading-tight
-        `,
-        // -------------------------------------------
-
-        //ANCHOR -------------------------------------------
-        heading: `font-bold text-gray-800`,        
-        sectionHeading: `
-        ~jk-text-md/4xl 
-
-        mb-2 underline font-semibold text-gray-800 uppercase tracking-wide`,
-        // -------------------------------------------
-        
-        // ANCHOR -------------------------------------------
-        subheading: `
-        ~jk-text-md/4xl 
-        
-        `,
-        // -------------------------------------------
-        
-        // ANCHOR -------------------------------------------
-        // TODO
-        body: `
-        ~jk-text-sm/3xl 
-
-        text-gray-600 mb-2
-        `,
-        // -------------------------------------------
-        
-        // ANCHOR -------------------------------------------
-        bodySmall: `
-        ~jk-text-sm/3xl 
-        
-        mb-2 w-max h-[10px] flex items-center text-gray-500
-        `,
-        // -------------------------------------------
-        
-        // ANCHOR -------------------------------------------
-        spacing: {
-            section: "mb-4 last:mb-0 border-b-[1px] border-black/10 pb-[2%]",
-            item: "mb-0"
+    
+    const [userFieldData, setUserFieldData] = useState<UserFieldData>({
+        personalInfo: {
+          firstName: "Itwela",
+          lastName: "Ibomu",
+          email: "citwela@gmail.com",
+          citizenship: "US Citizen",
+          phone: "(404) 555-0123",
+          location: "Atlanta, GA",
+          website: "itwela.dev",
+          socials: [
+            { type: 'github', url: 'Github.com/itwela' },
+          ]
         },
-        // -------------------------------------------
-        
-        // ANCHOR -------------------------------------------
-        // Container
-        container: "w-full bg-white h-max p-[3%] text-base",
-        // -------------------------------------------
-        
-        // Header Section
-        header: {
-            wrapper: "flex h-max place-items-end justify-between w-full mb-[2%]",
-            nameSection: "relative flex flex-col place-items-start h-max leading-none",
-            contactSection: "flex leading-none gap-[15px]",
-            contactColumn: "flex flex-col h-max leading-none place-items-end"
-        },
-        // -------------------------------------------
-
-        // Content Sections
-        section: {
-            wrapper: "space-y-[2%]",
-            title: "text-[1.2em] font-semibold mb-[1%]",
-            content: "space-y-[2%]"
-        },
-
-        // Education Section
-        education: {
-            item: "mb-[2%] last:mb-0",
-            details: "list-disc",
-            detailItem: "list-disc text-[0.9em] leading-relaxed"
-        },
-
-        // Experience Section
-        experience: {
-            item: "mb-[2%] last:mb-0",
-            details: "pl-[4%] list-disc",
-            detailItem: "list-disc"
-        },
-
-        // Projects Section
-        projects: {
-            item: "mb-[2%] last:mb-0",
-            details: "pl-[4%] list-disc",
-            detailItem: "list-disc text-[0.9em] leading-relaxed"
-        },
-
-        // Skills Section
+        education: [
+          {
+            name: "Western Governors University (WGU)",
+            school: "WGU",
+            startDate: "",
+            endDate: "December 2025",
+            degree: "Bachelor of Science in Software Engineering",
+            field: "Software Engineering",
+            date: "Expected Graduation: December 2025",
+            details: ["Studies focus on Math, Programming, Data Management, Application Design and Development, Cloud Foundations"],
+            description: "",
+            technologies: [],
+          },
+        ],
+        experience: [
+          {
+            title: "Software Engineering Fellow",
+            company: "Headstarter",
+            location: "Long Island City, NY",
+            date: "July 2024 - September 2024",
+            description: "Built and deployed five AI projects focused on user-centered development and optimization",
+            details: [
+              "Built and deployed five AI projects focused on user-centered development and optimization, using React TS, Next.js, Tailwind, Firebase, Supabase, Clerk, LangChain, Pinecone, Docker, and Vercel",
+              "Scaled web applications to over 200 users through collaboration with UI/UX designers, optimizing user interfaces based on feedback and quality testing across deployment stages",
+              "Enhanced SDLC processes, including code reviews and QA testing, to ensure high performance and reliability",
+              "Impact: Achieved funding and support for \"CitySwipe\" by winning multiple hackathons, leading to its launch with 100+ users"
+            ],
+          },
+          {
+            title: "AI Software Engineer",
+            company: "Dataforce",
+            location: "Atlanta, GA",
+            date: "April 2024 - June 2024",
+            description: "Meet and exceed client captioning targets on a daily and weekly basis",
+            details: [
+              "Meet and exceed client captioning targets on a daily and weekly basis, resulting in improved client satisfaction and increased project efficiency",
+              "Documented and notified development team of technical errors, bugs, contributing to the timely resolution of issues",
+              "Created a spreadsheet to track personal productivity, resulting in 50% increase in captions per day"
+            ],
+          },
+          {
+            title: "Software Engineering Virtual Experience",
+            company: "Forage (J.P Morgan)",
+            location: "",
+            date: "December 2023 - January 2024",
+            description: "Developed live graph generation functionality using JPMorgan's open-source library",
+            details: [
+              "Developed live graph generation functionality using JPMorgan's open-source library, Perspective, and gained exposure to financial data visualization and agile methodologies"
+            ],
+          },
+          {
+            title: "Software Engineer",
+            company: "Freelance",
+            location: "Atlanta, GA",
+            date: "December 2023 - Present",
+            description: "Develop and build dynamic UI to support multiple businesses",
+            details: [
+              "Develop and build dynamic UI to support multiple businesses in an Agile environment using web frameworks like React and Nextjs and mobile frameworks such as React Native and Expo Go",
+              "Design, develop, and code web and mobile components for multiple clients, including debugging, diagnosing root causes, & identifying solutions",
+              "Develop blockchain-based crypto games utilizing Solana, Web3.js, Rust and Anchor"
+            ],
+          }
+        ],
+        projects: [
+          {
+            name: "AI Travel & Vacation Planning Application",
+            achievement: "Published App 50+ Users",
+            description: "Led a team of developers, designers, and marketers to create an AI-powered platform for vacation planning",
+            link: "cityswipe.app",
+            technologies: ["Next.js", "React", "Vercel", "Supabase", "Gemini", "Framer Motion", "Pexels API"],
+            date: "July 2024 - Present",
+            details: [
+              "Led a team of developers, designers, and marketers to create an AI-powered platform for vacation planning, leveraging machine learning for personalized recommendations",
+              "Integrated natural language processing (NLP) to improve user interaction with travel suggestions based on preferences",
+              "Impact: Garnered thousands of social media impressions, secured investment from the CEO of Lunchbox, and grew user engagement by 150%"
+            ],
+          },
+          {
+            name: "Job Tracker & Data Analysis Application",
+            achievement: "Published App 10+ Users",
+            description: "Developed a job application tracking tool that automated the data entry and analysis",
+            link: "myjobkompass.com",
+            technologies: ["Next.js", "TypeScript", "React", "Supabase", "Tailwind CSS", "Vercel", "Chart.js", "React Query", "Prisma", "PostgreSQL"],
+            date: "January 2024 - April 2024",
+            details: [
+              "Developed a job application tracking tool that automated the data entry and analysis of job applications, reducing job search time by 50%",
+              "Collaborated with users to refine features based on feedback, conducting iterative testing to improve UI and functionality",
+              "I landed my first contract role in tech (Dataforce), and the Software engineering fellowship (Headstarter) role using this tool"
+            ],
+          },
+          {
+            name: "RAG AI Rate My Professor Chat Application",
+            achievement: "Published App 5+ Users",
+            description: "Designed and implemented an AI-powered web application for professor reviews using vector search and real-time data processing",
+            link: "ratemyprofessor.vercel.app",
+            technologies: ["Nextjs", "TypeScript", "React", "Vercel", "Pinecone", "OpenAI", "Langchain", "Framer Motion"],
+            date: "August 2024",
+            details: [
+              "Designed a web app utilizing real-time data and vector search, delivering accurate and up-to-date responses",
+              "Emphasized ML model fine-tuning to maintain high levels of data relevance"
+            ],
+          },
+          {
+            name: "Instant Video Caption Generator (Jelly Up!)",
+            achievement: "2nd Place Hackathon Winner",
+            description: "Built a backend AI system for video captioning using OpenAI Whisper",
+            link: "jellyup.vercel.app",
+            technologies: ["Nextjs", "TypeScript", "React", "Vercel", "Docker", "OpenCV", "OpenAI (Whisper)", "Supabase"],
+            date: "August 2024",
+            details: [
+              "Built a backend AI system for video captioning, achieving high transcription accuracy using OpenAI Whisper",
+              "Impact: Won 2nd place at the Headstarter Hiring Hackathon among hundreds of teams, demonstrating excellence in real-time caption generation for diverse media"
+            ],
+          },
+          {
+            name: "Voice Activated AI Travel Assistant (Globetrotter AI)",
+            achievement: "Published App 20+ Users",
+            description: "Developed an AI-powered voice assistant for personalized travel recommendations",
+            link: "globetrotterai.vercel.app",
+            technologies: ["Nextjs", "React", "Vercel", "Gemini", "Google TTS", "React Three Fiber", "Framer Motion"],
+            date: "August 2024",
+            details: [
+              "Designed a conversational AI travel assistant using Flask, integrating multiple travel APIs for seamless itinerary planning",
+              "Impact: Won 1st place at the Headstarter Hiring Hackathon, recognized for innovation and utility in travel assistance"
+            ],
+          }
+        ],
         skills: {
-            wrapper: "flex flex-wrap gap-x-[4%] gap-y-[2%]",
-            section: "flex-1 min-w-[45%]",
-            list: "flex flex-wrap gap-x-[3] gap-y-[3] my-2",
-            item: "text-[0.9em] after:content-[',']  py-2 pr-2 last:after:content-none after:mr-[0.5%]"
-        }
-    }
+          technical: ["Python", "React", "React Native", "SQL", "Python", "React", "React Native", "SQL", "Python", "React", "React Native", "SQL", "Python", "React", "React Native", "SQL"],
+          additional: ["UI/UX Design", "Leadership", "Teamwork", "Agile", "Artist", "Musician (Piano, Guitar)", "Python", "React", "React Native", "SQL", "Python", "React", "React Native", "SQL"]
+        },
+        additionalInfo: {
+          interests: ["Mentoring", "Investing", "Crypto", "Basketball", "Gaming", "Traveling", "Teaching", "Machine Learning"],
+          hobbies: ["Photography", "Music Production", "Rock Climbing", "Chess"],
+          languages: ["English (Native)", "Spanish (Conversational)", "Mandarin (Basic)"],
+          references: ["Available upon request"],
+        },
+      });
+
+
+    // ✨ Tech Bro 
+    // const currentTheme = {
+        
+    //     //ANCHOR -------------------------------------------
+    //     name: `
+    //     ~text-xl/5xl  
+
+    //     font-bold leading-tight
+    //     `,
+    //     // -------------------------------------------
+
+    //     //ANCHOR -------------------------------------------
+    //     heading: `font-bold text-gray-800`,        
+    //     sectionHeading: `
+    //     ~jk-text-md/4xl 
+
+    //     mb-2 underline font-semibold text-gray-800 uppercase tracking-wide`,
+    //     // -------------------------------------------
+        
+    //     // ANCHOR -------------------------------------------
+    //     subheading: `
+    //     ~jk-text-md/4xl 
+        
+    //     `,
+    //     // -------------------------------------------
+        
+    //     // ANCHOR -------------------------------------------
+    //     // TODO
+    //     body: `
+    //     ~jk-text-sm/3xl 
+
+    //     text-gray-600 mb-2
+    //     `,
+    //     // -------------------------------------------
+        
+    //     // ANCHOR -------------------------------------------
+    //     bodySmall: `
+    //     ~jk-text-sm/3xl 
+        
+    //     mb-2 w-max h-[10px] flex items-center text-gray-500
+    //     `,
+    //     // -------------------------------------------
+        
+    //     // ANCHOR -------------------------------------------
+    //     spacing: {
+    //         section: "mb-4 last:mb-0 border-b-[1px] border-black/10 pb-[2%]",
+    //         item: "mb-0"
+    //     },
+    //     // -------------------------------------------
+        
+    //     // ANCHOR -------------------------------------------
+    //     // Container
+    //     container: "w-full bg-white h-max p-[3%] text-base",
+    //     // -------------------------------------------
+        
+    //     // Header Section
+    //     header: {
+    //         wrapper: "flex h-max place-items-end justify-between w-full mb-[2%]",
+    //         nameSection: "relative flex flex-col place-items-start h-max leading-none",
+    //         contactSection: "flex leading-none gap-[15px]",
+    //         contactColumn: "flex flex-col h-max leading-none place-items-end"
+    //     },
+    //     // -------------------------------------------
+
+    //     // Content Sections
+    //     section: {
+    //         wrapper: "space-y-[2%]",
+    //         title: "text-[1.2em] font-semibold mb-[1%]",
+    //         content: "space-y-[2%]"
+    //     },
+
+    //     // Education Section
+    //     education: {
+    //         item: "mb-[2%] last:mb-0",
+    //         details: "list-disc",
+    //         detailItem: "list-disc text-[0.9em] leading-relaxed"
+    //     },
+
+    //     // Experience Section
+    //     experience: {
+    //         item: "mb-[2%] last:mb-0",
+    //         details: "pl-[4%] list-disc",
+    //         detailItem: "list-disc"
+    //     },
+
+    //     // Projects Section
+    //     projects: {
+    //         item: "mb-[2%] last:mb-0",
+    //         details: "pl-[4%] list-disc",
+    //         detailItem: "list-disc text-[0.9em] leading-relaxed"
+    //     },
+
+    //     // Skills Section
+    //     skills: {
+    //         wrapper: "flex flex-wrap gap-x-[4%] gap-y-[2%]",
+    //         section: "flex-1 min-w-[45%]",
+    //         list: "flex flex-wrap gap-x-[3] gap-y-[3] my-2",
+    //         item: "text-[0.9em] after:content-[',']  py-2 pr-2 last:after:content-none after:mr-[0.5%]"
+    //     }
+    // }
+
     useEffect(() => {
         setWantsToPrint(true)
         setCurrentlyTestingNewTheme(true)
@@ -277,167 +435,15 @@ export default function ThemePlayground() {
 
                     {/* Resume Preview */}
                     <div
-                        className="w-full h-full overflow-y-auto rounded-xl"
+                        className="w-max h-full overflow-y-auto rounded-xl"
                         style={{ backgroundColor: "#fff" }}
                     >
                         <div className="relative">
                             <TechBroResume
-                                data={dummyResumeData}
-                                theme={currentTheme}
+                                data={userFieldData}
+                                theme={themes['Tech Bro']}
                                 registerContentRef={registerContentRef}
                             />
-                            {/* <div className="w-full h-full" ref={registerContentRef}>
-                                <div>
-                                    <div>
-                                        <div className="flex h-max place-items-end justify-between w-full">
-                                            <span className="relative place-items-start h-max pb-1 leading-none">
-                                                <p
-                                                    className={currentTheme.name}
-                                                    onClick={() => {
-                                                        setSelectedElement('name')
-                                                        setSelectedElementClass(currentTheme?.name || '')
-                                                    }}
-                                                    style={{ cursor: 'pointer' }}
-                                                >{themeData.personalInfo.firstName} {themeData.personalInfo.lastName}</p>
-                                                {themeData.personalInfo.website && <p className="" key="website">{themeData.personalInfo.website}</p>}
-                                            </span>
-
-                                            <span className="flex leading-none gap-5">
-                                                <span className="flex flex-col h-max leading-none place-items-end">
-                                                    <p className={currentTheme?.body}>{themeData.personalInfo.citizenship}</p>
-                                                    <p className={currentTheme?.body} key="location">{themeData.personalInfo.location}</p>
-                                                </span>
-
-                                                <span className="flex flex-col h-max leading-none place-items-end">
-                                                    <p className={currentTheme?.body} key="phone">{themeData.personalInfo.phone}</p>
-                                                    <p className={currentTheme?.body} key="email">{themeData.personalInfo.email}</p>
-                                                </span>
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <span className="block h-[10px]"></span>
-
-                                    <div className={currentTheme?.spacing?.section}>
-                                        <h2
-                                            className={currentTheme?.sectionHeading}
-                                            onClick={() => {
-                                                setSelectedElement('sectionHeading')
-                                                setSelectedElementClass(currentTheme?.sectionHeading || '')
-                                            }}
-                                            style={{ cursor: 'pointer' }}
-                                        >Education</h2>
-                                        {themeData.education.map((edu: any, index: number) => (
-                                            <div key={`edu-${index}`} className={currentTheme?.spacing?.item}>
-                                                <h3
-                                                    className={currentTheme?.subheading}
-                                                    onClick={() => {
-                                                        setSelectedElement('subheading')
-                                                        setSelectedElementClass(currentTheme?.subheading || '')
-                                                    }}
-                                                    style={{ cursor: 'pointer' }}
-                                                >{edu.name}</h3>
-                                                <p
-                                                    className={currentTheme?.body}
-                                                    onClick={() => {
-                                                        setSelectedElement('body')
-                                                        setSelectedElementClass(currentTheme?.body || '')
-                                                    }}
-                                                    style={{ cursor: 'pointer' }}
-                                                >{edu.degree}</p>
-                                                <p
-                                                    className={currentTheme?.bodySmall}
-                                                    onClick={() => {
-                                                        setSelectedElement('bodySmall')
-                                                        setSelectedElementClass(currentTheme?.bodySmall || '')
-                                                    }}
-                                                    style={{ cursor: 'pointer' }}
-                                                >{edu.date}</p>
-                                                <ul className="pl-4">
-                                                    {edu.details.map((detail: string, detailIndex: number) => (
-                                                        <li key={`edu-detail-${index}-${detailIndex}`} className={`${currentTheme?.body} list-disc`}>{detail}</li>
-                                                    ))}
-                                                </ul>
-                                            </div>
-                                        ))}
-                                    </div>
-
-                                    <div className={currentTheme?.spacing?.section}>
-                                        <h2 className={currentTheme?.sectionHeading}>Experience</h2>
-                                        {themeData.experience.map((exp: any, index: number) => (
-                                            <div key={`exp-${index}`} className={currentTheme?.spacing?.item}>
-                                                <h3 className={currentTheme?.subheading}>{exp.title}</h3>
-                                                <p className={currentTheme?.bodySmall}>{exp.company} - {exp.location}</p>
-                                                <p className={currentTheme?.bodySmall}>{exp.date}</p>
-                                                <p className={currentTheme?.body}>{exp.description}</p>
-                                                <ul className="pl-4">
-                                                    {exp.details.map((detail: string, detailIndex: number) => (
-                                                        <li key={detailIndex} className={`${currentTheme?.body} list-disc`}>{detail}</li>
-                                                    ))}
-                                                </ul>
-                                            </div>
-                                        ))}
-                                    </div>
-
-                                    <div className={currentTheme?.spacing?.section}>
-                                        <h2 className={currentTheme?.sectionHeading}>Projects</h2>
-                                        {themeData.projects.map((project: any, index: number) => (
-                                            <div key={index} className={currentTheme?.spacing?.item}>
-                                                <h3 className={currentTheme?.subheading}>{project.name}</h3>
-                                                {project.achievement && (
-                                                    <p className={`${currentTheme?.body} list-disc`}> {project.achievement}</p>
-                                                )}
-                                                <p className={currentTheme?.body}>{project.description}</p>
-                                                {project.link && (
-                                                    <p className={`${currentTheme?.bodySmall}`}>Link: {project.link}</p>
-                                                )}
-                                                {project.technologies && project.technologies.length > 0 && (
-                                                    <p className={currentTheme?.bodySmall}>
-                                                        Technologies: {project.technologies.join(', ')}
-                                                    </p>
-                                                )}
-                                                <ul className="pl-4">
-                                                    {project.details.map((detail: string, detailIndex: number) => (
-                                                        <li key={detailIndex} className={`${currentTheme?.body} list-disc`}>{detail}</li>
-                                                    ))}
-                                                </ul>
-                                            </div>
-                                        ))}
-                                    </div>
-
-                                    <div className={currentTheme?.spacing?.section}>
-                                        <h2 className={currentTheme?.sectionHeading}>Skills</h2>
-                                        <div className="flex flex-wrap gap-x-8">
-                                            <div className={`${currentTheme?.spacing?.item} flex-1 min-w-[200px]`}>
-                                                <h3 className={currentTheme?.subheading}>Technical Skills</h3>
-                                                <div className="flex flex-wrap">
-                                                    {themeData.skills.technical.map((skill: string, index: number) => (
-                                                        <span
-                                                            key={index}
-                                                            className={`${currentTheme?.body} after:content-[','] last:after:content-none after:mr-1`}
-                                                        >
-                                                            {skill}
-                                                        </span>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                            <div className={`${currentTheme?.spacing?.item} flex-1 min-w-[200px]`}>
-                                                <h3 className={currentTheme?.subheading}>Additional Skills</h3>
-                                                <div className="flex flex-wrap">
-                                                    {themeData.skills.additional.map((skill: string, index: number) => (
-                                                        <span
-                                                            key={index}
-                                                            className={`${currentTheme?.body} after:content-[','] last:after:content-none after:mr-1`}
-                                                        >
-                                                            {skill}
-                                                        </span>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> */}
                         </div>
 
                     </div>

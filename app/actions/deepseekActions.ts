@@ -119,7 +119,161 @@ export async function Utils_DeepseekJK_Extract_Company_And_Image(theHtml?: strin
   }
 }
 
-// NOTE
+
+// ------
+
+export async function GenFullResume_DeepSeekJk(resumeData: any, jobdata: any, moreContext?: string, bio?: string) {
+
+    const systemPrompt = `
+        You are a professional resume optimization expert. Your task is to create an exceptional, highly targeted resume that will maximize the candidate's chances of landing their desired position. Follow these critical guidelines:
+
+        1. ANALYSIS & OPTIMIZATION
+        - Thoroughly analyze both the job requirements and candidate's background
+        - Identify and highlight key transferable skills and relevant experiences
+        - Optimize keywords and phrases to pass ATS (Applicant Tracking Systems)
+        - Quantify achievements wherever possible with metrics and specific outcomes
+        - Use the keywords from the job you are provided to optimize the users resume.
+
+        2. TAILORING & POSITIONING
+        - Strategically align the candidate's experience with job requirements
+        - Emphasize experiences and skills that directly match the role
+        - Incorporate industry-specific terminology and buzzwords
+        - Demonstrate clear progression and growth in relevant areas
+
+        3. COMPANY & CULTURE FIT
+        - Mirror the company's communication style and terminology
+        - Highlight experiences that align with the company's mission
+        - Demonstrate understanding of industry challenges and trends
+
+        4. FORMAT & PRESENTATION
+        - Prioritize most relevant information at the top
+        - Ensure consistent style and terminology throughout
+        - Create compelling achievement statements using the STAR method:
+          (Situation, Task, Action, Result)
+
+        OUTPUT QUALITY EXPECTATIONS:
+        - Professional, ATS-optimized resume word choices
+        - Strategic positioning of candidate's experience
+        - Quantified achievements and results
+        - Clear alignment with job requirements
+        - Compelling narrative that showcases candidate's value proposition
+
+        Remember: Every word must serve a purpose. Focus on impact, relevance, and strategic positioning to make the candidate stand out as the ideal choice for this role.
+
+        You will be given the users current resume and the job that they are looking to apply to. 
+        The job information will have keywords and basic description as to what the company is looking for.
+        These things should provide you more context to craft a high-quality, 15 out of 10 resume.
+
+        Your job is not too simply return their data back, but to make it better make every sentence better reword it in a way that clearly translates to employers value.
+        The person giving you their data or résumé is not an expert you are, So you need to be the one tailoring what they're giving you and turning it into something amazing.
+    `;
+
+    let userPrompt = ''
+
+    if (moreContext && moreContext?.length > 5) {
+        userPrompt = `
+        
+        Here is my resume:
+        ${resumeData}
+
+        Here is the job that I want to apply to:
+        ${jobdata}
+
+        Here is some more context to help you craft my resume:
+        ${moreContext}
+        `;
+    } 
+
+    if (!moreContext || moreContext?.length < 5) {
+        
+        userPrompt = `
+        Here is my resume:
+        ${resumeData}
+        Here is the job that I want to apply to:
+        ${jobdata}
+        `;
+
+    }
+
+    if (!!resumeData) {
+        userPrompt = `
+
+        I don't have a resume yet. but here is some ore context about me:
+        ${moreContext}
+        ${bio}
+
+        Here is the job that I want to apply to:
+        ${jobdata}
+
+        `
+    }
+
+    console.log('starting....first attempt')
+
+    // console.log(userPrompt)
+
+    try {
+        const result = await generateObject({
+            model: deepseek('deepseek-chat'),
+            system: systemPrompt,
+            prompt: userPrompt,
+            maxTokens: 7500,
+            temperature: 0,
+            schema: z.object({
+                education: z.array(z.object({
+                name: z.string(),
+                school: z.string(),
+                startDate: z.string(),
+                endDate: z.string(),
+                degree: z.string(),
+                field: z.string(),
+                date: z.string(),
+                details: z.array(z.string()),
+                description: z.string(),
+                technologies: z.array(z.string())
+                })),
+                experience: z.array(z.object({
+                title: z.string(),
+                company: z.string(),
+                location: z.string(),
+                date: z.string(),
+                description: z.string(),
+                details: z.array(z.string())
+                })),
+                projects: z.array(z.object({
+                name: z.string(),
+                achievement: z.string(),
+                description: z.string(),
+                link: z.string(),
+                technologies: z.array(z.string()),
+                date: z.string(),
+                details: z.array(z.string())
+                })),
+                skills: z.object({
+                technical: z.array(z.string()),
+                additional: z.array(z.string())
+                }),
+                additionalInfo: z.object({
+                interests: z.array(z.string()),
+                hobbies: z.array(z.string()),
+                languages: z.array(z.string()),
+                references: z.array(z.string())
+                })
+            })
+        });
+
+        const resObject = result?.object;
+        const resToJson = result?.toJsonResponse;
+        console.log('dstojson', resToJson)
+        console.log('dstojson', resObject)
+        return resObject;
+
+    } catch (error) {
+        console.error("Error during job board scraping:", error);
+    }
+}
+
+
 export async function Scrape_Utils_DeepSeekJk_Entire_Job_Board(theHtml: any) {
     const systemPrompt = `
         You are an AI assistant that extracts job listings from a company job board page. You will be given HTML. 

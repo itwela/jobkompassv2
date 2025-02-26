@@ -92,7 +92,7 @@ export default function QuickAdd({
                             value={url}
                             onChange={(e) => setUrl(e.target.value)}
                             placeholder="Paste job URL here..."
-                            className="w-full p-4 bg-transparent outline-none"
+                            className="w-[90%] p-4 bg-transparent outline-none"
                             style={{
                                 color: styles.text.primary,
                             }}

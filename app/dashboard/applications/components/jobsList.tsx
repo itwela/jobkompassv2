@@ -10,12 +10,13 @@ import { JK_Colors } from '@/app/jkUtilities_and_Tokens/colors'
 import { JK_Styles } from '@/app/jkUtilities_and_Tokens/styles'
 import { ThemeKeys } from '@/app/types'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogFooter, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTrigger } from "@/components/ui/dialog"
 import { useSidebar } from '@/components/ui/sidebar'
 import { ArrowDown, Eye, EyeOff, FileText, FileUser, NotebookPen } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import ApplicationBuddy from './applicationBuddy'
 import JobFilters from './jobFIlters'
+import { JkPopUp } from '@/app/jkComponents/jkPopUp'
 
 export default function JobsList() {
     const scrollContainerRef = useRef<HTMLDivElement>(null)
@@ -40,10 +41,22 @@ export default function JobsList() {
     }, []);
 
     // Filter jobs based on search query
-    const filteredJobs = userJobs?.filter(job => 
-        job.Title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        job.Company.toLowerCase().includes(searchQuery.toLowerCase())
-    )
+    const filteredJobs = userJobs?.filter(job => {
+        const searchLower = searchQuery.toLowerCase();
+  
+        // If no search query, show all jobs
+        if (!searchQuery) return true;
+        
+        // Check if search query matches status (case-insensitive)
+        if (job.Status.toLowerCase() === searchLower) return true;
+        
+        // Check if search query matches title or company
+        return job.Title.toLowerCase().includes(searchLower) ||
+               job.Company.toLowerCase().includes(searchLower) ||
+               job.Keywords?.some(keyword => keyword.toLowerCase().includes(searchLower)) ||
+               job.Description?.toLowerCase().includes(searchLower) ||
+               job['Date Applied'].toLowerCase().includes(searchLower);
+    });
 
     const filterColors = {
         Interested: styles.status.interested,
@@ -132,33 +145,21 @@ export default function JobsList() {
                                                     <div className="flex gap-1 w-max  h-max">
                                                         <FileText className='cursor-pointer' size={15} />
                                                         <FileUser className='cursor-pointer' size={15} />                            
-                                                        <Dialog>
-                                                            <DialogTrigger asChild>
-                                                                <NotebookPen onClick={() => {setIsBuddyOpen(!isBuddyOpen);}} className='cursor-pointer' size={15} />
-                                                            </DialogTrigger>
-
-                                                            <DialogContent ref={fullScreenRef} className='!w-max h-max !border-none !outline-none ' style={{ color: styles.text.primary }}>
-
-
-                                                                <div style={{ 
-                                                                    color: styles.text.primary,
-                                                                    // backgroundColor: styles.card.background
-                                                                }}>
-                                                                    <DialogTitle> 
-                                                                    </DialogTitle>
-
-                                                                    <DialogContent ref={fullScreenRef} style={{backgroundColor: styles.background
-                                                                    }} >
-                                                                        <ApplicationBuddy/>
-                                                                    </DialogContent>
-
-                                                                    <DialogFooter>
-                                                                    </DialogFooter>
-
-                                                                </div>
-
-                                                            </DialogContent>
-                                                        </Dialog>
+                                                        {/* <JkPopUp
+                                                            user={user}
+                                                            trigger={<NotebookPen onClick={() => {setIsBuddyOpen(!isBuddyOpen);}} className='cursor-pointer' size={15} />}
+                                                            styledTrigger={false}
+                                                            dialogId={`application-buddy-${i}`}
+                                                            triggerClassName="cursor-pointer"
+                                                            BigField={
+                                                                <>
+                                                                    <ApplicationBuddy/>
+                                                                </>
+                                                            }
+                                                            label=""
+                                                            header={''}
+                                                            subtitle=""
+                                                        /> */}
                                                     </div>
                                                 </div>
                                                 <CardTitle className='font-bold'>

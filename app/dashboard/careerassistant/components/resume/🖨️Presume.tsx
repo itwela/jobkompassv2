@@ -8,7 +8,7 @@ import { useJobKompassResume } from "@/app/helpers/providers/JobKompassResumePro
 import TechBroResume from "@/app/jkComponents/TechBro/jkTechBroResume";
 
 export default function PrintResume() {
-    const {currentTheme, techBroData, wantsToPrint, setWantsToPrint, registerContentRef} = useJobKompassResume();
+    const {currentTheme, userFieldData, wantsToPrint, setWantsToPrint, registerContentRef} = useJobKompassResume();
 
     React.useEffect(() => {
         setWantsToPrint(true);
@@ -24,7 +24,7 @@ export default function PrintResume() {
     return (
 
         <TechBroResume
-            data={techBroData}
+            data={userFieldData}
             theme={currentTheme as any}
             registerContentRef={registerContentRef}
         />

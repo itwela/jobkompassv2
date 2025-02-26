@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from "next/cache";
 import { supabaseClientClient } from "../utils/supabase/client";
 import { createSupServerInstance } from "../utils/supabase/server";
 
@@ -137,11 +138,22 @@ export async function addResumeToDb(resume: FormData, user: any) {
         
         if (addResumeTitleToUserError) {
             console.log("Error adding job:", addResumeTitleToUserError);
+           
+            revalidatePath('/dashboard', 'page');
+            revalidatePath('/dashboard', 'layout');
+            revalidatePath('/', 'page');
+            revalidatePath('/', 'layout');
+
             return {
                 status: 'error',
                 message: 'Failed to add resume title to user table'
             };
         }
+
+        revalidatePath('/dashboard', 'page');
+        revalidatePath('/dashboard', 'layout');
+        revalidatePath('/', 'page');
+        revalidatePath('/', 'layout');
 
         return {
             status: 'success',
@@ -150,12 +162,89 @@ export async function addResumeToDb(resume: FormData, user: any) {
 
     } catch (error) {
         console.error("Error processing resume upload:", error);
+
+        revalidatePath('/dashboard', 'page');
+        revalidatePath('/dashboard', 'layout');
+        revalidatePath('/', 'page');
+        revalidatePath('/', 'layout');
+
         return {
             status: 'error',
             message: 'Failed to process resume upload'
         };
     }
 }
+
+export async function deleteResumeFromDb(resumeName: string, user: any) {
+    const supabase = await createSupServerInstance();
+    
+    const userFN = user?.[0]?.firstName;
+    const userID = user?.[0]?.user_id;
+
+    try {
+        // First, delete the file from storage
+        const { data: deleteFromStorage, error: deleteFromStorageError } = await supabase
+            .storage
+            .from('docs')
+            .remove([`resumes/${userFN}-${userID}/${resumeName}`]);
+
+        if (deleteFromStorageError) {
+            console.error("Error deleting resume from storage:", deleteFromStorageError);
+            return {
+                status: 'error',
+                message: 'Failed to delete resume from storage'
+            };
+        }
+
+        // Then, get current resume list
+        const { data: currentResumes, error: getCurrentResumesError } = await supabase
+            .from("Profiles")
+            .select("resumes")
+            .eq("user_id", userID)
+            .single();
+
+        if (getCurrentResumesError) {
+            console.error("Error fetching current resumes:", getCurrentResumesError);
+            return {
+                status: 'error',
+                message: 'Failed to fetch current resumes'
+            };
+        }
+
+        // Filter out the deleted resume
+        const updatedResumes = currentResumes.resumes.filter((resume: string) => resume !== resumeName);
+
+        // Update the profile with new resumes array
+        const { data: updateProfile, error: updateProfileError } = await supabase
+            .from("Profiles")
+            .update({
+                resumes: updatedResumes
+            })
+            .eq("user_id", userID);
+
+        if (updateProfileError) {
+            console.error("Error updating profile:", updateProfileError);
+            return {
+                status: 'error',
+                message: 'Failed to update resume list in profile'
+            };
+        }
+
+        return {
+            status: 'success',
+            message: 'Resume deleted successfully'
+        };
+
+    } catch (error) {
+        console.error("Error processing resume deletion:", error);
+        return {
+            status: 'error',
+            message: 'Failed to process resume deletion'
+        };
+    }
+}
+
+
 
 export async function addCoverLetterToDb(cover: FormData, user: any) {
     const supabase = await createSupServerInstance();
@@ -256,6 +345,63 @@ export async function addCoverLetterToDb(cover: FormData, user: any) {
         };
     }
 }
+
+
+
+export async function addNewBioToDb(bioText: string, user: any) {
+    const supabase = await createSupServerInstance();
+    const userID = user?.[0]?.user_id;
+
+    // First, get current bios
+    const { data: currentBios, error: getBiosError } = await supabase
+        .from("Profiles")
+        .select("bios")
+        .eq("user_id", userID)
+        .single();
+
+    if (getBiosError) {
+        console.error("Error fetching current bios:", getBiosError);
+        return {
+            status: 'error',
+            message: 'Failed to fetch current bios'
+        };
+    }
+
+    // Generate bio title based on number of existing bios
+    const bioCount = currentBios?.bios?.length || 0;
+    const generatedBioTitle = `bio${bioCount + 1}`;
+
+    // Create new bio object
+    const newBio = {
+        title: generatedBioTitle,
+        text: bioText
+    };
+
+    // Combine existing bios with new bio
+    const updatedBios = [...(currentBios?.bios || []), newBio];
+
+    // Update the profile with new bios array
+    const { data: addBioToDb, error: addBioToDbError } = await supabase
+        .from("Profiles")
+        .update({
+            bios: updatedBios
+        })
+        .eq("user_id", userID);
+
+    if (addBioToDbError) {
+        console.error("Error adding bio:", addBioToDbError);
+        return {
+            status: 'error',
+            message: 'Failed to add bio to user table'
+        };
+    }
+
+    return {
+        status: 'success',
+        message: 'Bio uploaded successfully'
+    };
+}
+
 
 export async function getUsersResume(resumeName: string, userName: string, userId: string) {
     const supabase = await createSupServerInstance();

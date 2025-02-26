@@ -1,54 +1,34 @@
-import { replicate } from "@/app/helpers/clients/replicateClient";
+'use server';
+
+import { deepseek } from "@/app/helpers/clients/deeepseekClient";
+import { generateText } from 'ai';
+import { streamText } from 'ai';
 
 
-const aiExperienceGenerator = async () => {
-    try {
-      const input = {
-        prompt: `
-        {system_prompt}
-        ${markdownScriptEnhancerPrompt}
-        {system_prompt}
+export const aiFieldGenerator = async (messages: any, context: any) => {
+  try {
 
-        |begin_of_text|
-        ${newGuideContent}
-        `,
-        
-        max_new_tokens: 10000,
-        prompt_template: "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n{system_prompt}<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n{prompt}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
-      };
+    const result = await streamText({
+      model: deepseek('deepseek-chat'),
+      system: `You are an AI assistant specializing in resume writing and career advice.
+              You have access to the user's resume data and current job information.
+              Use this context to provide personalized advice and suggestions.
+              Current resume: ${JSON.stringify(context?.resume || {})}
+              Current job being applied for: ${JSON.stringify(context?.currentJob || {})}
+              Field being edited: ${context?.field || 'general'}
+      `,
+      messages,
+      maxTokens: 5000,
+      temperature: 0.7,
+    });
 
-      const output = await replicate.run("meta/meta-llama-3-8b-instruct", { input });
+    return result.toDataStreamResponse();
 
-      if (Array.isArray(output)) {
-        const formattedOutput = output
-          .join('')
-          .trim()
-          // Keep markdown characters and basic text formatting
-          .replace(/[^a-zA-Z0-9\s.,!?#*\-_\[\]()]/g, '')
-          // Normalize spaces while preserving markdown line breaks
-          .replace(/[ \t]+/g, ' ')
-          // Ensure proper spacing after punctuation
-          .replace(/([.,!?])(\w)/g, '$1 $2')
-          // Preserve markdown headers
-          .replace(/#+\s*/g, match => match);
-
-        console.log("replicate works!", formattedOutput);
-        setNewGuideContent(formattedOutput);
-        return formattedOutput;
-
-      } else {
-        const cleanOutput = String(output)
-          .replace(/[^a-zA-Z0-9\s.,!?#*\-_\[\]()]/g, '')
-          .replace(/[ \t]+/g, ' ')
-          .replace(/([.,!?])(\w)/g, '$1 $2')
-          .replace(/#+\s*/g, match => match);
-
-        console.log("replicate works!", cleanOutput);
-        setNewGuideContent(cleanOutput);
-        return cleanOutput;
-
-      }
-    } catch (error) {
-      console.error("Error in testReplicate:", error);
-    }
-  };
+  } catch (error) {
+    console.error("Error in aiFieldGenerator:", error);
+    return new Response(
+      JSON.stringify({ error: 'Failed to generate content. Please try again.' }),
+      { status: 500 }
+    );
+  }
+};

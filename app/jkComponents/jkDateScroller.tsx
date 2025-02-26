@@ -17,7 +17,7 @@ export default function DateScroller({ dates, scrollContainerRef }: DateScroller
     const { styles } = useJobKompassTheme()
     
     // Number of ticks to display
-    const TICK_COUNT = 5
+    const TICK_COUNT = 10
 
     useEffect(() => {
         const scrollContainer = scrollContainerRef.current
@@ -51,11 +51,11 @@ export default function DateScroller({ dates, scrollContainerRef }: DateScroller
             {Array.from({ length: TICK_COUNT }).map((_, index) => (
                 <div
                     key={index}
-                    className="w-full py-2 flex items-center justify-center cursor-pointer"
-                    onClick={() => handleTickClick(index)}
+                    className="w-full py-1 flex items-center justify-center cursor-pointer"
+                    onMouseEnter={() => handleTickClick(index)}
                 >
                     <div 
-                        className={`h-[2px] transition-all duration-200 rounded-full ${
+                        className={`h-[2px] hover:scale-125 hover:w-[28px] transition-all duration-200 rounded-full ${
                             index === activeTickIndex ? 'w-[24px]' : 'w-[12px]'
                         }`}
                         style={{
@@ -64,7 +64,8 @@ export default function DateScroller({ dates, scrollContainerRef }: DateScroller
                                 : styles.card.accent,
                             boxShadow: index === activeTickIndex 
                                 ? `0 0 10px ${styles.card.boxShadow}` 
-                                : 'none'
+                                : 'none',
+                            transform: `rotate(${index % 2 === 0 ? '0deg' : '0deg'})`,
                         }}
                     />
                 </div>

@@ -17,7 +17,7 @@ export default function MyCoverLetters() {
         <>
             <div style={{color: styles.text.primary}} className="w-full h-max">
                 <div>
-                    <p>View and even update your saved cover letters!</p>
+                    <p>View your uploaded cover letters!</p>
                 </div>
                 <div className="flex flex-col w-full gap-2 my-5 h-max">
 

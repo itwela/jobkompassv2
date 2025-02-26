@@ -7,8 +7,8 @@ import { JkInput } from "@/app/jkComponents/jkInput";
 import { JkSelect } from "@/app/jkComponents/jkSelect";
 import { JkPopUp } from "@/app/jkComponents/jkPopUp";
 import { JkCombobox } from "@/app/jkComponents/jkCombobox";
-import { Bot, Briefcase, DownloadCloud, GraduationCap, LucideGraduationCap, LucidePlus, Plus, Sparkles, User, X } from "lucide-react";
-import { useRef, useState } from "react";
+import { Bot, Briefcase, CopyIcon, CopyPlusIcon, DownloadCloud, GraduationCap, LucideGraduationCap, LucidePlus, Plus, Sparkles, User, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { JkEducationFields } from "@/app/jkComponents/jkEducationFields";
 import { JkExperienceFields } from "@/app/jkComponents/jkExperienceFields";
 import { Download } from "lucide-react";
@@ -17,45 +17,245 @@ import html2canvas from "html2canvas";
 import { TechBroProps } from "./resume/resumeTemplates";
 import { JkProjectFields } from "@/app/jkComponents/jkProjectFields";
 import { useJobKompassResume } from "@/app/helpers/providers/JobKompassResumeProvider";
+import { JK_Styles } from "@/app/jkUtilities_and_Tokens/styles";
+import { useJobKompassJobs } from "@/app/helpers/providers/jobsProvider";
+import { useJkAiChatHook } from "@/app/helpers/providers/aiResumeProvider";
+import { ResumeChat } from "./resumeChat";
+import { Message } from "ai";
+import { GenFullResume_DeepSeekJk } from "@/app/actions/deepseekActions";
+import fs from 'fs';
+import { exec } from 'child_process';
+import path from 'path';
+import { useJobKompassToast } from "@/app/helpers/providers/toastProvider";
 
 export default function EditFields({
     user,
     resumeData,
-    handleUpdateResumeData
+    handleUpdateResumeData,
+    messages, 
+    setMessages, 
+    input, 
+    setInput, 
+    handleSubmit, 
+    isLoading,
+    additionalResumeContext,
+    selectedBio,
 }: {
     user: any,
     resumeData: TechBroProps;
-    handleUpdateResumeData: (field: keyof TechBroProps["personalInfo"] | "summary" | "skills" | "education" | "experience" | "projects", value: any) => void;
+    handleUpdateResumeData: (field: keyof TechBroProps["personalInfo"] | "summary" | "skills" | "education" | "experience" | "projects" | "additionalInfo", value: any) => void;
+    messages: any;
+    setMessages: (messages: any) => void;
+    input: string;
+    setInput: (input: string) => void;
+    handleSubmit: (e: any) => void;
+    isLoading: boolean;
+    additionalResumeContext: string;
+    selectedBio: string;
 }) {
     const { styles } = useJobKompassTheme();
     const refOfThisComponent = useRef<HTMLDivElement>(null);
 
     const [currentTechnicalSkill, setCurrentTechnicalSkill] = useState<string>('');
     const [currentAdditionalSkill, setCurrentAdditionalSkill] = useState<string>('');
-    const { registerContentRef, wantsToPrint, setWantsToPrint, currentTheme } = useJobKompassResume();
-    const { sectionImCurrentlyEditingRef, setSectionImCurrentlyEditingRef } = useJobKompassResume();
+    const { registerContentRef, wantsToPrint, setWantsToPrint, currentTheme, currentJobForResumeCreation, setCurrentJobForResumeCreation } = useJobKompassResume();
+    const { sectionImCurrentlyEditingRef, setSectionImCurrentlyEditingRef, userFieldData, clearResumeDataDeepseek, updateResumeWithAIDataDeepseek } = useJobKompassResume();
+    const { userJobs } = useJobKompassJobs()
+    const { isOpen, setIsOpen } = useJkAiChatHook();
+    // Add these with your other state declarations
+    const [currentInterest, setCurrentInterest] = useState<string>('');
+    const [currentHobby, setCurrentHobby] = useState<string>('');
+    const [currentLanguage, setCurrentLanguage] = useState<string>('');
+    const [currentReference, setCurrentReference] = useState<string>('');
+    const { setToastIsVisible, setToastMessage, setToastHeader } = useJobKompassToast();
 
-    const handleWantingToPrint = () => {
-
-        // NOTE this is setup to effectively hide everything else on the page
-        // and then we are going to print the page/save it
-
-        // NOTE Component references:
-        // LINK app/dashboard/careerassistant/components/resume/🖨️Presume.tsx
-        // LINK app/dashboard/careerassistant/components/🖨️PdocumentComponent.tsx
-        // LINK app/dashboard/careerassistant/components/documentEditor.tsx:143
+    useEffect(() => {
+        console.log(userJobs)
+    }, [userJobs])
 
 
-        // NOTE this is where the preview component is being rendered as well, I found myself loosing it sometime:
-        // LINK app/dashboard/careerassistant/components/documentEditor.tsx:188
+    const generateLatexPDF = async () => {
+        try {
+            // Show loading state or feedback to user
+            console.log('Generating PDF...');
+            
+            const response = await fetch('/api/resume/jakeFull', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/pdf'
+                },
+                body: JSON.stringify({
+                    data: resumeData,
+                    user: user
+                })
+            });
 
-        setWantsToPrint(true);
-    }
+            if (!response.ok) {
+                throw new Error(`PDF generation failed: ${response.statusText}`);
+            }
+
+            // Verify content type
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/pdf')) {
+                throw new Error('Received invalid content type from server');
+            }
+
+            // Get the PDF blob
+            const pdfBlob = await response.blob();
+            if (!pdfBlob || pdfBlob.size === 0) {
+                throw new Error('Received empty PDF from server');
+            }
+            
+            // Create download link
+            const url = window.URL.createObjectURL(new Blob([pdfBlob], { type: 'application/pdf' }));
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `resume_${Date.now()}.pdf`;
+            document.body.appendChild(link);
+            link.click();
+
+            // Cleanup
+            setTimeout(() => {
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            }, 100);
+
+            console.log('PDF generated and download initiated');
+
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+            // You might want to show this error to the user
+            alert('Failed to generate PDF. Please try again.');
+        }
+    };
 
     const handleFocus = ( e: any, fieldName? : string,) => {
         console.log("Focus event triggered for project:", fieldName, e);
         setSectionImCurrentlyEditingRef(`${fieldName}`);
     };
+
+    const genFullResume = async () => {
+
+        if (currentJobForResumeCreation) {
+
+            const startingToGenMessege: Message = {
+                id: Date.now().toString(),
+                role: 'assistant',
+                content: "I'm generating your new résumé...",
+                parts: [{
+                    type: 'text',
+                    text: "I'm generating your new résumé..."
+                }]
+            };
+            // Use callback form of setMessages to ensure we're working with the latest state
+            setMessages((prevMessages: any) => [...prevMessages, startingToGenMessege]);
+        
+            const deepseekResume = await GenFullResume_DeepSeekJk(
+                JSON.stringify(userFieldData, null, 2),
+                JSON.stringify(currentJobForResumeCreation, null, 2),
+                additionalResumeContext,
+                selectedBio
+            );
+
+            clearResumeDataDeepseek()
+            updateResumeWithAIDataDeepseek(deepseekResume as any)
+
+            // need to update techbro data after this based on the response :D
+             
+            const completionMessage: Message = {
+                id: (Date.now() + 1).toString(),
+                role: 'assistant',
+                content: "I've generated your résumé",
+                parts: [{
+                    type: 'text',
+                    text: "I've generated your résumé"
+                }]
+            };
+            // Use callback form here too to ensure we're adding to the updated array
+            setMessages((prevMessages: any) => [...prevMessages, completionMessage]);
+
+        } else {
+
+            const uhohNeedJob: Message = {
+                id: Date.now().toString(),
+                role: 'assistant',
+                content: "Uh oh...I need you to choose a job first before I can make your resume 😐",
+            };
+            // Use callback form of setMessages to ensure we're working with the latest state
+            setMessages((prevMessages: any) => [...prevMessages, uhohNeedJob]);
+        }
+    
+    }
+
+    const copyResumeData = () => {
+        const formattedData = `
+Personal Information:
+${resumeData.personalInfo.firstName} ${resumeData.personalInfo.lastName}
+${resumeData.personalInfo.email}
+${resumeData.personalInfo.phone}
+${resumeData.personalInfo.citizenship}
+
+Education:
+${resumeData.education.map(edu => `
+- ${edu.school}
+  ${edu.degree} in ${edu.field}
+  ${edu.startDate} - ${edu.endDate}
+  ${edu.details?.join('\n  ')}
+`).join('\n')}
+
+Experience:
+${resumeData.experience.map(exp => `
+- ${exp.title} at ${exp.company}
+  ${exp.location}
+  ${exp.date}
+  ${exp.details?.join('\n  ')}
+`).join('\n')}
+
+Projects:
+${resumeData.projects.map(proj => `
+- ${proj.name}
+  ${proj.description}
+  Technologies: ${proj.technologies?.join(', ')}
+  ${proj.details?.join('\n  ')}
+`).join('\n')}
+
+Skills:
+Technical: ${resumeData.skills.technical.join(', ')}
+Additional: ${resumeData.skills.additional.join(', ')}
+
+Additional Information:
+Interests: ${resumeData.additionalInfo.interests.join(', ')}
+Hobbies: ${resumeData.additionalInfo.hobbies.join(', ')}
+Languages: ${resumeData.additionalInfo.languages.join(', ')}
+References: ${resumeData.additionalInfo.references.join(', ')}
+`;
+
+        navigator.clipboard.writeText(formattedData)
+            .then(() =>  {
+               console.log('✅✅✅✅ Resume data copied to clipboard ✅✅✅✅');
+               setToastIsVisible(true)
+               setToastMessage('Resume data copied to clipboard')
+               setToastHeader('Success')
+           }).catch((err) => {
+               console.error('❌❌❌❌ Failed to copy resume data to clipboard ❌❌❌❌', err);
+               setToastIsVisible(true)
+               setToastMessage('Failed to copy resume data to clipboard')
+               setToastHeader('Error')
+           });
+    };
+
+    // TODO
+    // const formatFieldsForSelect = () => {
+    //     console.log("user fields:", user?.[0]?.fields); // Debug log
+    //     if (!user?.[0]?.bios) return [];
+    //     const formattedBios = user[0].bios.map(bio => ({
+    //         label: bio.title,
+    //         value: bio.text
+    //     }));
+    //     console.log("formatted bios:", formattedBios); // Debug log
+    //     return formattedBios;
+    // };
 
     return (
         <div 
@@ -71,44 +271,117 @@ export default function EditFields({
         >
 
             {/* TOOLS */}
-            <section className="w-full">
-                <div className="flex gap-3 mb-8  flex place-content-center w-full">
-                   
-                    <button 
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 hover:translate-y-[-2px]"
-                        style={{
-                            backgroundColor: `${styles.nav.colors.careerAssistant}20`,
-                            color: styles.text.primary,
-                            border: styles.card.border
-                        }}
-                    >
-                        <Bot className="h-[16px] w-[16px]" />
-                    </button>
+            <section className="flex flex-col gap-5 place-items-center justify-content-center">
 
-                    <button 
-                        onClick={handleWantingToPrint}
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 hover:translate-y-[-2px]"
-                        style={{
-                            backgroundColor: `${styles.nav.colors.careerAssistant}20`,
-                            color: styles.text.primary,
-                            border: styles.card.border
-                        }}
-                    >
-                        <Download className="h-[16px] w-[16px]" />
-                    </button>
-                    <button 
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 hover:translate-y-[-2px]"
-                        style={{
-                            backgroundColor: `${styles.nav.colors.careerAssistant}20`,
-                            color: styles.text.primary,
-                            border: styles.card.border
-                        }}
-                    >
-                        <DownloadCloud className="h-[16px] w-[16px]" />
-                    </button>
+                <div className="flex gap-3  flex-col place-content-center w-max">
+                    
+                    <label style={{color: styles.text.primary}}  className={`${JK_Styles().subTitleSize} text-sm font-medium tracking-wide opacity-[61.8%] transition-opacity duration-200 group-hover:opacity-100`}>
+                        Tools
+                    </label>
+
+                    <span className="flex gap-2 w-max">
+                        <button 
+                            onClick={genFullResume}
+                            className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 hover:translate-y-[-2px]"
+                            style={{
+                                backgroundColor: `${styles.nav.colors.careerAssistant}20`,
+                                color: styles.text.primary,
+                                border: styles.card.border
+                            }}
+                        >
+                            <Bot className="h-[16px] w-[16px]" />
+                        </button>
+
+                        <button 
+                            onClick={copyResumeData}
+                            className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 hover:translate-y-[-2px]"
+                            style={{
+                                backgroundColor: `${styles.nav.colors.careerAssistant}20`,
+                                color: styles.text.primary,
+                                border: styles.card.border
+                            }}
+                        >
+                            <CopyIcon className="h-[16px] w-[16px]" />
+                        </button>
+
+                        <button 
+                            className="flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-300 hover:translate-y-[-2px]"
+                            style={{
+                                backgroundColor: `${styles.nav.colors.careerAssistant}20`,
+                                color: styles.text.primary,
+                                border: styles.card.border
+                            }}
+                                    onClick={generateLatexPDF}
+                        >
+                            <Download className="h-[16px] w-[16px]" />
+                        </button>
+                    </span>
 
                 </div>
+
+                <section className="w-full h-max place-items-center place-content-center justify-between flex gap-5">
+                    
+                    <div className="w-[200px]">
+                    <JkCombobox
+                            user={user}
+                            label="Select Job"
+                            placeholderText="Select Job"
+                            initialObjectOfThings={
+                                userJobs?.map(job => ({
+                                    value: job.Title,
+                                    label: `${job.Title} at ${job.Company}`
+                                })) || []
+                            }
+                            onChange={(value: any, index?: number) => {
+                                const selectedJob = userJobs?.find(job => job.Title === value);
+                                if (selectedJob) {
+                                    setCurrentJobForResumeCreation(selectedJob);
+                                    console.log('✅✅✅✅ Selected job ✅✅✅✅:', selectedJob);
+                                }
+                            }}
+                            notFoundComponent={
+                                <div className="p-2 text-sm opacity-50">
+                                    No jobs found
+                                </div>
+                            }
+                        />
+                    </div>
+               
+                    <div className="w-[200px]">
+                    <JkCombobox
+                            user={user}
+                            label="Select Saved Fields"
+                            placeholderText="Select Saved Fields"
+                            initialObjectOfThings={
+                                userJobs?.map(job => ({
+                                    value: job.Title,
+                                    label: `${job.Title} at ${job.Company}`
+                                })) || []
+                            }
+                            onChange={(value: any, index?: number) => {
+                                const selectedJob = userJobs?.find(job => job.Title === value);
+                                if (selectedJob) {
+                                    setCurrentJobForResumeCreation(selectedJob);
+                                    console.log('✅✅✅✅ Selected job ✅✅✅✅:', selectedJob);
+                                }
+                            }}
+                            notFoundComponent={
+                                <div className="p-2 text-sm opacity-50">
+                                    No jobs found
+                                </div>
+                            }
+                        />
+                    </div>
+
+                </section>
+
             </section>
+
+
+            <span className="w-[20px] opacity-[0%] h-[30px]">
+                .
+            </span>
+
 
             {/* Personal Information Section */}
             <section className="space-y-3">
@@ -209,12 +482,13 @@ export default function EditFields({
                     </h2>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid  grid-cols-1 md:grid-cols-2 gap-6">
                
-                <JkPopUp
+                    <JkPopUp
                         user={user}
                         refComponent={refOfThisComponent}
                         label="Education"
+                        dialogId="education-popup"
                         header="Educational Background"
                         subtitle="Add your academic qualifications"
                         trigger={
@@ -230,7 +504,11 @@ export default function EditFields({
                             </span>
                         }
                         styledTrigger={false}
-                        BigField={<JkEducationFields user={user} education={resumeData.education} />}
+                        BigField={
+                            <JkEducationFields 
+                                user={user} 
+                                  education={resumeData.education} 
+                            />}
                     />
 
                     <JkPopUp
@@ -238,6 +516,7 @@ export default function EditFields({
                         label="Experience"
                         refComponent={refOfThisComponent}
                         header="Professional Experience"
+                        dialogId="experience-popup"
                         subtitle="Add your work history and achievements"
                         trigger={
                             <span 
@@ -255,26 +534,6 @@ export default function EditFields({
                         BigField={<JkExperienceFields 
                             user={user} 
                             experience={resumeData.experience}
-                            onCreate={() => {
-                                const newExperience = {
-                                    title: "",
-                                    company: "",
-                                    location: "",
-                                    date: "",
-                                    description: "",
-                                    details: []
-                                };
-                                handleUpdateResumeData("experience", [...resumeData.experience, newExperience]);
-                            }}
-                            onSave={(index: number, updatedExperience: any) => {
-                                const newExperience = [...resumeData.experience];
-                                newExperience[index] = updatedExperience;
-                                handleUpdateResumeData("experience", newExperience);
-                            }}
-                            onDelete={(index) => {
-                                const updatedExperience = resumeData.experience.filter((_, i) => i !== index);
-                                handleUpdateResumeData("experience", updatedExperience);
-                            }}
                         />}
                     />
 
@@ -464,6 +723,7 @@ export default function EditFields({
                         label="Projects"
                         refComponent={refOfThisComponent}
                         header="Project Portfolio"
+                        dialogId="projects-popup"
                         subtitle="Add your projects and achievements"
                         trigger={
                             <span 
@@ -478,8 +738,319 @@ export default function EditFields({
                             </span>
                         }
                         styledTrigger={false}
-                        BigField={<JkProjectFields user={user} projects={resumeData.projects} />}
+                        BigField={
+                            <JkProjectFields 
+                                user={user} 
+                                projects={resumeData.projects} 
+                              
+                        />}
                     />
+
+                                {/* Skills & Projects Section */}
+            <section>
+
+                {/* Additional Information Section */}
+                <div className="space-y-3 pt-6 border-t" 
+                    style={{ borderColor: `${styles.text.primary}10` }}
+                >
+                    <div className="flex items-center gap-2">
+                        <div 
+                            className="p-2.5 rounded-lg transition-all duration-300"
+                            style={{ backgroundColor: `${styles.nav.colors.careerAssistant}20` }}
+                        >
+                            <User 
+                                className="h-[18px] w-[18px]"
+                                style={{ color: styles.nav.colors.careerAssistant }}
+                            />
+                        </div>
+                        <h2 className="text-base font-medium" style={{ color: styles.text.primary }}>
+                            Additional Information
+                        </h2>
+                    </div>
+
+                    {/* Interests */}
+                    <div className="flex gap-2">
+                        <JkInput
+                            user={user}
+                            label="Interests"
+                            placeholderText="Add an interest"
+                            type="text"
+                            className="w-full"
+                            value={currentInterest}
+                            onChange={(e) => setCurrentInterest(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    if (currentInterest.trim()) {
+                                        const updatedInfo = {
+                                            ...resumeData.additionalInfo,
+                                            interests: [...resumeData.additionalInfo.interests, currentInterest.trim()]
+                                        };
+                                        handleUpdateResumeData("additionalInfo", updatedInfo);
+                                        setCurrentInterest('');
+                                    }
+                                }
+                            }}
+                        />
+                        <button
+                            onClick={() => {
+                                if (currentInterest.trim()) {
+                                    const updatedInfo = {
+                                        ...resumeData.additionalInfo,
+                                        interests: [...resumeData.additionalInfo.interests, currentInterest.trim()]
+                                    };
+                                    handleUpdateResumeData("additionalInfo", updatedInfo);
+                                    setCurrentInterest('');
+                                }
+                            }}
+                            className="self-end p-3 rounded-lg transition-all duration-300 hover:opacity-80"
+                            style={{
+                                backgroundColor: styles.nav.colors.careerAssistant,
+                                color: '#ffffff',
+                                marginBottom: '1px'
+                            }}
+                        >
+                            Add
+                        </button>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                        {resumeData.additionalInfo.interests.map((interest, index) => (
+                            <span 
+                                key={index} 
+                                className="px-3.5 py-1.5 rounded-full text-sm flex items-center gap-2.5 transition-all duration-300 hover:scale-[1.02] hover:shadow-sm"
+                                style={{ 
+                                    backgroundColor: styles.card.boxShadow,
+                                    color: styles.text.primary
+                                }}
+                            >
+                                {interest}
+                                <X 
+                                    className="h-3 w-3 cursor-pointer hover:opacity-70" 
+                                    onClick={() => {
+                                        const updatedInfo = {
+                                            ...resumeData.additionalInfo,
+                                            interests: resumeData.additionalInfo.interests.filter((_, i) => i !== index)
+                                        };
+                                        handleUpdateResumeData("additionalInfo", updatedInfo);
+                                    }}
+                                />
+                            </span>
+                        ))}
+                    </div>
+
+                                      {/* Hobbies */}
+                                      <div className="flex gap-2">
+                        <JkInput
+                            user={user}
+                            label="Hobbies"
+                            placeholderText="Add a hobby"
+                            type="text"
+                            className="w-full"
+                            value={currentHobby}
+                            onChange={(e) => setCurrentHobby(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    if (currentHobby.trim()) {
+                                        const updatedInfo = {
+                                            ...resumeData.additionalInfo,
+                                            hobbies: [...resumeData.additionalInfo.hobbies, currentHobby.trim()]
+                                        };
+                                        handleUpdateResumeData("additionalInfo", updatedInfo);
+                                        setCurrentHobby('');
+                                    }
+                                }
+                            }}
+                        />
+                        <button
+                            onClick={() => {
+                                if (currentHobby.trim()) {
+                                    const updatedInfo = {
+                                        ...resumeData.additionalInfo,
+                                        hobbies: [...resumeData.additionalInfo.hobbies, currentHobby.trim()]
+                                    };
+                                    handleUpdateResumeData("additionalInfo", updatedInfo);
+                                    setCurrentHobby('');
+                                }
+                            }}
+                            className="self-end p-3 rounded-lg transition-all duration-300 hover:opacity-80"
+                            style={{
+                                backgroundColor: styles.nav.colors.careerAssistant,
+                                color: '#ffffff',
+                                marginBottom: '1px'
+                            }}
+                        >
+                            Add
+                        </button>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                        {resumeData.additionalInfo.hobbies.map((hobby, index) => (
+                            <span 
+                                key={index} 
+                                className="px-3.5 py-1.5 rounded-full text-sm flex items-center gap-2.5 transition-all duration-300 hover:scale-[1.02] hover:shadow-sm"
+                                style={{ 
+                                    backgroundColor: styles.card.boxShadow,
+                                    color: styles.text.primary
+                                }}
+                            >
+                                {hobby}
+                                <X 
+                                    className="h-3 w-3 cursor-pointer hover:opacity-70" 
+                                    onClick={() => {
+                                        const updatedInfo = {
+                                            ...resumeData.additionalInfo,
+                                            hobbies: resumeData.additionalInfo.hobbies.filter((_, i) => i !== index)
+                                        };
+                                        handleUpdateResumeData("additionalInfo", updatedInfo);
+                                    }}
+                                />
+                            </span>
+                        ))}
+                    </div>
+
+                    {/* Languages */}
+                    <div className="flex gap-2">
+                        <JkInput
+                            user={user}
+                            label="Languages"
+                            placeholderText="Add a language"
+                            type="text"
+                            className="w-full"
+                            value={currentLanguage}
+                            onChange={(e) => setCurrentLanguage(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    if (currentLanguage.trim()) {
+                                        const updatedInfo = {
+                                            ...resumeData.additionalInfo,
+                                            languages: [...resumeData.additionalInfo.languages, currentLanguage.trim()]
+                                        };
+                                        handleUpdateResumeData("additionalInfo", updatedInfo);
+                                        setCurrentLanguage('');
+                                    }
+                                }
+                            }}
+                        />
+                        <button
+                            onClick={() => {
+                                if (currentLanguage.trim()) {
+                                    const updatedInfo = {
+                                        ...resumeData.additionalInfo,
+                                        languages: [...resumeData.additionalInfo.languages, currentLanguage.trim()]
+                                    };
+                                    handleUpdateResumeData("additionalInfo", updatedInfo);
+                                    setCurrentLanguage('');
+                                }
+                            }}
+                            className="self-end p-3 rounded-lg transition-all duration-300 hover:opacity-80"
+                            style={{
+                                backgroundColor: styles.nav.colors.careerAssistant,
+                                color: '#ffffff',
+                                marginBottom: '1px'
+                            }}
+                        >
+                            Add
+                        </button>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                        {resumeData.additionalInfo.languages.map((language, index) => (
+                            <span 
+                                key={index} 
+                                className="px-3.5 py-1.5 rounded-full text-sm flex items-center gap-2.5 transition-all duration-300 hover:scale-[1.02] hover:shadow-sm"
+                                style={{ 
+                                    backgroundColor: styles.card.boxShadow,
+                                    color: styles.text.primary
+                                }}
+                            >
+                                {language}
+                                <X 
+                                    className="h-3 w-3 cursor-pointer hover:opacity-70" 
+                                    onClick={() => {
+                                        const updatedInfo = {
+                                            ...resumeData.additionalInfo,
+                                            languages: resumeData.additionalInfo.languages.filter((_, i) => i !== index)
+                                        };
+                                        handleUpdateResumeData("additionalInfo", updatedInfo);
+                                    }}
+                                />
+                            </span>
+                        ))}
+                    </div>
+
+                    {/* References */}
+                    <div className="flex gap-2">
+                        <JkInput
+                            user={user}
+                            label="References"
+                            placeholderText="Add a reference"
+                            type="text"
+                            className="w-full"
+                            value={currentReference}
+                            onChange={(e) => setCurrentReference(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    if (currentReference.trim()) {
+                                        const updatedInfo = {
+                                            ...resumeData.additionalInfo,
+                                            references: [...resumeData.additionalInfo.references, currentReference.trim()]
+                                        };
+                                        handleUpdateResumeData("additionalInfo", updatedInfo);
+                                        setCurrentReference('');
+                                    }
+                                }
+                            }}
+                        />
+                        <button
+                            onClick={() => {
+                                if (currentReference.trim()) {
+                                    const updatedInfo = {
+                                        ...resumeData.additionalInfo,
+                                        references: [...resumeData.additionalInfo.references, currentReference.trim()]
+                                    };
+                                    handleUpdateResumeData("additionalInfo", updatedInfo);
+                                    setCurrentReference('');
+                                }
+                            }}
+                            className="self-end p-3 rounded-lg transition-all duration-300 hover:opacity-80"
+                            style={{
+                                backgroundColor: styles.nav.colors.careerAssistant,
+                                color: '#ffffff',
+                                marginBottom: '1px'
+                            }}
+                        >
+                            Add
+                        </button>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                        {resumeData.additionalInfo.references.map((reference, index) => (
+                            <span 
+                                key={index} 
+                                className="px-3.5 py-1.5 rounded-full text-sm flex items-center gap-2.5 transition-all duration-300 hover:scale-[1.02] hover:shadow-sm"
+                                style={{ 
+                                    backgroundColor: styles.card.boxShadow,
+                                    color: styles.text.primary
+                                }}
+                            >
+                                {reference}
+                                <X 
+                                    className="h-3 w-3 cursor-pointer hover:opacity-70" 
+                                    onClick={() => {
+                                        const updatedInfo = {
+                                            ...resumeData.additionalInfo,
+                                            references: resumeData.additionalInfo.references.filter((_, i) => i !== index)
+                                        };
+                                        handleUpdateResumeData("additionalInfo", updatedInfo);
+                                    }}
+                                />
+                            </span>
+                        ))}
+                    </div>
+
+                    {/* References tags similar to Interests */}
+                </div>
+            </section>
 
                 </div>
 
@@ -487,6 +1058,7 @@ export default function EditFields({
                 </div>
                 
             </section>
+
             
         </div>
     );
